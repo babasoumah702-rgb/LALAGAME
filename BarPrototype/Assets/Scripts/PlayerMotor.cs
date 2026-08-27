@@ -19,6 +19,7 @@ namespace BarPrototype
         public float MotionSpeed { get; private set; }
         public float WalkSpeed => walkSpeed;
         public float RunSpeed => runSpeed;
+        public bool InputBlocked { get; set; }
         public Transform VisualRoot { get => visualRoot; set => visualRoot = value; }
 
         private void Awake()
@@ -45,7 +46,7 @@ namespace BarPrototype
         private void OnDestroy() { moveAction?.Dispose(); runAction?.Dispose(); }
         private void Update()
         {
-            if (Time.timeScale == 0 || !Application.isFocused) { MotionSpeed = 0; return; }
+            if (InputBlocked || Time.timeScale == 0 || !Application.isFocused) { MotionSpeed = 0; return; }
             Step(moveAction.ReadValue<Vector2>(), runAction.IsPressed(), Time.deltaTime);
         }
 
@@ -87,6 +88,13 @@ namespace BarPrototype
             verticalSpeed = 0;
             MotionSpeed = 0;
             Physics.SyncTransforms();
+        }
+        public void MoveWorld(Vector3 direction, float dt)
+        {
+            var rotation = Camera.main ? Camera.main.transform.rotation : Quaternion.Euler(35, 45, 0);
+            var right = rotation * Vector3.right; right.y = 0; right.Normalize();
+            var forward = rotation * Vector3.forward; forward.y = 0; forward.Normalize();
+            Step(new Vector2(Vector3.Dot(direction,right),Vector3.Dot(direction,forward)), false, dt);
         }
     }
 }

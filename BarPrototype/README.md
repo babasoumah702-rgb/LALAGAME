@@ -1,10 +1,10 @@
 # 琥珀酒馆 / The Amber Room
 
+新增关系体验游戏 **LALAGAME / Last Call MVP**：启动 Builds/LastCall-Windows/LastCall.exe，说明见 [LASTCALL_启动说明.md](LASTCALL_启动说明.md)。以下内容仍记录保留的原版漫游。
+
 可玩的固定斜俯视、低多边形 2.5D 酒吧漫游原型。场景、角色 Prefab、材质及 Windows 程序均已生成。
 
 ## 直接游玩
-
-GitHub 仓库仅提供源码、可编辑资产和测试证据，不包含下述 Windows 运行目录或 ZIP。本机已有运行包；从 GitHub 克隆后请按“重建与测试”生成程序，或在编辑器中 Play。
 
 打开 `Builds/Windows/AmberRoom.exe`，或解压 `Builds/AmberRoom-Windows.zip` 后运行其中的 `AmberRoom.exe`。运行游戏不需要安装编辑器或登录账号。
 

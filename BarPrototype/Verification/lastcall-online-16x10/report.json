@@ -1,0 +1,58 @@
+{
+    "version": "2022.3.62t14",
+    "device": "NVIDIA GeForce RTX 4070 Laptop GPU",
+    "mode": "online",
+    "width": 1280,
+    "height": 800,
+    "calls": 2,
+    "averageFps": 59.9937744140625,
+    "passed": true,
+    "checks": [
+        {
+            "name": "backend_bootstrap",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "session_created",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "opening_within_ten_seconds",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "physical_approach",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "independent_reply",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "pause_freezes_world",
+            "detail": "paused=True delta=0.000",
+            "passed": true
+        },
+        {
+            "name": "chinese_edit_blocks_movement",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "performance_sample",
+            "detail": "60.0 FPS (5 seconds)",
+            "passed": true
+        },
+        {
+            "name": "leave_and_reflection",
+            "detail": "",
+            "passed": true
+        }
+    ],
+    "errors": []
+}

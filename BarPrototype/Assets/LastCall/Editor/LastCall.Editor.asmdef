@@ -1,0 +1,6 @@
+{
+  "name":"LastCall.Editor",
+  "references":["LastCall.Runtime","BarPrototype.Runtime","BarPrototype.Editor"],
+  "includePlatforms":["Editor"],
+  "autoReferenced":true
+}

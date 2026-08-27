@@ -1,0 +1,17 @@
+{
+  "requestedMode": "online",
+  "finalMode": "online",
+  "reason": "在线 · gpt-4.1-mini",
+  "status": "ended",
+  "elapsed": 720,
+  "wallSeconds": 98.517,
+  "calls": 23,
+  "tokens": 28455,
+  "accepted": 23,
+  "rejected": 0,
+  "events": 17,
+  "visibleEvents": 16,
+  "reflected": 3,
+  "resumeMatches": true,
+  "note": "World clock accelerated in the server harness; movement acknowledged along exported grid. This is not a real-time 3D playthrough."
+}

@@ -1,0 +1,17 @@
+{
+  "requestedMode": "offline",
+  "finalMode": "offline",
+  "reason": "规则模式 · 无模型调用",
+  "status": "ended",
+  "elapsed": 720,
+  "wallSeconds": 0.17,
+  "calls": 0,
+  "tokens": 0,
+  "accepted": 48,
+  "rejected": 0,
+  "events": 24,
+  "visibleEvents": 24,
+  "reflected": 3,
+  "resumeMatches": true,
+  "note": "World clock accelerated in the server harness; movement acknowledged along exported grid. This is not a real-time 3D playthrough."
+}

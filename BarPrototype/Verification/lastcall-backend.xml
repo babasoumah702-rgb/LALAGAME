@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="authentication failure falls back without another model or retry" time="0.020282" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\model.test.js"/>
+	<testcase name="invalid JSON is retried once and never applied" time="0.003227" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\model.test.js"/>
+	<testcase name="timeout retries count toward budget and preserve events" time="0.001247" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\model.test.js"/>
+	<testcase name="high attraction cannot override an explicit space request" time="0.001938" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\model.test.js"/>
+	<testcase name="entry and finish: passerby" time="0.004347" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="entry and finish: social_guest" time="0.000589" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="entry and finish: friend_guest" time="0.000392" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="entry and finish: staff" time="0.000360" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="entry and finish: owner_bartender" time="0.000343" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="unseen character cannot read an event" time="0.000760" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="same signal creates distinct local interpretations" time="0.000736" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="private note reveals gesture, not content, to bystander" time="0.000498" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="boundary cannot be bypassed by attraction" time="0.001209" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="command idempotency, length limit and distance" time="0.000863" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="refusing cards does not stop the night" time="0.001003" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="conditional C and D entry, not unconditional spawning" time="0.021105" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="pause freezes world time" time="0.000730" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="invalid evidence and targets cannot mutate state" time="0.000414" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="delayed autonomous relay keeps causal source" time="0.000489" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="save ownership, resume and next night preserve memories" time="0.003976" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="seed reproduces rules and source logs" time="0.000568" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="player view never serializes private minds or world facts" time="0.000572" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="A star avoids obstacles and blocked corners" time="0.000218" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="model request budget forces explicit offline mode without fetch" time="0.001672" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="exhausted event action budget cannot change relationships" time="0.001014" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="old reliable command remains idempotent throughout a world" time="0.006527" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="batched position reports respect pause and finite coordinates" time="0.001092" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="every configured location is reachable on the exported Unity grid" time="0.008865" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="full 720-second offline night with navigation: passerby" time="0.135002" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="full 720-second offline night with navigation: social_guest" time="0.111773" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="full 720-second offline night with navigation: friend_guest" time="0.099708" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="full 720-second offline night with navigation: staff" time="0.106765" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="full 720-second offline night with navigation: owner_bartender" time="0.100801" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="seat reservations do not allocate the same endpoint" time="0.013895" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="pending speech waits for physical arrival" time="0.000951" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="old observation actions cannot trigger D later" time="0.008156" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="decision records are owner isolated and preserved" time="0.001594" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="entry willingness adjusts invitations, not relationship history" time="0.000901" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="same seed reproduces an entire rules-mode event sequence" time="0.052985" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="alternate declarative scenario starts an independent world" time="0.001089" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="HTTP ownership, WebSocket commands and reconnect" time="0.619080" classname="test" file="D:\工作\项目\黑客松\BarPrototype\Server\dist\tests\service.test.js"/>
+	<!-- tests 41 -->
+	<!-- suites 0 -->
+	<!-- pass 41 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 1139.6259 -->
+</testsuites>

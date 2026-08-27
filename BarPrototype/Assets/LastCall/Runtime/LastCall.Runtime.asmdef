@@ -1,0 +1,5 @@
+{
+  "name":"LastCall.Runtime",
+  "references":["BarPrototype.Runtime","Unity.InputSystem","UnityEngine.UI"],
+  "autoReferenced":true
+}

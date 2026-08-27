@@ -10,3 +10,14 @@ Builds/
 .vs/
 .idea/
 Verification/*.log
+Server/node_modules/
+Server/dist/
+Server/node.exe
+**/private/
+**/.env
+**/model.env
+**/*.db
+**/*.db-wal
+**/*.db-shm
+**/*.sqlite*
+Server/.test-data/

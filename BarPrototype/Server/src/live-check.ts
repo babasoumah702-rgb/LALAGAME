@@ -1,0 +1,16 @@
+import {join,dirname} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {Engine} from './engine.js';
+import {loadScenario} from './config.js';
+import {ModelAdapter} from './model.js';
+const root=dirname(dirname(fileURLToPath(import.meta.url)));
+const game=new Engine(loadScenario(join(root,'scenarios','last_call.json')),{playerId:'live-verification',online:true});
+const user=game.actor('USER'),target=game.actor('B');
+user.x=target.x;user.z=target.z-1;
+const event=game.emit('speech','USER','B','approach','我可以在这里陪你一会吗？');
+const model=new ModelAdapter();
+const start=Date.now();
+const decision=await model.decide(game,{actor:'B',eventId:event.id,due:0});
+const applied=game.apply('B',decision,event.id);
+console.log(JSON.stringify({online:game.world.modelMode==='online',mode:game.world.modelMode,applied,model:model.config.model,elapsedMs:Date.now()-start,calls:game.world.calls,tokens:game.world.tokens,reason:game.world.modelReason}));
+process.exitCode=game.world.modelMode==='online'&&applied?0:2;

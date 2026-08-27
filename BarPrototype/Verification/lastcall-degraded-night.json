@@ -1,0 +1,17 @@
+{
+  "requestedMode": "online",
+  "finalMode": "offline",
+  "reason": "接口暂不可用，已切换规则模式",
+  "status": "ended",
+  "elapsed": 720,
+  "wallSeconds": 22.406,
+  "calls": 5,
+  "tokens": 4210,
+  "accepted": 44,
+  "rejected": 0,
+  "events": 23,
+  "visibleEvents": 23,
+  "reflected": 3,
+  "resumeMatches": true,
+  "note": "World clock accelerated in the server harness; movement acknowledged along exported grid. This is not a real-time 3D playthrough."
+}

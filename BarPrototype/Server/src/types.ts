@@ -1,0 +1,17 @@
+export type Point = { x: number; z: number };
+export type Relation = { trust: number; closeness: number; attraction: number; safety: number; tension: number; uncertainty: number };
+export type Memory = { eventId: string; summary: string; source: string; importance: number; time: number; tier: string };
+export type Belief = { subject: string; confidence: number; sourceEventId: string; interpretation: string };
+export type ActorConfig = { id: string; name: string; color: string; goal: string; voice: string; knownFacts: string[]; knownActors: string[]; privatePhoto: boolean; initiative: number; share: number; home: string; initial: boolean };
+export type Actor = ActorConfig & Point & { active: boolean; yaw: number; animation: string; destination: string; route: Point[]; routeVersion?:number; memory: Memory[]; beliefs: Belief[]; consideredEvents?:string[]; relations: Record<string, Relation>; pending?: Decision; pendingParent?: string; nextAction: number; lastSpoke: number; withdrawn: boolean };
+export type Location = Point & { id: string; name: string; radius: number; privacy: number; staffOnly?: boolean; capacity: number };
+export type Card = { id: string; name: string; type: string; intent: string; text: string; cooldown: number; expressions: string[]; effect?: string };
+export type Beat = { id: string; at: number; condition: string; effect: string; text: string };
+export type Scenario = { id: string; version: number; title: string; duration: number; roles: {id:string;name:string;description:string;spawn:string}[]; intents:{id:string;name:string}[]; styles:{id:string;name:string}[]; locations:Location[]; actors:ActorConfig[]; cards:Card[]; beats:Beat[]; facts:Record<string,string>; voices:Record<string,Record<string,string[]>>; rules: {clamp:number; fullHear:number; partialHear:number; sight:number; maxDepth:number}; initialRelations:{from:string;to:string;values:Partial<Relation>}[] };
+export type Event = { id:string; seq:number; time:number; type:string; actor:string; target:string; intent:string; text:string; location:string; privacy:string; parentId:string; rootId:string; depth:number; evidenceId:string; perceptions:Perception[] };
+export type Perception = { actor:string; source:string; level:string; text:string; confidence:number };
+export type Decision = { action:string; target:string; intent:string; expression:string; interpretation:string; evidenceIds:string[]; signal:string; confidence:number; location?:string };
+export type Job = { actor:string; eventId:string; due:number };
+export type World = { version:number; scenarioId:string; id:string; playerId:string; role:string; entryIntent:string; style:string; seed:number; rng:number; elapsed:number; night:number; status:string; paused:boolean; sequence:number; actors:Actor[]; events:Event[]; jobs:Job[]; beatIds:string[]; commandIds:string[]; flags:Record<string,number|boolean|string>; moves:Record<string,number>; cooldowns:Record<string,number>; initialRelations:Record<string,Relation>; calls:number; tokens:number; modelMode:string; modelReason:string; updatedAt:string; createdAt:string };
+export type Command = { id:string; type:string; version?:number; cursor?:number; sessionId?:string; items?:Command[]; target?:string; intent?:string; text?:string; card?:string; x?:number; z?:number; yaw?:number; actor?:string; paused?:boolean; online?:boolean; location?:string };
+export type Navigation = { cell:number; minX:number; minZ:number; width:number; height:number; blocked:number[]; walls:{x:number;z:number;w:number;h:number}[] };

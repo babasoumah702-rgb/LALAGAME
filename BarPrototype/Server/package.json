@@ -1,0 +1,10 @@
+{
+  "name": "last-call-local-runtime",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "engines": { "node": ">=24.12.0 <25" },
+  "scripts": { "build": "tsc", "start": "node dist/server.js", "test": "npm run build && node --test dist/tests/*.test.js", "test:live": "npm run build && node dist/live-check.js" },
+  "dependencies": { "fastify": "^5.6.0", "@fastify/websocket": "^11.2.0", "ajv": "^8.17.1" },
+  "devDependencies": { "typescript": "^5.9.2", "@types/node": "^24.0.0", "@types/ws": "^8.18.1" }
+}
