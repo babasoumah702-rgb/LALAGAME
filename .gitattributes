@@ -1,0 +1,14 @@
+* text=auto
+*.cs text eol=lf
+*.shader text eol=lf
+*.json text eol=lf
+*.asmdef text eol=lf
+*.md text eol=lf
+*.meta text eol=lf
+*.unity text eol=lf
+*.prefab text eol=lf
+*.asset text eol=lf
+*.mat text eol=lf
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+*.png binary

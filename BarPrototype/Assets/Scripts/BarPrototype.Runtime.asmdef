@@ -1,0 +1,5 @@
+{
+  "name": "BarPrototype.Runtime",
+  "references": ["Unity.InputSystem"],
+  "autoReferenced": true
+}

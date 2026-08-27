@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:yousandi.cn,2023:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de640fe3d0db1804a85f9fc8f5cadab6, type: 3}
+  m_Name: AmberRenderer
+  m_EditorClassIdentifier: 
+  debugShaders:
+    debugReplacementPS: {fileID: 0}
+    hdrDebugViewPS: {fileID: 0}
+    debugVisibilityShader: {fileID: 0}
+    debugMaterialIDShader: {fileID: 0}
+    blitPS: {fileID: 0}
+  m_RendererFeatures: []
+  m_RendererFeatureMap: 
+  m_UseNativeRenderPass: 0
+  postProcessData: {fileID: 0}
+  shaders:
+    blitPS: {fileID: 0}
+    copyDepthPS: {fileID: 0}
+    screenSpaceShadowPS: {fileID: 0}
+    samplingPS: {fileID: 0}
+    stencilDeferredPS: {fileID: 0}
+    deferredPlusPS: {fileID: 0}
+    fallbackErrorPS: {fileID: 0}
+    fallbackLoadingPS: {fileID: 0}
+    materialErrorPS: {fileID: 0}
+    coreBlitPS: {fileID: 0}
+    coreBlitColorAndDepthPS: {fileID: 0}
+    blitHDROverlay: {fileID: 0}
+    shadingRate: {fileID: 0}
+    generateSRI: {fileID: 0}
+    reprojectSRI: {fileID: 0}
+    convertSRIPS: {fileID: 0}
+    cameraMotionVector: {fileID: 0}
+    objectMotionVector: {fileID: 0}
+    TuanjieGIBuildDepthPyramid: {fileID: 0}
+    TuanjieGIGPUCopy: {fileID: 0}
+    TuanjieGICopyTexture: {fileID: 0}
+    GIMotionVector: {fileID: 0}
+    gpuMotionVector: {fileID: 0}
+    stencilSplat: {fileID: 0}
+    visibilityBuffer: {fileID: 0}
+    materialDepth: {fileID: 0}
+    decalBufferEmit: {fileID: 0}
+    depthPyramid: {fileID: 0}
+    reflectionProbeCulling: {fileID: 0}
+    dataDrivenLensFlare: {fileID: 0}
+    terrainDetailLitPS: {fileID: 0}
+    terrainDetailGrassPS: {fileID: 0}
+    terrainDetailGrassBillboardPS: {fileID: 0}
+  m_AssetVersion: 2
+  m_OpaqueLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_TransparentLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_DefaultStencilState:
+    overrideStencilState: 0
+    stencilReference: 0
+    stencilCompareFunction: 8
+    passOperation: 2
+    failOperation: 0
+    zFailOperation: 0
+  m_ShadowTransparentReceive: 1
+  m_RenderingMode: 0
+  m_DepthPrimingMode: 0
+  m_CopyDepthMode: 1
+  m_AccurateGbufferNormals: 0
+  m_IntermediateTextureMode: 1

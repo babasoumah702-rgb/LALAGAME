@@ -1,0 +1,195 @@
+{
+    "unityVersion": "2022.3.62t14",
+    "graphicsDevice": "NVIDIA GeForce RTX 4070 Laptop GPU",
+    "timestamp": "2026-08-27T18:38:38.7339203+08:00",
+    "passed": true,
+    "averageFps": 59.98448181152344,
+    "checks": [
+        {
+            "name": "scene_components",
+            "passed": true,
+            "detail": "Player, UI, main camera"
+        },
+        {
+            "name": "spawn_position",
+            "passed": true,
+            "detail": "(0.100, 0.024, -2.350)"
+        },
+        {
+            "name": "direction_0",
+            "passed": true,
+            "detail": "(0.707, 0.000, -0.707)"
+        },
+        {
+            "name": "direction_1",
+            "passed": true,
+            "detail": "(1.000, 0.000, 0.000)"
+        },
+        {
+            "name": "direction_2",
+            "passed": true,
+            "detail": "(0.707, 0.000, 0.707)"
+        },
+        {
+            "name": "direction_3",
+            "passed": true,
+            "detail": "(0.000, 0.000, 1.000)"
+        },
+        {
+            "name": "direction_4",
+            "passed": true,
+            "detail": "(-0.707, 0.000, 0.707)"
+        },
+        {
+            "name": "direction_5",
+            "passed": true,
+            "detail": "(-1.000, 0.000, 0.000)"
+        },
+        {
+            "name": "direction_6",
+            "passed": true,
+            "detail": "(-0.707, 0.000, -0.707)"
+        },
+        {
+            "name": "direction_7",
+            "passed": true,
+            "detail": "(0.000, 0.000, -1.000)"
+        },
+        {
+            "name": "walk_30fps",
+            "passed": true,
+            "detail": "1.400"
+        },
+        {
+            "name": "walk_60fps",
+            "passed": true,
+            "detail": "1.400"
+        },
+        {
+            "name": "walk_144fps",
+            "passed": true,
+            "detail": "1.400"
+        },
+        {
+            "name": "framerate_invariance",
+            "passed": true,
+            "detail": "30 vs 144 FPS displacement"
+        },
+        {
+            "name": "run_speed",
+            "passed": true,
+            "detail": "2.300"
+        },
+        {
+            "name": "release_stops",
+            "passed": true,
+            "detail": "(0.00, 0.00, 0.00)"
+        },
+        {
+            "name": "boundary_0",
+            "passed": true,
+            "detail": "(-5.790, 0.005, -0.200)"
+        },
+        {
+            "name": "boundary_1",
+            "passed": true,
+            "detail": "(5.745, 0.005, -4.700)"
+        },
+        {
+            "name": "boundary_2",
+            "passed": true,
+            "detail": "(0.000, 0.005, -4.790)"
+        },
+        {
+            "name": "boundary_3",
+            "passed": true,
+            "detail": "(2.000, 0.005, 4.745)"
+        },
+        {
+            "name": "counter_or_stool_collision",
+            "passed": true,
+            "detail": "(-1.800, 0.005, 0.310)"
+        },
+        {
+            "name": "wall_sliding",
+            "passed": true,
+            "detail": "(-5.797, 0.005, 0.680)"
+        },
+        {
+            "name": "pause_blocks_movement",
+            "passed": true,
+            "detail": "Paused movement remains zero"
+        },
+        {
+            "name": "resume",
+            "passed": true,
+            "detail": "Time scale restored"
+        },
+        {
+            "name": "keyboard_W_binding",
+            "passed": true,
+            "detail": "0.560"
+        },
+        {
+            "name": "keyboard_A_binding",
+            "passed": true,
+            "detail": "0.513"
+        },
+        {
+            "name": "keyboard_S_binding",
+            "passed": true,
+            "detail": "0.513"
+        },
+        {
+            "name": "keyboard_D_binding",
+            "passed": true,
+            "detail": "0.513"
+        },
+        {
+            "name": "keyboard_UpArrow_binding",
+            "passed": true,
+            "detail": "0.514"
+        },
+        {
+            "name": "keyboard_LeftArrow_binding",
+            "passed": true,
+            "detail": "0.513"
+        },
+        {
+            "name": "keyboard_DownArrow_binding",
+            "passed": true,
+            "detail": "0.513"
+        },
+        {
+            "name": "keyboard_RightArrow_binding",
+            "passed": true,
+            "detail": "0.513"
+        },
+        {
+            "name": "keyboard_shift_binding",
+            "passed": true,
+            "detail": "1.227"
+        },
+        {
+            "name": "escape_binding",
+            "passed": true,
+            "detail": "Escape opens pause menu"
+        },
+        {
+            "name": "keyboard_release_stops",
+            "passed": true,
+            "detail": "(0.000, 0.000, 0.000)"
+        },
+        {
+            "name": "materials",
+            "passed": true,
+            "detail": "No missing or error materials"
+        },
+        {
+            "name": "1080p_performance",
+            "passed": true,
+            "detail": "60.0 FPS"
+        }
+    ],
+    "errors": []
+}

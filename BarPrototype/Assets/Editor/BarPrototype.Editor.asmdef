@@ -1,0 +1,6 @@
+{
+  "name": "BarPrototype.Editor",
+  "references": ["BarPrototype.Runtime", "Unity.RenderPipelines.Universal.Runtime", "Unity.RenderPipelines.Core.Runtime"],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": true
+}

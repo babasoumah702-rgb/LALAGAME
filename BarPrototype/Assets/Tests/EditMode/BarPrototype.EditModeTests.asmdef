@@ -1,0 +1,6 @@
+{
+  "name": "BarPrototype.EditModeTests",
+  "references": ["BarPrototype.Runtime", "BarPrototype.Editor"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "com.unity.inputsystem": "1.14.4-t1",
+    "com.unity.render-pipelines.universal": "14.2.0-t1",
+    "com.unity.test-framework": "1.1.33",
+    "com.unity.mathematics": "1.3.2",
+    "com.unity.burst": "1.8.30-t2",
+    "com.unity.modules.audio": "1.0.0",
+    "com.unity.modules.imgui": "1.0.0",
+    "com.unity.modules.imageconversion": "1.0.0",
+    "com.unity.modules.jsonserialize": "1.0.0",
+    "com.unity.modules.physics": "1.0.0",
+    "com.unity.modules.screencapture": "1.0.0",
+    "com.unity.modules.ui": "1.0.0"
+  }
+}
