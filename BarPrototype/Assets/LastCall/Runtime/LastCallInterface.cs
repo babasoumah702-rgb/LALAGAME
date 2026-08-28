@@ -34,7 +34,7 @@ namespace LastCall
             var backdrop=new GameObject("Last Call | background",typeof(Camera)).GetComponent<Camera>();
             backdrop.transform.SetParent(transform,false);
             backdrop.clearFlags=CameraClearFlags.SolidColor;
-            backdrop.backgroundColor=new Color(.04f,.065f,.07f);
+            backdrop.backgroundColor=new Color(.07f,.07f,.09f);
             backdrop.cullingMask=0;
             backdrop.depth=Camera.main.depth-10;
             var canvas=new GameObject("Last Call | Canvas",typeof(Canvas),typeof(CanvasScaler),typeof(GraphicRaycaster));

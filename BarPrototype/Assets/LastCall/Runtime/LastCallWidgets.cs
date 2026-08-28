@@ -7,11 +7,11 @@ namespace LastCall
     public sealed partial class LastCallInterface
     {
         public Font SharedFont { get; private set; }
-        private readonly Color ink = new Color(.045f,.075f,.078f,.98f);
-        private readonly Color cream = new Color(.94f,.88f,.72f);
-        private readonly Color muted = new Color(.61f,.7f,.66f);
-        private readonly Color green = new Color(.15f,.26f,.23f);
-        private readonly Color gold = new Color(.83f,.56f,.28f);
+        private readonly Color ink = new Color(.09f,.09f,.11f,.96f);
+        private readonly Color cream = new Color(.94f,.94f,.96f);
+        private readonly Color muted = new Color(.62f,.64f,.68f);
+        private readonly Color green = new Color(.22f,.24f,.28f);
+        private readonly Color gold = new Color(.78f,.80f,.84f);
         private Transform canvasRoot;
         private RectTransform Box(string name, Transform parent, float x,float y,float w,float h)
         {
@@ -43,12 +43,12 @@ namespace LastCall
         }
         private Button ActionButton(Transform parent,string title,float x,float y,float w,float h,Action action,bool primary=false)
         {
-            var rect=Panel(title,parent,x,y,w,h,primary?green:new Color(.085f,.13f,.13f));
+            var rect=Panel(title,parent,x,y,w,h,primary?green:new Color(.16f,.16f,.18f));
             var button=rect.gameObject.AddComponent<Button>();
             var colors=button.colors;
-            colors.highlightedColor=new Color(.68f,.83f,.75f);
-            colors.pressedColor=new Color(.45f,.6f,.52f);
-            colors.disabledColor=new Color(.3f,.35f,.34f);
+            colors.highlightedColor=new Color(.55f,.58f,.64f);
+            colors.pressedColor=new Color(.32f,.34f,.38f);
+            colors.disabledColor=new Color(.22f,.22f,.24f);
             button.colors=colors;
             var label=Label(rect,title,10,0,w-20,h,15);
             label.alignment=TextAnchor.MiddleCenter;
@@ -57,7 +57,7 @@ namespace LastCall
         }
         private InputField InputBox(Transform parent,float x,float y,float w,float h)
         {
-            var rect=Panel("Your words",parent,x,y,w,h,new Color(.025f,.045f,.046f));
+            var rect=Panel("Your words",parent,x,y,w,h,new Color(.08f,.08f,.1f));
             var field=rect.gameObject.AddComponent<InputField>();
             var text=Label(rect,"",12,8,w-24,h-16,17);
             text.alignment=TextAnchor.UpperLeft;
@@ -65,7 +65,7 @@ namespace LastCall
             placeholder.alignment=TextAnchor.UpperLeft;
             field.textComponent=text;field.placeholder=placeholder;
             field.lineType=InputField.LineType.MultiLineNewline;field.characterLimit=200;
-            field.selectionColor=new Color(.6f,.8f,.7f,.45f);
+            field.selectionColor=new Color(.7f,.72f,.76f,.45f);
             return field;
         }
         private void Clear(Transform parent)

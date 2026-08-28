@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using BarPrototype;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 namespace LastCall
 {
@@ -22,6 +24,7 @@ namespace LastCall
             Interface = gameObject.AddComponent<LastCallInterface>();
             Interface.Game = this;
             Client.Changed += ApplyState;
+            OtomeStage.Open();
             gameObject.AddComponent<DirectorLens>().Game = this;
         }
         private void ApplyState()
@@ -44,9 +47,9 @@ namespace LastCall
                     avatar = instance.AddComponent<ActorAvatar>();
                     avatar.Setup(data.id, data.id == "USER");
                     avatar.Place(data);
-                    if (ColorUtility.TryParseHtmlString("#" + data.color, out var tint)) avatar.Tint(tint);
+                    OtomeCast.Dress(instance, data.id);
                     Avatars.Add(data.id, avatar);
-                    MakeName(avatar, data.name);
+                    MakeName(avatar, data.name, data.id);
                 }
                 avatar.State = data;
                 avatar.gameObject.SetActive(true);
@@ -56,18 +59,18 @@ namespace LastCall
             foreach (var pair in Avatars)
                 if (!state.characters.Any(a => a.id == pair.Key)) pair.Value.gameObject.SetActive(false);
         }
-        private void MakeName(ActorAvatar actor, string text)
+        private void MakeName(ActorAvatar actor, string text, string actorId)
         {
             var label = new GameObject("Name", typeof(TextMesh));
             label.transform.SetParent(actor.transform, false);
-            label.transform.localPosition = new Vector3(0, 2.12f, 0);
+            label.transform.localPosition = new Vector3(0, OtomeCast.NameY(actorId), 0);
             label.transform.rotation = Camera.main.transform.rotation;
             var mesh = label.GetComponent<TextMesh>();
             mesh.text = text;
             mesh.characterSize = .035f;
             mesh.fontSize = 64;
             mesh.anchor = TextAnchor.MiddleCenter;
-            mesh.color = new Color(1, .94f, .78f);
+            mesh.color = new Color(.93f, .93f, .95f);
         }
         private void Update()
         {
@@ -122,138 +125,556 @@ namespace LastCall
         public LastCallGame Game;
         private Camera cam;
         private FixedRoomCamera room;
-        private Vector3 focus = new Vector3(-.65f, 1.2f, 0);
-        private Vector3 focusSpeed;
-        private float size = 6.2f, sizeSpeed;
-        private float pitch = 35, pitchSpeed;
-        private float yaw = 45, yawSpeed;
-        private string lastFocus, lastPlace, lastBeat;
+        private float lookYaw = 205, lookPitch = 8;
+        private bool armed, walking;
         private void Awake()
         {
             cam = Camera.main;
             if (!cam) return;
             room = cam.GetComponent<FixedRoomCamera>();
             if (room) room.enabled = false;
-            Apply(true);
+            cam.orthographic = false;
+            cam.fieldOfView = 70;
+            cam.nearClipPlane = .08f;
+            cam.farClipPlane = 80;
+            cam.transform.position = new Vector3(.1f, 1.58f, -2.35f);
+            cam.transform.rotation = Quaternion.Euler(lookPitch, lookYaw, 0);
         }
         private void OnDestroy()
         {
             if (room) room.enabled = true;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
         private void LateUpdate()
         {
             if (!cam) cam = Camera.main;
             if (!cam) return;
-            var shot = Compose();
-            bool cut = ShouldCut(shot);
-            if (cut)
+            cam.orthographic = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            bool playing = Game && Game.Client?.State != null && Game.Client.State.status == "playing";
+            bool blocked = !playing || (Game.Interface && Game.Interface.Blocking);
+            ActorAvatar player = null;
+            if (Game) Game.Avatars.TryGetValue("USER", out player);
+            ActorAvatar them = null;
+            var focusId = Game && Game.Interface ? Game.Interface.FocusId : "";
+            if (Game && !string.IsNullOrEmpty(focusId)) Game.Avatars.TryGetValue(focusId, out them);
+            bool approaching = player && player.State != null && player.State.route != null && player.State.route.Length > 0 && them;
+            if (!approaching && playing && !blocked && Keyboard.current != null)
             {
-                focus = shot.focus;
-                size = shot.size;
-                pitch = shot.pitch;
-                yaw = shot.yaw;
-                focusSpeed = Vector3.zero;
-                sizeSpeed = pitchSpeed = yawSpeed = 0;
+                float turn = 110f * Time.unscaledDeltaTime;
+                if (Keyboard.current.qKey.isPressed) lookYaw -= turn;
+                if (Keyboard.current.cKey.isPressed) lookYaw += turn;
+                if (Keyboard.current.rKey.isPressed) lookPitch = Mathf.Clamp(lookPitch - turn, -72f, 78f);
+                if (Keyboard.current.fKey.isPressed) lookPitch = Mathf.Clamp(lookPitch + turn, -72f, 78f);
             }
-            else
+            if (!approaching && playing && !blocked && Mouse.current != null && Mouse.current.rightButton.isPressed)
             {
-                float time = shot.kind == "wide" ? .85f : shot.kind == "close" ? .42f : .55f;
-                focus = Vector3.SmoothDamp(focus, shot.focus, ref focusSpeed, time);
-                size = Mathf.SmoothDamp(size, shot.size, ref sizeSpeed, time);
-                pitch = Mathf.SmoothDamp(pitch, shot.pitch, ref pitchSpeed, time);
-                yaw = Mathf.SmoothDamp(yaw, shot.yaw, ref yawSpeed, time);
+                var delta = Mouse.current.delta.ReadValue();
+                lookYaw += delta.x * .12f;
+                lookPitch = Mathf.Clamp(lookPitch - delta.y * .12f, -72f, 78f);
             }
-            Apply(false);
+            if (player && player.gameObject.activeSelf)
+            {
+                if (!armed)
+                {
+                    var visual = player.GetComponent<PlayerMotor>()?.VisualRoot;
+                    if (visual) lookYaw = visual.eulerAngles.y;
+                    armed = true;
+                }
+                HideSelf(player);
+                cam.transform.position = player.transform.position + Vector3.up * 1.55f;
+                if (approaching) FacePerson(them);
+                else if (walking && them) FacePerson(them, true);
+                cam.transform.rotation = Quaternion.Euler(lookPitch, lookYaw, 0);
+                var visualRoot = player.GetComponent<PlayerMotor>()?.VisualRoot;
+                if (visualRoot)
+                    visualRoot.rotation = Quaternion.Euler(0, lookYaw, 0);
+            }
+            walking = approaching;
             FaceNames();
         }
-        private Shot Compose()
+        private void FacePerson(ActorAvatar them, bool snap = false)
         {
-            var wide = new Shot { kind = "wide", focus = new Vector3(-.65f, 1.2f, 0), size = 6.2f, pitch = 35, yaw = 45 };
-            if (!Game || Game.Client?.State == null) return wide;
-            var state = Game.Client.State;
-            Game.Avatars.TryGetValue("USER", out var player);
-            ActorAvatar target = null;
-            var focusId = Game.Interface ? Game.Interface.FocusId : "";
-            if (!string.IsNullOrEmpty(focusId)) Game.Avatars.TryGetValue(focusId, out target);
-            if (target && !target.gameObject.activeSelf) target = null;
-            if (state.lastCall || state.status == "ended")
-                return new Shot { kind = "wide", focus = player ? Mix(wide.focus, Lift(player), .28f) : wide.focus, size = 6.5f, pitch = 32, yaw = 45 };
-            if (!player) return wide;
-            var playerLift = Lift(player);
-            if (!target)
-                return new Shot { kind = "wide", focus = Mix(wide.focus, playerLift, .4f), size = 5.6f, pitch = 34, yaw = 45 };
-            float gap = Vector3.Distance(player.transform.position, target.transform.position);
-            var mid = Mix(playerLift, Lift(target), .55f);
-            float turn = Mathf.Clamp(Mathf.DeltaAngle(45, YawToward(player, target)) * .18f, -10f, 10f);
-            bool talk = state.busy || Game.Interface.Talking;
-            if (talk)
-                return new Shot { kind = "close", focus = Mix(Lift(target), playerLift, .22f), size = 1.72f, pitch = 16, yaw = 45 + turn };
-            if (gap < 2.15f)
-                return new Shot { kind = "close", focus = Mix(Lift(target), playerLift, .35f), size = 2.05f, pitch = 20, yaw = 45 + turn };
-            if (gap < 4.2f)
-                return new Shot { kind = "medium", focus = mid, size = 3.25f, pitch = 27, yaw = 45 + turn * .6f };
-            if (gap < 6.4f)
-                return new Shot { kind = "medium", focus = Lift(target), size = 3.55f, pitch = 26, yaw = 45 + turn };
-            return new Shot { kind = "wide", focus = Mix(wide.focus, playerLift, .4f), size = 5.9f, pitch = 34, yaw = 45 };
-        }
-        private bool ShouldCut(Shot shot)
-        {
-            if (!Game || Game.Client?.State == null) return false;
-            var state = Game.Client.State;
-            var focusId = Game.Interface ? Game.Interface.FocusId : "";
-            Game.Avatars.TryGetValue("USER", out var player);
-            string place = player && player.State != null ? player.State.location : "";
-            string beat = state.lastCall ? "last" : state.busy ? "busy" : shot.kind;
-            bool cut = false;
-            if (lastFocus != focusId && !string.IsNullOrEmpty(focusId))
-            {
-                Game.Avatars.TryGetValue(focusId, out var next);
-                float gap = player && next ? Vector3.Distance(player.transform.position, next.transform.position) : 9;
-                cut = gap > 3.4f;
-            }
-            if (lastPlace != place && !string.IsNullOrEmpty(place) && !string.IsNullOrEmpty(lastPlace)) cut = true;
-            if (lastBeat != "last" && state.lastCall) cut = true;
-            lastFocus = focusId;
-            lastPlace = place;
-            lastBeat = beat;
-            return cut;
-        }
-        private void Apply(bool snap)
-        {
-            cam.orthographic = true;
-            cam.orthographicSize = Mathf.Max(1.35f, size);
-            cam.transform.rotation = Quaternion.Euler(pitch, yaw, 0);
-            cam.transform.position = focus - cam.transform.forward * 24;
+            if (!them || !cam) return;
+            var dir = them.transform.position + Vector3.up * 1.45f - cam.transform.position;
+            dir.y = Mathf.Clamp(dir.y, -2f, 2f);
+            if (dir.sqrMagnitude < .01f) return;
+            var euler = Quaternion.LookRotation(dir).eulerAngles;
+            float yaw = euler.y;
+            float pitch = euler.x > 180 ? euler.x - 360 : euler.x;
+            pitch = Mathf.Clamp(pitch, -72f, 78f);
             if (snap)
             {
-                focusSpeed = Vector3.zero;
-                sizeSpeed = pitchSpeed = yawSpeed = 0;
+                lookYaw = yaw;
+                lookPitch = pitch;
+                return;
             }
+            lookYaw = Mathf.MoveTowardsAngle(lookYaw, yaw, 220f * Time.deltaTime);
+            lookPitch = Mathf.MoveTowards(lookPitch, pitch, 110f * Time.deltaTime);
+        }
+        private static void HideSelf(ActorAvatar player)
+        {
+            foreach (var body in player.GetComponentsInChildren<Renderer>(true))
+                if (body && !body.GetComponent<TextMesh>()) body.enabled = false;
+            var label = player.transform.Find("Name");
+            if (label) label.gameObject.SetActive(false);
         }
         private void FaceNames()
         {
-            if (Game == null) return;
+            if (Game == null || !cam) return;
             var rotation = cam.transform.rotation;
             foreach (var avatar in Game.Avatars.Values)
             {
+                if (avatar.IsPlayer) continue;
                 var label = avatar.transform.Find("Name");
                 if (label) label.rotation = rotation;
             }
         }
-        private static Vector3 Lift(ActorAvatar actor) => actor.transform.position + Vector3.up * 1.42f;
-        private static Vector3 Mix(Vector3 a, Vector3 b, float t) => Vector3.Lerp(a, b, t);
-        private static float YawToward(ActorAvatar from, ActorAvatar to)
+    }
+
+    public static class OtomeArt
+    {
+        public const string BarPath = "Assets/LastCall/Stage/otome-bar.png";
+        private static Texture2D bar;
+        private static readonly Dictionary<string, Texture2D> sheets = new Dictionary<string, Texture2D>();
+
+        public static Texture2D Bar()
         {
-            var delta = to.transform.position - from.transform.position;
-            delta.y = 0;
-            if (delta.sqrMagnitude < .01f) return 45;
-            return Quaternion.LookRotation(delta).eulerAngles.y;
+            if (bar) return bar;
+            bar = Read("otome-bar", false);
+            return bar;
         }
-        private struct Shot
+
+        public static Texture2D Picture(string id)
         {
-            public string kind;
-            public Vector3 focus;
-            public float size, pitch, yaw;
+            if (sheets.TryGetValue(id, out var cached) && cached) return cached;
+            var texture = Read(id, true);
+            if (texture) sheets[id] = texture;
+            return texture;
+        }
+
+        public static Material Flat(Color color, Texture texture = null)
+        {
+            var shader = Shader.Find("Universal Render Pipeline/Unlit")
+                ?? Shader.Find("Unlit/Color")
+                ?? Shader.Find("Sprites/Default");
+            var material = new Material(shader);
+            if (material.HasProperty("_BaseMap") && texture) material.SetTexture("_BaseMap", texture);
+            if (material.HasProperty("_BaseColor")) material.SetColor("_BaseColor", color);
+            if (material.HasProperty("_MainTex") && texture) material.SetTexture("_MainTex", texture);
+            if (material.HasProperty("_Color")) material.SetColor("_Color", color);
+            if (material.HasProperty("_Cull")) material.SetFloat("_Cull", 0);
+            return material;
+        }
+
+        public static Material Sheet(Texture texture)
+        {
+            var shader = Shader.Find("Universal Render Pipeline/Unlit")
+                ?? Shader.Find("Sprites/Default")
+                ?? Shader.Find("Unlit/Transparent");
+            var material = new Material(shader);
+            material.mainTexture = texture;
+            if (material.HasProperty("_BaseMap")) material.SetTexture("_BaseMap", texture);
+            if (material.HasProperty("_MainTex")) material.SetTexture("_MainTex", texture);
+            if (material.HasProperty("_BaseColor")) material.SetColor("_BaseColor", Color.white);
+            if (material.HasProperty("_Color")) material.SetColor("_Color", Color.white);
+            if (material.HasProperty("_Cull")) material.SetFloat("_Cull", 0);
+            if (material.HasProperty("_Surface"))
+            {
+                material.SetFloat("_Surface", 1);
+                material.SetFloat("_Blend", 0);
+                material.SetFloat("_AlphaClip", 1);
+                if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", .12f);
+                material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+                material.EnableKeyword("_ALPHATEST_ON");
+                material.SetInt("_SrcBlend", (int)BlendMode.SrcAlpha);
+                material.SetInt("_DstBlend", (int)BlendMode.OneMinusSrcAlpha);
+                material.SetInt("_ZWrite", 0);
+                material.SetOverrideTag("RenderType", "Transparent");
+                material.renderQueue = 3000;
+            }
+            return material;
+        }
+
+        public static Material Cloth(Color color, float smoothness = .18f, float metallic = 0f)
+        {
+            var shader = Shader.Find("Universal Render Pipeline/Lit");
+            if (!shader) return Flat(color);
+            var material = new Material(shader);
+            if (material.HasProperty("_BaseColor")) material.SetColor("_BaseColor", color);
+            if (material.HasProperty("_Color")) material.SetColor("_Color", color);
+            if (material.HasProperty("_Smoothness")) material.SetFloat("_Smoothness", smoothness);
+            if (material.HasProperty("_Metallic")) material.SetFloat("_Metallic", metallic);
+            return material;
+        }
+
+        public static Color Hex(string hex)
+        {
+            ColorUtility.TryParseHtmlString("#" + hex, out var color);
+            return color;
+        }
+
+        private static Texture2D Read(string id, bool punch)
+        {
+            foreach (var ext in new[] { ".png", ".jpg", ".jpeg" })
+            {
+                var path = Path.Combine(Application.dataPath, "LastCall/Stage", id + ext);
+                if (!File.Exists(path)) continue;
+                var texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                if (!texture.LoadImage(File.ReadAllBytes(path))) continue;
+                texture.wrapMode = TextureWrapMode.Clamp;
+                texture.filterMode = FilterMode.Bilinear;
+                if (punch) PunchStudio(texture);
+                return texture;
+            }
+            return null;
+        }
+
+        private static void PunchStudio(Texture2D texture)
+        {
+            var pixels = texture.GetPixels32();
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                var p = pixels[i];
+                int max = Mathf.Max(p.r, Mathf.Max(p.g, p.b));
+                int min = Mathf.Min(p.r, Mathf.Min(p.g, p.b));
+                if (min > 168 && max - min < 22) p.a = 0;
+                else if (min > 148 && max - min < 16) p.a = (byte)Mathf.Clamp((180 - min) * 8, 0, 255);
+                pixels[i] = p;
+            }
+            texture.SetPixels32(pixels);
+            texture.Apply(false, false);
+        }
+    }
+
+    public static class OtomeStage
+    {
+        public static void Open()
+        {
+            if (GameObject.Find("Last Call | otome")) return;
+            var root = new GameObject("Last Call | otome").transform;
+            RecolorRoom();
+            CoolLights();
+            RenameSign();
+            Mural(root);
+            Motifs(root);
+            RenderSettings.ambientSkyColor = OtomeArt.Hex("C8D0D8") * .38f;
+            RenderSettings.ambientEquatorColor = OtomeArt.Hex("5A6068") * .45f;
+            RenderSettings.ambientGroundColor = OtomeArt.Hex("101214") * .55f;
+            if (Camera.main) Camera.main.backgroundColor = OtomeArt.Hex("0A0C10");
+        }
+
+        private static void RecolorRoom()
+        {
+            foreach (var mesh in Object.FindObjectsOfType<Renderer>())
+            {
+                if (!mesh || mesh.GetComponentInParent<ActorAvatar>() || mesh.GetComponentInParent<Canvas>()) continue;
+                if (mesh.name.StartsWith("Last Call |")) continue;
+                var color = Map(mesh.name);
+                if (!color.HasValue) continue;
+                mesh.sharedMaterial = OtomeArt.Flat(color.Value);
+                mesh.shadowCastingMode = ShadowCastingMode.Off;
+            }
+        }
+
+        private static Color? Map(string name)
+        {
+            var n = name.ToLowerInvariant();
+            if (n.Contains("plaster")) return OtomeArt.Hex("C4C0BA");
+            if (n.Contains("wainscot") || n.Contains("panel")) return OtomeArt.Hex("2A2A2E");
+            if (n.Contains("walnut")) return OtomeArt.Hex("1A1A1E");
+            if (n.Contains("oak")) return OtomeArt.Hex("3A3A40");
+            if (n.Contains("leather")) return OtomeArt.Hex("2A2A2C");
+            if (n.Contains("rug")) return OtomeArt.Hex("1C1C20");
+            if (n.Contains("stage")) return OtomeArt.Hex("101012");
+            if (n.Contains("jacket")) return null;
+            return null;
+        }
+
+        private static void CoolLights()
+        {
+            foreach (var light in Object.FindObjectsOfType<Light>())
+            {
+                if (light.type == LightType.Directional)
+                {
+                    light.color = OtomeArt.Hex("E4E8F0");
+                    light.intensity = .92f;
+                }
+                else
+                {
+                    light.color = OtomeArt.Hex("C8D4DE");
+                    light.intensity = Mathf.Max(.75f, light.intensity * .8f);
+                }
+            }
+        }
+
+        private static void RenameSign()
+        {
+            foreach (var label in Object.FindObjectsOfType<TextMesh>())
+                if (label.text == "AMBER ROOM")
+                {
+                    label.text = "LA LA LAND";
+                    label.color = OtomeArt.Hex("E8EEF4");
+                }
+        }
+
+        private static void Mural(Transform root)
+        {
+            var texture = OtomeArt.Bar();
+            if (!texture) return;
+            var plate = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            plate.name = "Last Call | otome mural";
+            plate.transform.SetParent(root, false);
+            plate.transform.position = new Vector3(-1.8f, 2.15f, 4.72f);
+            plate.transform.rotation = Quaternion.Euler(0, 180, 0);
+            var aspect = texture.width / (float)Mathf.Max(1, texture.height);
+            plate.transform.localScale = new Vector3(6.4f, 6.4f / aspect, 1);
+            Object.Destroy(plate.GetComponent<Collider>());
+            var mesh = plate.GetComponent<Renderer>();
+            mesh.sharedMaterial = OtomeArt.Flat(Color.white, texture);
+            mesh.shadowCastingMode = ShadowCastingMode.Off;
+        }
+
+        private static void Motifs(Transform root)
+        {
+            var table = new Vector3(1.65f, 0, -1.8f);
+            Cube("empty chair", table + new Vector3(-.7f, .42f, .1f), new Vector3(.38f, .08f, .38f), OtomeArt.Hex("2A2A2E"), root);
+            Cube("empty chair back", table + new Vector3(-.7f, .72f, -.12f), new Vector3(.38f, .55f, .06f), OtomeArt.Hex("2A2A2E"), root);
+            Cube("third drink", table + new Vector3(.08f, .8f, -.1f), new Vector3(.08f, .16f, .07f), OtomeArt.Hex("D8DEE4"), root);
+            Cube("second glass", table + new Vector3(-.16f, .78f, .08f), new Vector3(.07f, .13f, .07f), OtomeArt.Hex("C8D0D8"), root);
+        }
+
+        private static void Cube(string name, Vector3 position, Vector3 scale, Color color, Transform parent)
+        {
+            var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            go.name = name;
+            go.transform.SetParent(parent, false);
+            go.transform.position = position;
+            go.transform.localScale = scale;
+            Object.Destroy(go.GetComponent<Collider>());
+            var mesh = go.GetComponent<Renderer>();
+            mesh.sharedMaterial = OtomeArt.Flat(color);
+            mesh.shadowCastingMode = ShadowCastingMode.Off;
+        }
+    }
+
+    public static class CastModel
+    {
+        public static System.Func<string, GameObject> Loader;
+
+        public static bool Wear(GameObject instance, string actorId)
+        {
+            if (Loader == null) return false;
+            var source = Loader(actorId);
+            if (!source) return false;
+            var visual = instance.GetComponent<PlayerMotor>()?.VisualRoot;
+            if (!visual) return false;
+            visual.localScale = Vector3.one;
+            foreach (var body in visual.GetComponentsInChildren<Renderer>(true))
+                body.enabled = false;
+            var model = UnityEngine.Object.Instantiate(source, visual, false);
+            model.name = "Cast mesh";
+            foreach (var col in model.GetComponentsInChildren<Collider>(true))
+                UnityEngine.Object.Destroy(col);
+            var pose = instance.GetComponent<CharacterPose>();
+            if (pose) pose.enabled = false;
+            Fit(model, instance.transform, HeightOf(actorId));
+            return true;
+        }
+
+        public static float HeightOf(string actorId) => actorId == "C" ? 1.82f : actorId == "D" ? 1.58f : 1.68f;
+
+        private static void Fit(GameObject model, Transform root, float height)
+        {
+            var skins = model.GetComponentsInChildren<Renderer>();
+            if (skins.Length == 0) return;
+            var box = skins[0].bounds;
+            for (int i = 1; i < skins.Length; i++) box.Encapsulate(skins[i].bounds);
+            float size = Mathf.Max(box.size.y, .01f);
+            model.transform.localScale *= height / size;
+            box = skins[0].bounds;
+            for (int i = 1; i < skins.Length; i++) box.Encapsulate(skins[i].bounds);
+            model.transform.position += new Vector3(root.position.x - box.center.x, root.position.y - box.min.y, root.position.z - box.center.z);
+        }
+    }
+
+    public static class OtomeCast
+    {
+        public static void Dress(GameObject instance, string actorId)
+        {
+            Hide(instance, "Ground marker");
+            if (CastModel.Wear(instance, actorId)) return;
+            var visual = instance.GetComponent<PlayerMotor>()?.VisualRoot;
+            if (!visual) return;
+            float tall = actorId == "C" ? 1.08f : actorId == "D" ? .94f : 1f;
+            visual.localScale = new Vector3((actorId == "C" ? .9f : .8f) * tall, tall, .86f);
+            var skin = OtomeArt.Hex("E8C8B4");
+            var silver = OtomeArt.Hex("C8D0D8");
+            Color coat, shirt, hair, legs, boots;
+            Outfit(actorId, out coat, out shirt, out hair, out legs, out boots);
+            Paint(instance, "Jacket body", coat, .2f);
+            Paint(instance, "Sleeve", actorId == "USER" ? shirt : coat, .2f);
+            Paint(instance, "Jacket seam", silver, .7f, .8f);
+            Paint(instance, "Shirt front", shirt, .16f);
+            Paint(instance, "Hair silhouette", hair, .22f);
+            Paint(instance, "Swept fringe", hair, .22f);
+            Paint(instance, "Trouser leg", legs, .18f);
+            Paint(instance, "Boot", boots, .55f, .12f);
+            Paint(instance, "Boot sole", OtomeArt.Hex("141210"), .2f);
+            Paint(instance, "Faceted head", skin, .32f);
+            Paint(instance, "Neck", skin, .32f);
+            Paint(instance, "Hand", skin, .32f);
+            Paint(instance, "Nose", skin, .32f);
+            Paint(instance, "Eye", OtomeArt.Hex("2A1818"), .15f);
+            Hide(instance, "Scarf");
+            Hide(instance, "Scarf tail");
+            Hide(instance, "Ground marker");
+            var torso = Child(instance, "Breathing body");
+            var head = Child(instance, "Faceted head");
+            Each(instance, "Trouser leg", leg =>
+                Add("crease", new Vector3(0, 0, .11f), new Vector3(.02f, .92f, .02f), Color.Lerp(legs, Color.white, .12f), .25f, 0, leg));
+            if (actorId == "A" || actorId == "USER") Glasses(head, silver);
+            if (actorId == "A")
+            {
+                Add("button", new Vector3(0, .04f, .175f), new Vector3(.03f, .03f, .02f), silver, .7f, .8f, torso);
+                Add("ring L", new Vector3(-.02f, 0, .04f), new Vector3(.04f, .02f, .04f), silver, .7f, .85f, Child(instance, "Hand"));
+            }
+            if (actorId == "USER")
+            {
+                Hide(instance, "Jacket seam");
+                Each(instance, "Jacket body", body => body.localScale = new Vector3(.48f, .42f, .3f));
+                Each(instance, "Sleeve", arm =>
+                {
+                    arm.localScale = new Vector3(.16f, .22f, .18f);
+                    arm.localPosition = new Vector3(arm.localPosition.x, -.22f, 0);
+                });
+                Add("belt", new Vector3(0, -.24f, .02f), new Vector3(.42f, .045f, .3f), OtomeArt.Hex("3A241C"), .4f, .1f, torso);
+                Add("buckle", new Vector3(0, -.24f, .16f), new Vector3(.05f, .04f, .02f), silver, .7f, .8f, torso);
+            }
+            if (actorId == "B")
+                Add("sport watch", new Vector3(0, -.42f, .08f), new Vector3(.12f, .045f, .13f), silver, .65f, .7f, Child(instance, "Left arm pivot"));
+            if (actorId == "C")
+                Add("carabiner", new Vector3(-.22f, -.18f, .16f), new Vector3(.05f, .12f, .03f), silver, .7f, .8f, torso);
+            if (actorId == "D")
+                Add("violet streak", new Vector3(.08f, .22f, .02f), new Vector3(.07f, .2f, .1f), OtomeArt.Hex("6A5A98"), .2f, 0, head);
+            if (actorId == "BARTENDER")
+            {
+                Hide(instance, "Jacket seam");
+                Hide(instance, "Swept fringe");
+                Each(instance, "Sleeve", arm =>
+                {
+                    arm.localScale = new Vector3(.17f, .26f, .18f);
+                    arm.localPosition = new Vector3(0, -.24f, 0);
+                });
+                Add("apron", new Vector3(0, -.18f, .17f), new Vector3(.46f, .36f, .05f), OtomeArt.Hex("3A2418"), .35f, .08f, torso);
+                Add("apron bow", new Vector3(0, -.02f, .2f), new Vector3(.12f, .05f, .04f), OtomeArt.Hex("3A2418"), .35f, .08f, torso);
+                Add("towel", new Vector3(.2f, -.16f, .2f), new Vector3(.08f, .18f, .03f), OtomeArt.Hex("E8E4DC"), .12f, 0, torso);
+                Add("bun", new Vector3(0, .18f, -.14f), new Vector3(.16f, .13f, .14f), hair, .22f, 0, head);
+                Add("watch", new Vector3(0, -.28f, .08f), new Vector3(.1f, .04f, .12f), OtomeArt.Hex("1A1614"), .4f, .2f, Child(instance, "Left arm pivot"));
+                Add("pendant", new Vector3(0, .38f, .18f), new Vector3(.04f, .04f, .02f), silver, .7f, .8f, torso);
+            }
+            if (actorId == "OWNER")
+            {
+                Hide(instance, "Jacket seam");
+                Each(instance, "Jacket body", body => body.localScale = new Vector3(.5f, .7f, .32f));
+                Paint(instance, "Trouser leg", coat, .22f);
+                Add("necklace", new Vector3(0, .4f, .16f), new Vector3(.12f, .02f, .12f), silver, .7f, .8f, torso);
+            }
+        }
+
+        public static float NameY(string actorId) => CastModel.HeightOf(actorId) + .12f;
+
+        private static void Outfit(string actorId, out Color coat, out Color shirt, out Color hair, out Color legs, out Color boots)
+        {
+            coat = OtomeArt.Hex("1A1618");
+            shirt = OtomeArt.Hex("2A1C1C");
+            hair = OtomeArt.Hex("1A1616");
+            legs = OtomeArt.Hex("3A3A40");
+            boots = OtomeArt.Hex("141214");
+            if (actorId == "A") { shirt = OtomeArt.Hex("1A1414"); legs = OtomeArt.Hex("3A3A42"); }
+            if (actorId == "B") { coat = OtomeArt.Hex("2A2A30"); shirt = OtomeArt.Hex("D8D4D0"); legs = OtomeArt.Hex("2A2A32"); }
+            if (actorId == "C") { coat = OtomeArt.Hex("242428"); shirt = OtomeArt.Hex("1A181C"); legs = OtomeArt.Hex("2A2A2E"); }
+            if (actorId == "D") { coat = OtomeArt.Hex("2A2832"); shirt = OtomeArt.Hex("1A1820"); hair = OtomeArt.Hex("2A2438"); }
+            if (actorId == "BARTENDER") { coat = OtomeArt.Hex("161414"); shirt = OtomeArt.Hex("141212"); legs = OtomeArt.Hex("1A1616"); boots = OtomeArt.Hex("121010"); }
+            if (actorId == "OWNER") { coat = OtomeArt.Hex("161416"); shirt = OtomeArt.Hex("1A1416"); legs = OtomeArt.Hex("161416"); }
+            if (actorId == "USER") { coat = OtomeArt.Hex("4E1824"); shirt = OtomeArt.Hex("4E1824"); legs = OtomeArt.Hex("3A3A42"); boots = OtomeArt.Hex("3A2418"); }
+        }
+
+        private static void Glasses(Transform head, Color silver)
+        {
+            if (!head) return;
+            Rim("lens L", new Vector3(-.078f, .2f, .178f), head, silver);
+            Rim("lens R", new Vector3(.078f, .2f, .178f), head, silver);
+            Add("bridge", new Vector3(0, .2f, .182f), new Vector3(.04f, .012f, .012f), silver, .75f, .85f, head);
+            Add("arm L", new Vector3(-.12f, .198f, .08f), new Vector3(.01f, .01f, .16f), silver, .75f, .85f, head);
+            Add("arm R", new Vector3(.12f, .198f, .08f), new Vector3(.01f, .01f, .16f), silver, .75f, .85f, head);
+        }
+
+        private static void Rim(string name, Vector3 local, Transform parent, Color silver)
+        {
+            var ring = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            ring.name = name;
+            ring.transform.SetParent(parent, false);
+            ring.transform.localPosition = local;
+            ring.transform.localRotation = Quaternion.Euler(90, 0, 0);
+            ring.transform.localScale = new Vector3(.07f, .005f, .07f);
+            Object.Destroy(ring.GetComponent<Collider>());
+            Finish(ring.GetComponent<Renderer>(), silver, .75f, .85f);
+            Add(name + " glass", local + new Vector3(0, 0, .004f), new Vector3(.058f, .004f, .058f), OtomeArt.Hex("2A3038") * new Color(1, 1, 1, .55f), .8f, .1f, parent);
+        }
+
+        private static void Paint(GameObject root, string name, Color color, float smoothness, float metallic = 0)
+        {
+            Each(root, name, item =>
+            {
+                var body = item.GetComponent<Renderer>();
+                if (!body) return;
+                body.enabled = true;
+                Finish(body, color, smoothness, metallic);
+            });
+        }
+
+        private static void Hide(GameObject root, string name)
+        {
+            Each(root, name, item =>
+            {
+                var body = item.GetComponent<Renderer>();
+                if (body) body.enabled = false;
+            });
+        }
+
+        private static void Each(GameObject root, string name, System.Action<Transform> use)
+        {
+            foreach (var item in root.GetComponentsInChildren<Transform>(true))
+                if (item.name == name) use(item);
+        }
+
+        private static Transform Child(GameObject root, string name)
+        {
+            foreach (var item in root.GetComponentsInChildren<Transform>(true))
+                if (item.name == name) return item;
+            return null;
+        }
+
+        private static void Add(string name, Vector3 local, Vector3 scale, Color color, float smoothness, float metallic, Transform parent)
+        {
+            if (!parent) return;
+            var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            go.name = name;
+            go.transform.SetParent(parent, false);
+            go.transform.localPosition = local;
+            go.transform.localScale = scale;
+            Object.Destroy(go.GetComponent<Collider>());
+            Finish(go.GetComponent<Renderer>(), color, smoothness, metallic);
+        }
+
+        private static void Finish(Renderer body, Color color, float smoothness, float metallic)
+        {
+            if (!body) return;
+            body.sharedMaterial = OtomeArt.Cloth(color, smoothness, metallic);
+            body.shadowCastingMode = ShadowCastingMode.On;
         }
     }
 }

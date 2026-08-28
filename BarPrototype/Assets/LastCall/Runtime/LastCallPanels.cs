@@ -55,7 +55,7 @@ namespace LastCall
         }
         private void ScrollText(Transform body,string value,float y=84,float height=367)
         {
-            var viewport=Panel("Scroll",body,28,y,684,height,new Color(.03f,.06f,.063f));
+            var viewport=Panel("Scroll",body,28,y,684,height,new Color(.06f,.06f,.08f));
             viewport.gameObject.AddComponent<RectMask2D>();
             var scroll=viewport.gameObject.AddComponent<ScrollRect>();
             var content=Box("Content",viewport,0,0,658,100);

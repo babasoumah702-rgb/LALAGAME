@@ -45,7 +45,10 @@ export class Engine {
     a.route=this.navigation.path(a,p);a.routeVersion=(a.routeVersion??0)+1;a.destination=id||this.zone(p).id;a.animation=a.route.length?'walk':'idle';
     return a.route.length>0;
   }
-  near(a:Actor,t:Actor){const dx=a.x-t.x,dz=a.z-t.z,len=Math.hypot(dx,dz)||1;return this.navigation.nearest({x:t.x+dx/len*.95,z:t.z+dz/len*.95});}
+  near(a:Actor,t:Actor){
+    const rad=t.yaw*Math.PI/180;
+    return this.navigation.nearest({x:t.x+Math.sin(rad)*1.05,z:t.z+Math.cos(rad)*1.05});
+  }
   command(c:Command){return handleCommand(this,c);}
   advance(seconds:number){const w=this.world;if(w.status!=='playing'||w.paused||this.busy)return;w.elapsed=Math.min(this.scenario.duration,w.elapsed+clamp(seconds,0,2));runBeats(this);
     for(const a of w.actors){if(!aActive(a)||a.route.length||a.nextAction>w.elapsed)continue;a.nextAction=w.elapsed+25+this.random()*20;

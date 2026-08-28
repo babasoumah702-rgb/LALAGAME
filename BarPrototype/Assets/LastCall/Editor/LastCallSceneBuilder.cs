@@ -127,4 +127,36 @@ namespace LastCall.Editor
                 CopyTree(directory,Path.Combine(destination,Path.GetFileName(directory)));
         }
     }
+
+    [InitializeOnLoad]
+    static class CastModelHook
+    {
+        static CastModelHook()
+        {
+            CastModel.Loader = id =>
+            {
+                var folder = "Assets/LastCall/Characters/" + id;
+                if (!AssetDatabase.IsValidFolder(folder)) return null;
+                foreach (var guid in AssetDatabase.FindAssets("t:Model", new[] { folder }))
+                {
+                    var path = AssetDatabase.GUIDToAssetPath(guid);
+                    if (path.EndsWith(".fbx", StringComparison.OrdinalIgnoreCase))
+                        return AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                }
+                return null;
+            };
+        }
+    }
+
+    class CastTextureImport : AssetPostprocessor
+    {
+        void OnPreprocessTexture()
+        {
+            if (assetPath.IndexOf("/LastCall/Characters/", StringComparison.OrdinalIgnoreCase) < 0) return;
+            if (assetPath.IndexOf("_normal.", StringComparison.OrdinalIgnoreCase) < 0) return;
+            var importer = (TextureImporter)assetImporter;
+            importer.textureType = TextureImporterType.NormalMap;
+            importer.sRGBTexture = false;
+        }
+    }
 }

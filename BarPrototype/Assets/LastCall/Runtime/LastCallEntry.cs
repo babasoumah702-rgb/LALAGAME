@@ -1,5 +1,6 @@
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace LastCall
 {
@@ -9,14 +10,26 @@ namespace LastCall
         {
             Clear(root);
             entryVisible=true;
-            entryPanel=Panel("Entry",root,0,0,Width,Height,new Color(.035f,.065f,.07f,.94f));
+            entryPanel=Box("Entry",root,0,0,Width,Height);
             Fill(entryPanel);
+            var plate=OtomeArt.Bar();
+            if(plate)
+            {
+                var photo=Box("Painting",entryPanel,0,0,Width,Height);
+                Fill(photo);
+                var image=photo.gameObject.AddComponent<RawImage>();
+                image.texture=plate;
+                image.color=Color.white;
+                image.raycastTarget=false;
+            }
+            var veil=Panel("Veil",entryPanel,0,0,Width,Height,new Color(.06f,.06f,.08f,plate?0.48f:0.94f));
+            Fill(veil);
             float left=(Width-760)/2;
             var form=Panel("Arrival",entryPanel,left,55,760,610,ink);
             Panel("Brass",form,0,0,4,610,gold);
-            Label(form,"LALAGAME  /  LAST CALL",28,22,700,52,34);
+            Label(form,"LALAGAME  /  LA LA LAND",28,22,700,52,34);
             Label(form,"闭店前最后一局",30,78,650,34,23);
-            Label(form,"你与 A 是长期伴侣，与 B 有未定义的吸引；C 属于过去。\n今晚以什么方式来店里，不会抹掉你们的历史。",30,119,700,60,17,muted);
+            Label(form,"今晚，你带着怎样的自己来到这里？可跳过。\n门里面的夜已经开始。第三杯还在桌上，椅子是空的。",30,119,700,60,17,muted);
             var config=Client.Bootstrap;
             if(config==null)
             {

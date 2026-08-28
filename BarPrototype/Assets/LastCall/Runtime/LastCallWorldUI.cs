@@ -19,7 +19,7 @@ namespace LastCall
             Label(root,"闭店前最后一局 · 虚构关系体验",26,57,430,24,14,muted);
             clockText=Label(root,"",Width-535,20,180,34,25,gold);
             modeText=Label(root,"",24,85,Width-385,25,13,muted);
-            var feed=Panel("What you perceive",root,22,Height-151,Width-372,93,new Color(.035f,.065f,.068f,.93f));
+            var feed=Panel("What you perceive",root,22,Height-151,Width-372,93,new Color(.08f,.08f,.1f,.92f));
             feedText=Label(feed,"",12,5,Width-398,82,15);
             feedText.alignment=TextAnchor.UpperLeft;
             ActionButton(root,"观察",22,Height-47,88,34,()=>Client.Send(new CommandDto{type="observe"}));
@@ -27,7 +27,7 @@ namespace LastCall
             ActionButton(root,"线索册",221,Height-47,95,34,ShowNotes);
             ActionButton(root,"牌局",324,Height-47,90,34,ShowParty);
             ActionButton(root,"暂停 / 存档",422,Height-47,135,34,()=>Pause(true));
-            Label(root,"WASD 移动   E 互动   走近推近 · 走动拉远 · 换场切镜",575,Height-46,Width-935,34,12,muted);
+            Label(root,"Q/C 左右转头   R/F 上下   按住右键也可转   WASD 移动   E 互动",575,Height-46,Width-935,34,12,muted);
             toastText=Label(root,"",24,Height-188,Width-380,32,16,gold);
             rightPanel=Panel("Social moves",root,Width-330,0,330,Height,ink);
             Panel("Edge",rightPanel,0,0,2,Height,gold);
