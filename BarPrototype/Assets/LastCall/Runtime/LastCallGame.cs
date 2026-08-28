@@ -360,10 +360,11 @@ namespace LastCall
             RenameSign();
             Mural(root);
             Motifs(root);
-            RenderSettings.ambientSkyColor = OtomeArt.Hex("C8D0D8") * .38f;
-            RenderSettings.ambientEquatorColor = OtomeArt.Hex("5A6068") * .45f;
-            RenderSettings.ambientGroundColor = OtomeArt.Hex("101214") * .55f;
-            if (Camera.main) Camera.main.backgroundColor = OtomeArt.Hex("0A0C10");
+            RenderSettings.ambientSkyColor = OtomeArt.Hex("D4DAE2") * .72f;
+            RenderSettings.ambientEquatorColor = OtomeArt.Hex("7A828C") * .7f;
+            RenderSettings.ambientGroundColor = OtomeArt.Hex("1A1C20") * .7f;
+            RenderSettings.ambientIntensity = 1.15f;
+            if (Camera.main) Camera.main.backgroundColor = OtomeArt.Hex("141820");
         }
 
         private static void RecolorRoom()
@@ -399,13 +400,13 @@ namespace LastCall
             {
                 if (light.type == LightType.Directional)
                 {
-                    light.color = OtomeArt.Hex("E4E8F0");
-                    light.intensity = .92f;
+                    light.color = OtomeArt.Hex("EEF2F6");
+                    light.intensity = 1.28f;
                 }
                 else
                 {
-                    light.color = OtomeArt.Hex("C8D4DE");
-                    light.intensity = Mathf.Max(.75f, light.intensity * .8f);
+                    light.color = OtomeArt.Hex("D8DEE6");
+                    light.intensity = Mathf.Max(1.15f, light.intensity * 1.15f);
                 }
             }
         }
