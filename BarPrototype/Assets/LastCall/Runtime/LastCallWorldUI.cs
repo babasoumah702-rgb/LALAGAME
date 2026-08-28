@@ -14,8 +14,8 @@ namespace LastCall
             Clear(root);
             expression=null;pausePanel=null;notesPanel=null;
             size=new Vector2(Width,Height);
-            Camera.main.rect=new Rect(0,.18f,(Width-330)/Width,.72f);
-            Label(root,"LAST CALL",24,14,300,40,30);
+            Camera.main.rect=new Rect(0,0,(Width-330)/Width,1);
+            Label(root,"LA LA LAND",24,14,300,40,30);
             Label(root,"闭店前最后一局 · 虚构关系体验",26,57,430,24,14,muted);
             clockText=Label(root,"",Width-535,20,180,34,25,gold);
             modeText=Label(root,"",24,85,Width-385,25,13,muted);
@@ -27,7 +27,7 @@ namespace LastCall
             ActionButton(root,"线索册",221,Height-47,95,34,ShowNotes);
             ActionButton(root,"牌局",324,Height-47,90,34,ShowParty);
             ActionButton(root,"暂停 / 存档",422,Height-47,135,34,()=>Pause(true));
-            Label(root,"WASD / 方向键  移动   SHIFT  快走   E  互动",575,Height-46,Width-935,34,12,muted);
+            Label(root,"WASD 移动   E 互动   走近推近 · 走动拉远 · 换场切镜",575,Height-46,Width-935,34,12,muted);
             toastText=Label(root,"",24,Height-188,Width-380,32,16,gold);
             rightPanel=Panel("Social moves",root,Width-330,0,330,Height,ink);
             Panel("Edge",rightPanel,0,0,2,Height,gold);

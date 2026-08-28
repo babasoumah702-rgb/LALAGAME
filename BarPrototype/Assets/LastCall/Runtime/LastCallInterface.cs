@@ -12,6 +12,8 @@ namespace LastCall
     {
         public LastCallGame Game;
         public bool Blocking => entryVisible || pauseVisible || notesVisible || (expression && expression.isFocused);
+        public string FocusId => selected;
+        public bool Talking => expression && expression.isFocused;
         private RectTransform root, entryPanel, pausePanel, notesPanel, rightPanel;
         private Text clockText, modeText, feedText, targetText, cardText, toastText, roleDetail;
         private InputField expression;
