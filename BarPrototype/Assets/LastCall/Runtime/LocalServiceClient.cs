@@ -50,10 +50,10 @@ namespace LastCall
             var serverRoot=Application.isEditor
                 ? Path.GetFullPath(Path.Combine(Application.dataPath,"../Server"))
                 : Path.GetFullPath(Path.Combine(Application.dataPath,"../Server"));
-            var node=Path.Combine(serverRoot,"node.exe");
-            if(!File.Exists(node)&&Application.isEditor)node=@"D:\node.exe";
+            var node=FindNode(serverRoot);
             var script=Path.Combine(serverRoot,"dist/server.js");
-            if(!File.Exists(script)||!File.Exists(node)){Fail("缺少本地后端或 Node 运行时。请使用完整运行目录。");yield break;}
+            if(!File.Exists(script)){Fail("缺少本地后端。请在 BarPrototype/Server 执行 npm ci 和 npm run build。");yield break;}
+            if(string.IsNullOrEmpty(node)||!File.Exists(node)){Fail("找不到 Node 运行时。请安装 Node 24，或把 node 放到 Server 目录。");yield break;}
             token=Guid.NewGuid().ToString("N")+Guid.NewGuid().ToString("N");
             var startInfo=new ProcessStartInfo(node,"\""+script+"\" --managed")
             {
@@ -61,6 +61,7 @@ namespace LastCall
                 WindowStyle=ProcessWindowStyle.Hidden,RedirectStandardInput=true,
                 RedirectStandardOutput=true,RedirectStandardError=true
             };
+            startInfo.EnvironmentVariables["PATH"]="/opt/homebrew/bin:/usr/local/bin:"+(startInfo.EnvironmentVariables["PATH"]??"");
             startInfo.EnvironmentVariables["LASTCALL_SESSION_TOKEN"]=token;
             if(Array.IndexOf(Environment.GetCommandLineArgs(),"-lastCallVerify")>=0)
             {
@@ -104,6 +105,28 @@ namespace LastCall
             }
         }
         public void Fail(string text){Status=text;UnityEngine.Debug.LogWarning("LASTCALL_STATUS "+text);Error?.Invoke(text);Changed?.Invoke();}
+        private static string FindNode(string serverRoot)
+        {
+            foreach(var candidate in NodeCandidates(serverRoot))
+                if(!string.IsNullOrEmpty(candidate)&&File.Exists(candidate))return candidate;
+            return null;
+        }
+        private static IEnumerable<string> NodeCandidates(string serverRoot)
+        {
+            yield return Path.Combine(serverRoot,"node.exe");
+            yield return Path.Combine(serverRoot,"node");
+            if(!Application.isEditor)yield break;
+            yield return @"D:\node.exe";
+            var file=Application.platform==RuntimePlatform.WindowsEditor?"node.exe":"node";
+            foreach(var dir in (Environment.GetEnvironmentVariable("PATH")??"").Split(Path.PathSeparator))
+                if(!string.IsNullOrEmpty(dir))yield return Path.Combine(dir,file);
+            yield return "/opt/homebrew/bin/node";
+            yield return "/usr/local/bin/node";
+            var nvm=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),".nvm","versions","node");
+            if(!Directory.Exists(nvm))yield break;
+            foreach(var version in Directory.GetDirectories(nvm))
+                yield return Path.Combine(version,"bin","node");
+        }
         private void AcceptState(StateDto state)
         {
             if(State==null||State.sessionId!=state.sessionId)visibleHistory.Clear();
