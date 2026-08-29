@@ -1,6 +1,10 @@
-# 琥珀酒馆 / The Amber Room
+# BarPrototype｜Last Call 与琥珀酒馆
 
-新增关系体验游戏 **LALAGAME / Last Call MVP**：启动 Builds/LastCall-Windows/LastCall.exe，说明见 [LASTCALL_启动说明.md](LASTCALL_启动说明.md)。以下内容仍记录保留的原版漫游。
+当前主线是第一人称 AI 社交叙事 **LALAGAME / Last Call**，主场景为 `Assets/Scenes/LastCall.unity`。它已经串联 Scene 0–6，并加入三页新游戏入口、观察／移动／互动两层菜单、章节下一步、定向 AI 回复、A–D Humanoid 动作、头顶气泡、存档和屋顶收尾。
+
+Windows 最终运行目录仍在收尾，当前 `Builds/Scene0-Windows` 只是候选构建源，不能直接视为正式交付。剩余测试与打包事项见[未完成工作_前端交互改造.md](未完成工作_前端交互改造.md)。按要求最终只交付完整 exe 运行目录，不生成 ZIP。
+
+以下内容主要记录仍保留的原版“琥珀酒馆”漫游。
 
 可玩的固定斜俯视、低多边形 2.5D 酒吧漫游原型。场景、角色 Prefab、材质及 Windows 程序均已生成。
 
@@ -20,7 +24,7 @@
 本工程使用用户已安装并激活的**团结引擎 2022.3.62t14**（revision `1f04f7aba499`），并非最初规划的 Unity 6.3。请优先用此版本重新打开，跨版本升级前先备份。
 
 - 编辑器：`D:\unity cn\Editor\Tuanjie.exe`。
-- 工程目录：`D:\工作\项目\黑客松\BarPrototype`。
+- 工程目录：`D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype`。
 - 在团结 Hub 中添加现有工程，打开 `Assets/Scenes/AmberRoom.unity`，点击 Play。
 - 场景内 Player 的 PlayerMotor 可调整速度和转向；Main Camera 的 FixedRoomCamera 可调整构图参数。
 - 主角源资产为 `Assets/Prefabs/Player.prefab`。场景家具、灯光、材质均可直接编辑。

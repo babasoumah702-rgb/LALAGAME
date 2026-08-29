@@ -1,44 +1,79 @@
-# LALAGAME
-LALA game
+# LALAGAME · Last Call
 
-## Last Call · 关系体验 MVP
+第一人称 AI 社交叙事原型。玩家从电梯进入深夜酒吧，与 A–D 及调酒师自由观察、移动和交流，经历第三杯、动态社交、塔罗、走廊、断电散场与屋顶收尾。
 
-新增可从入场、交流、设界限玩到离场回看的单机关系体验。保留原琥珀酒馆漫游场景。
+> 当前仓库保存源码、场景、模型、剧情文档与验收材料。Windows 最终交付目录仍在收尾，详见[未完成工作](BarPrototype/未完成工作_前端交互改造.md)。旧版 Release 不代表当前源码状态。
 
-![Last Call 实机截图](BarPrototype/Verification/lastcall-late-night.png)
+## 当前版本
 
-- [Windows 完整运行包](https://github.com/babasoumah702-rgb/LALAGAME/releases/tag/lastcall-v0.2.0)：解压后运行 LastCall.exe，无需安装开发工具。
-- [中文启动说明与演示路线](BarPrototype/LASTCALL_启动说明.md)
-- [测试报告](BarPrototype/Verification/LASTCALL_测试报告.md)
-- [本地后端架构](BarPrototype/Server/ARCHITECTURE.md)
-- 编辑工程：团结引擎 2022.3.62t14，打开 BarPrototype/Assets/Scenes/LastCall.unity。
-- 后端：Node 24.12.x，在 BarPrototype/Server 中执行 npm ci 和 npm run build。
+- **Scene 0–6 连续流程**：电梯入场、第三杯、动态社交、Social Tarot、走廊私聊、夜深断电、楼梯与屋顶开放尾声。
+- **三页新游戏入口**：身份、今晚目的、聊天风格；每页只回答一个问题，可返回改选或跳过。
+- **统一交互语言**：剧情一级入口固定为 **观察 / 移动 / 互动**，线索册与暂停／存档位于独立系统区。
+- **章节下一步**：每章显示当前目标和推进方式；自由对话、AI 失败、角色沉默或纯旁观不会被当作唯一通关条件。
+- **定向 AI 对话**：玩家选择谁就由谁回应；其他角色只能按实际距离和遮挡旁听，不自动插嘴。
+- **来源与重试**：对白记录生成来源；在线失败保留玩家原话并允许重试，不用固定规则句冒充 AI。
+- **A–D Humanoid 动作**：行走、转身、交谈、倾听、坐立与剧情手势使用真实骨骼；头部、双手用于气泡和道具锚点。
+- **第一人称表现**：NPC 对白在头顶气泡显示，玩家发言位于画面下方；交谈双方自然面对彼此。
+- **信息边界**：姓名、私聊、隔墙／跨层声音、回忆与回顾内容按玩家和角色实际感知过滤。
 
-五种入口、A/B/C/D 条件关系内容、独立感知与记忆、12 张社交卡、中文输入、暂停、存档和回看。
-支持兼容模型网关和明确标识的离线规则模式。API 密钥、玩家存档及私人附件不在仓库或运行包中；离线游玩不需要密钥。
+## 操作
 
-验证：41 项后端测试、14 项编辑器测试通过；离线续玩到自然闭店 12 项实机检查通过，最终在线窗口 9 项检查通过。详细范围与未覆盖项见测试报告。
+- `WASD`：移动。
+- 按住右键或使用画面提示键：转动视角。
+- 鼠标点击：选择人物、一级菜单、二级动作与系统功能。
+- 文字交流：选择 **互动 → 文字交流**，输入内容后发送。
+- `Esc`：关闭输入／面板或打开暂停菜单。
 
-## 琥珀酒馆 / The Amber Room
+游戏运行时必须保留完整目录，不能只复制 `LastCall.exe`。
 
-固定斜俯视、低多边形 2.5D 酒吧漫游原型。WASD / 方向键移动，Shift 快走，Esc 暂停 / 继续。
+## 开发环境
 
-![酒吧实机截图](BarPrototype/Verification/bar-1920x1080.png)
+- 团结引擎 `2022.3.62t14`，revision `1f04f7aba499`。
+- Node.js `24.12.x`。
+- Windows x64 / Mono。
+- 主场景：`BarPrototype/Assets/Scenes/LastCall.unity`。
 
-- [工程与中文说明](BarPrototype/README.md)
-- [测试报告与验收边界](BarPrototype/Verification/STATUS.md)
-- 编辑器版本：团结引擎 **2022.3.62t14**；URP **14.2.0-t1**。
-- 在团结 Hub 中添加仓库内的 `BarPrototype` 文件夹，打开 `Assets/Scenes/AmberRoom.unity`。
-- 编辑器菜单 `Amber Room > 2 - Build Windows game` 可生成 Windows 程序。
-
-仓库包含源代码、场景、角色 Prefab、材质、截图及测试结果，不含 Library 缓存、本地日志和 Windows 二进制构建产物。
-
-在仓库根目录也可通过 PowerShell 运行重建脚本；路径与本机不同时指定编辑器位置：
+首次运行后端：
 
 ```powershell
-.\Tools\Build-Bar.ps1 -Action Test -EditorPath 'D:\unity cn\Editor\Tuanjie.exe'
-.\Tools\Build-Bar.ps1 -Action Build -EditorPath 'D:\unity cn\Editor\Tuanjie.exe'
-.\Tools\Build-Bar.ps1 -Action Smoke
+cd .\BarPrototype\Server
+npm ci
+npm run build
 ```
 
-已有场景可直接编辑，无需执行 Prepare。Prepare 会覆盖自动生成资产，手工修改后请先备份。
+在团结 Hub 中添加 `BarPrototype`，使用对应版本打开主场景即可编辑或 Play。不要同时用两个编辑器打开同一工程。
+
+## 测试与 Windows 构建
+
+```powershell
+# 服务端
+cd .\BarPrototype\Server
+npm test
+
+# 回到仓库根目录后运行编辑器测试或构建
+cd ..\..
+.\Tools\Build-Scene0.ps1 -Action Test
+.\Tools\Build-Scene0.ps1 -Action Build
+```
+
+可见窗口整晚验收由 `Tools/Verify-FullNight-Windows.ps1` 执行。最终仅生成 Windows 完整运行目录，不生成 ZIP。
+
+当前代码曾完成服务端 153 项、编辑器 28 项以及整晚 57 项可见流程检查；最后一次交互保护修改后的完整复跑尚未全部完成，因此交付前仍须按[未完成工作文档](BarPrototype/未完成工作_前端交互改造.md)重新确认。
+
+## 工程结构
+
+- `BarPrototype/Assets/LastCall`：角色、动作、Scene 0 资产与 Last Call 客户端代码。
+- `BarPrototype/Assets/Scenes/LastCall.unity`：当前连续夜晚主场景。
+- `BarPrototype/Server`：本地权威状态、AI 请求、角色感知、剧情推进、存档与测试。
+- `BarPrototype/Design`：Scene 0–6 原始剧情与设计材料。
+- `BarPrototype/Verification`：测试报告、截图与诊断材料；日志和本地运行数据不纳入交付。
+- `Tools`：构建、可见窗口验收、白名单打包与审计脚本。
+- `新置换模型素材库`：A–D 原始置换模型素材。
+
+## 隐私与模型配置
+
+在线模型配置只从本机私有配置读取。仓库与 Windows 运行目录不得包含 API 密钥、玩家存档、数据库、日志或私人附件。没有模型配置时，玩家可以明确选择离线规则模式；程序不会把规则台词标成 AI 回复。
+
+## 保留的旧原型
+
+仓库仍保留固定斜俯视的“琥珀酒馆 / The Amber Room”原型。旧场景与构建方式见 [BarPrototype/README.md](BarPrototype/README.md)，当前开发主线以 `LastCall.unity` 为准。
