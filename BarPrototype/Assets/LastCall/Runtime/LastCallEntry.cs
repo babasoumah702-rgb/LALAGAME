@@ -41,12 +41,12 @@ namespace LastCall
         private void BuildEntryQuestion(Transform form,BootstrapDto config)
         {
             string title=entryPage==1?"今晚以什么身份来？":entryPage==2?"今晚想做什么？":"喜欢什么样的聊天风格？";
-            Label(form,"新游戏  "+entryPage+" / 3",34,86,300,28,15,gold);Label(form,title,34,126,540,50,29);
+            Label(form,"新游戏  "+entryPage+" / 3",34,86,300,28,15,gold);var titleLabel=Label(form,title,0,126,900,50,29);titleLabel.alignment=TextAnchor.MiddleCenter;
             Label(form,"选择一项后，点击右下角「下一步」。",34,178,540,30,14,muted);
             var labels=entryPage==1?config.roles.Select(x=>x.name).ToArray():entryPage==2?config.intents.Select(x=>x.name).ToArray():config.styles.Select(x=>x.name).ToArray();
             int current=entryPage==1?entryRole:entryPage==2?entryIntent:entryStyle;
-            // 右侧竖排侧边栏：三个页面共用同一套布局，样式零差异。
-            const float sx=580,sy=230,sw=286,sh=46,gap=20;
+            // 竖排选项列，水平居中于表单：三页共用同一套布局，样式零差异。
+            const float sx=307,sy=230,sw=286,sh=46,gap=20;
             for(int i=0;i<labels.Length;i++)
             {
                 int index=i;var b=ActionButton(form,labels[i],sx,sy+i*(sh+gap),sw,sh,()=>SelectEntryAnswer(entryPage,index));
