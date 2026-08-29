@@ -10,7 +10,7 @@ import WebSocket from 'ws';
 test('HTTP ownership, WebSocket commands and reconnect',async()=>{
   const root=dirname(dirname(dirname(fileURLToPath(import.meta.url))));
   const child=spawn(process.execPath,[join(root,'dist/server.js')],{
-    env:{...process.env,LASTCALL_SESSION_TOKEN:'integration-token',LASTCALL_DATA_DIR:mkdtempSync(join(tmpdir(),'lastcall-test-'))},
+    env:{...process.env,LASTCALL_SESSION_TOKEN:'integration-token',LASTCALL_DATA_DIR:mkdtempSync(join(tmpdir(),'lastcall-test-')),LASTCALL_CONFIG_DIR:mkdtempSync(join(tmpdir(),'lastcall-test-config-'))},
     stdio:['pipe','pipe','pipe']
   });
   const port=await new Promise<number>((resolve,reject)=>{
@@ -26,7 +26,7 @@ test('HTTP ownership, WebSocket commands and reconnect',async()=>{
   try{
     const denied=await fetch(base+'/api/state');
     assert.equal(denied.status,401);
-    const opened=await fetch(base+'/api/session',{method:'POST',headers,body:JSON.stringify({playerId:'owner',role:'friend_guest',online:false})});
+    const opened=await fetch(base+'/api/session',{method:'POST',headers,body:JSON.stringify({playerId:'owner',role:'passerby',online:false})});
     const session=await opened.json() as any;
     assert.equal(session.state.mode,'offline');
     socket=new WebSocket(base.replace('http:','ws:')+'/api/events',{headers});

@@ -11,7 +11,7 @@ namespace LastCall
     public sealed partial class LastCallInterface : MonoBehaviour
     {
         public LastCallGame Game;
-        public bool Blocking => entryVisible || pauseVisible || notesVisible || (expression && expression.isFocused);
+        public bool Blocking => entryVisible || pauseVisible || notesVisible || introInputVisible || (expression && expression.isFocused);
         public string FocusId => selected;
         public bool Talking => expression && expression.isFocused;
         private RectTransform root, entryPanel, pausePanel, notesPanel, rightPanel;
@@ -20,7 +20,7 @@ namespace LastCall
         private Button sendButton;
         private Button[] cardButtons;
         private bool entryVisible=true,pauseVisible,notesVisible,builtEntry,editing,refresh=true,online=true;
-        private string selected="B",cardId="approach",viewSession="",lastActors="";
+        private string selected="B",cardId="approach",viewSession="",lastActors="",sceneMode="";
         private int roleIndex=2,intentIndex,styleIndex,lastEvent=-1;
         private float toastUntil;
         private Vector2 size;
@@ -51,35 +51,46 @@ namespace LastCall
             }
             Client.Changed+=()=>refresh=true;
             Client.Error+=Toast;
+            Client.Acknowledged+=CardAcknowledged;
+            Client.Rejected+=CardRejected;
             Canvas.ForceUpdateCanvases();
             BuildEntry();
         }
         private void Update()
         {
+            if(root)root.GetComponent<Canvas>().enabled=!NightPresentation.CinematicActive;
             if(!root)return;
             if(entryVisible&&!Client.Ready&&entryStatus!=Client.Status){entryStatus=Client.Status;BuildEntry();}
             if(Client.Ready&&!builtEntry&&Client.State==null){BuildEntry();builtEntry=true;}
             if(Client.State!=null&&Client.State.sessionId!=viewSession)
             {
                 viewSession=Client.State.sessionId;entryVisible=false;pauseVisible=Client.State.paused;
+                queuedCard=sentCard=null;approachId=null;partyStarting=false;
                 notesVisible=false;lastEvent=-1;BuildWorld();
                 if(pauseVisible)ShowPause();
             }
             if(Client.State!=null&&!entryVisible)
             {
+                if(Client.State.intro?.phase=="elevator"){UpdateIntroUI();return;}
+                if(introUIVisible){introUIVisible=false;BuildWorld();}
+                // Scene chapters hand off to each other without the actor list changing, so a refresh
+                // would never rebuild the frame. Detect the chapter boundary and rebuild once.
+                string mode=CurrentSceneMode();
+                if(mode!=sceneMode&&!cardsExpanded){sceneMode=mode;BuildWorld();}
                 if(Keyboard.current!=null&&Keyboard.current.escapeKey.wasPressedThisFrame)
                 {
                     if(expression&&expression.isFocused)EventSystem.current.SetSelectedGameObject(null);
                     else if(notesVisible)CloseNotes();
                     else Pause(!pauseVisible);
                 }
-                bool isEditing=expression&&expression.isFocused;
+                bool isEditing=expression&&expression.isFocused&&!FullNightVerification.Running&&!SceneOneVerification.Running&&!SceneTwoThreeVerification.Running;
                 if(editing!=isEditing)
                 {
                     editing=isEditing;
                     Client.Send(new CommandDto{type="pause",paused=editing||pauseVisible||notesVisible});
                 }
-                if(Client.State.status=="ended"&&!notesVisible){ShowReflection();notesVisible=true;}
+                if(Client.State.status=="ended"&&!notesVisible&&!NightPresentation.CinematicActive){ShowReflection();notesVisible=true;}
+                TickCardFlow();
                 if(refresh){RefreshWorld();refresh=false;}
             }
             if(toastText&&Time.unscaledTime>toastUntil)toastText.text="";
@@ -87,8 +98,20 @@ namespace LastCall
             if(size!=current&&Client.State!=null&&!entryVisible&&!pauseVisible&&!notesVisible)
             {size=current;BuildWorld();refresh=true;}
         }
+        private string CurrentSceneMode()
+        {
+            var state=Client?.State;
+            if(state==null)return "";
+            if(state.intro?.phase=="elevator")return "intro";
+            if(state.late!=null)return "night"+state.late.chapter;
+            if(state.scene3!=null)return "scene3";
+            if(state.scene2!=null)return "scene2";
+            if(state.scene1!=null)return "scene1";
+            return "world";
+        }
         public void Select(string id)
         {
+            if(selected!=id)CancelQueuedCard();
             selected=id;
             RefreshWorld();
         }
@@ -109,6 +132,7 @@ namespace LastCall
         private void OnDestroy()
         {
             if(Client)Client.Error-=Toast;
+            if(Client){Client.Acknowledged-=CardAcknowledged;Client.Rejected-=CardRejected;}
             if(SharedFont)Destroy(SharedFont);
         }
     }

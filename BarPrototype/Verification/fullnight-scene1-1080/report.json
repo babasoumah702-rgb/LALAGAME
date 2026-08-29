@@ -1,0 +1,140 @@
+{
+    "passed": false,
+    "width": 1920,
+    "height": 1080,
+    "checks": [
+        {
+            "name": "service_ready",
+            "passed": true
+        },
+        {
+            "name": "visible_window_focus",
+            "passed": false
+        },
+        {
+            "name": "rendered_entry",
+            "passed": true
+        },
+        {
+            "name": "entry_landing_has_three_step_path",
+            "passed": true
+        },
+        {
+            "name": "entry_page1_all_answers",
+            "passed": true
+        },
+        {
+            "name": "entry_back_keeps_role",
+            "passed": true
+        },
+        {
+            "name": "entry_page2_all_answers",
+            "passed": true
+        },
+        {
+            "name": "entry_back_keeps_intent",
+            "passed": true
+        },
+        {
+            "name": "entry_page3_all_answers",
+            "passed": true
+        },
+        {
+            "name": "scene0_handoff",
+            "passed": true
+        },
+        {
+            "name": "light_ui",
+            "passed": true
+        },
+        {
+            "name": "humanoid_A",
+            "passed": true
+        },
+        {
+            "name": "humanoid_B",
+            "passed": true
+        },
+        {
+            "name": "humanoid_C",
+            "passed": true
+        },
+        {
+            "name": "a_seated_pose",
+            "passed": true
+        },
+        {
+            "name": "rendered_first-meeting",
+            "passed": true
+        },
+        {
+            "name": "rendered_a-seated",
+            "passed": true
+        },
+        {
+            "name": "legal_name_from_reply",
+            "passed": true
+        },
+        {
+            "name": "b_uses_talk_animation",
+            "passed": true
+        },
+        {
+            "name": "bubble_visible",
+            "passed": true
+        },
+        {
+            "name": "rendered_conversation",
+            "passed": true
+        },
+        {
+            "name": "player_caption_below_face",
+            "passed": true
+        },
+        {
+            "name": "npc_faces_player",
+            "passed": true
+        },
+        {
+            "name": "third_drink_delivered",
+            "passed": true
+        },
+        {
+            "name": "rendered_third-drink",
+            "passed": true
+        },
+        {
+            "name": "free_text_object_target",
+            "passed": true
+        },
+        {
+            "name": "keyboard_movement",
+            "passed": false
+        },
+        {
+            "name": "fixture_long_chinese_paginated",
+            "passed": true
+        },
+        {
+            "name": "fixture_multiple_nonoverlap",
+            "passed": true
+        },
+        {
+            "name": "rendered_bubble-fixture",
+            "passed": true
+        },
+        {
+            "name": "offscreen_bubbles_hidden",
+            "passed": true
+        },
+        {
+            "name": "occluded_bubble_hidden",
+            "passed": true
+        },
+        {
+            "name": "fixture_restores_world_time",
+            "passed": true
+        }
+    ],
+    "errors": []
+}

@@ -1,0 +1,37 @@
+{
+  "configured": true,
+  "model": "deepseek-v4-flash",
+  "passed": true,
+  "calls": 4,
+  "exchanges": [
+    {
+      "player": "今晚推开这扇门，是因为想见你。",
+      "response": "那这杯算我请。不过先坐下，别站着说这么重的话。",
+      "action": "speak",
+      "source": "ai",
+      "accepted": true
+    },
+    {
+      "player": "我想见你",
+      "response": "这话我收下了。那坐下，慢慢说，今晚我不赶时间。",
+      "action": "speak",
+      "source": "ai",
+      "accepted": true
+    },
+    {
+      "player": "不是合作，我只是想坐下来和你聊一会。",
+      "response": "行，那就不谈项目，只聊你。这杯酒我请，你慢慢说。",
+      "action": "speak",
+      "source": "ai",
+      "accepted": true
+    },
+    {
+      "player": "你叫什么名字？",
+      "response": "X。朋友都直接叫名字，你也一样就行。",
+      "action": "speak",
+      "source": "ai",
+      "accepted": true
+    }
+  ],
+  "errors": []
+}

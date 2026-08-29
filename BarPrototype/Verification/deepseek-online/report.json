@@ -1,0 +1,84 @@
+{
+    "mode": "online",
+    "device": "NVIDIA GeForce RTX 4070 Laptop GPU",
+    "messageSource": "model",
+    "width": 1280,
+    "height": 720,
+    "calls": 1,
+    "introSeconds": 7.246720790863037,
+    "averageFps": 59.994232177734378,
+    "passed": true,
+    "checks": [
+        {
+            "name": "backend_ready",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "elevator_started",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "night_clock_held",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "cast_and_privacy",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "automatic_seven_second_handoff",
+            "detail": "7.247 seconds",
+            "passed": true
+        },
+        {
+            "name": "all_models_packaged",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "open_audio_filter",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "bar_movement_restored",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "chinese_input_freezes_scene",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "private_text_stored",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "pause_freezes_progress",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "resume_preserves_checkpoint",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "focus_loss_pauses",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "resume_handoff",
+            "detail": "progress=7, paused=False, localFrozen=False",
+            "passed": true
+        }
+    ],
+    "errors": []
+}

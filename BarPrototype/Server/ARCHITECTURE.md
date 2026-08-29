@@ -14,6 +14,7 @@ The local server binds only 127.0.0.1 on a dynamic port. A fresh bearer token is
 | Module | Responsibility |
 | --- | --- |
 | config / scenarios | Validated declarative character, relationship, card, voice and beat data |
+| identity | Deterministic Context Profile extraction and identity-pack selection; per-decision brief (no model calls) |
 | world / engine | Clock, seeded random state, facts, events, jobs, lifecycle |
 | visibility | Independent hearing, sight, privacy and perception completeness |
 | navigation | Exported collision grid, A*, corner checks, reserved destinations |
@@ -52,5 +53,7 @@ Rules-mode reproduction is checked over whole event sequences, not just the firs
 ## Editing boundaries
 
 The canonical actor IDs and eight beat-effect names form the scenario contract. Change prose, goals, relationships, colors, opportunities and existing conditions through JSON; introducing new mechanics or new effect types requires code plus tests. Rebuilding scene furniture requires a fresh navigation export.
+
+Personas and identity packs are also JSON-editable declarative data: `personas` carries the four characters' invariant cores, voices and the shared 80/20 humanity rule, while `identityPacks` carries the occupational shells (`urban_capital_default` plus the domain-specific variants), their topic mix and scene-skin prose. Pack selection is a deterministic function of the player's three choice answers plus free-text background, never a model call; the raw player text never reaches a Character Agent, only a sanitised Context Profile. A mid-game revision is staged as `pendingPackRevision` and applied at the next beat boundary so established relationship state and memory survive. Adding a new identity pack or a new choice option stays in JSON; adding a new actor ID or beat effect still requires code plus tests.
 
 The three memory tiers are bounded short, relationship and long-term lists. Beliefs retain evidence provenance and uncertainty. No psychological diagnosis, good/bad ending score, actual photography, voice recorder or external multiplayer service is present.

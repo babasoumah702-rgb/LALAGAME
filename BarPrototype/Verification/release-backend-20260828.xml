@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="normal and redirected AppData processes read the same profile-private configuration" time="0.022033" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\config-path.test.js"/>
+	<testcase name="explicit config directories remain isolated and never silently import a personal key" time="0.009380" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\config-path.test.js"/>
+	<testcase name="legacy config remains readable if no stable file exists; environment override is retained" time="0.012886" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\config-path.test.js"/>
+	<testcase name="an intentionally empty stable key never falls back to a stale key from a different location" time="0.015615" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\config-path.test.js"/>
+	<testcase name="config refresh repairs a missing-key fallback save without overriding deliberate offline mode" time="1.317153" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\config-service.test.js"/>
+	<testcase name="same answers, free text and seed always resolve to the same pack" time="0.002514" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\identity.test.js"/>
+	<testcase name="an explicit choice overrides free text and is not overridden by it" time="0.000338" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\identity.test.js"/>
+	<testcase name="ambiguous or missing domain falls back to the default pack" time="0.000360" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\identity.test.js"/>
+	<testcase name="profile extracts only explicit content and never infers protected attributes" time="0.000254" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\identity.test.js"/>
+	<testcase name="every pack covers A/B/C/D and only skins real beats" time="0.000276" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\identity.test.js"/>
+	<testcase name="identity brief is compressed and carries no raw player input" time="0.000203" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\identity.test.js"/>
+	<testcase name="agent context never serializes raw player background" time="0.007527" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\identity.test.js"/>
+	<testcase name="mid-game revision defers to the next beat boundary and keeps state" time="0.012571" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\identity.test.js"/>
+	<testcase name="no background means the default pack and a runnable night" time="0.004629" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\identity.test.js"/>
+	<testcase name="Scene0 survives a real backend process restart with private text and event deduplication" time="9.094381" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\intro-service.test.js"/>
+	<testcase name="Scene 0 is opt-in; legacy initial cast and immediate third drink are unchanged" time="0.009012" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\intro.test.js"/>
+	<testcase name="intro waits for client readiness, freezes on pause, and uses a separate seven-second clock" time="0.002221" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\intro.test.js"/>
+	<testcase name="exactly one background event, different evidence for A/C, no player leak" time="0.004326" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\intro.test.js"/>
+	<testcase name="background perception respects obstruction, distance and facing" time="0.002900" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\intro.test.js"/>
+	<testcase name="phone and private input are idempotent and never become public dialogue" time="0.002100" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\intro.test.js"/>
+	<testcase name="handoff starts third drink once and prevents duplicate A/C arrivals" time="0.114418" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\intro.test.js"/>
+	<testcase name="mid-intro snapshot preserves message, checkpoint and evidence" time="0.003259" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\intro.test.js"/>
+	<testcase name="model invitation rejects leaked names and late results" time="0.001836" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\intro.test.js"/>
+	<testcase name="gateway failure is a local preset fallback, with budget counted and no world loss" time="0.033005" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\intro.test.js"/>
+	<testcase name="production geometry supports A/C perception and a continuous elevator exit" time="0.004404" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\intro.test.js"/>
+	<testcase name="next night does not replay elevator and retains the new arrival route" time="0.002050" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\intro.test.js"/>
+	<testcase name="late network result cannot replace a phone message already on screen" time="0.006578" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\intro.test.js"/>
+	<testcase name="valid JSON is insufficient; extra fields, long text and identity claims are rejected" time="0.003915" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\intro.test.js"/>
+	<testcase name="authentication failure falls back without another model or retry" time="0.048555" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\model.test.js"/>
+	<testcase name="invalid JSON is retried once and never applied" time="0.009193" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\model.test.js"/>
+	<testcase name="timeout retries count toward budget and preserve events" time="0.004718" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\model.test.js"/>
+	<testcase name="high attraction cannot override an explicit space request" time="0.003763" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\model.test.js"/>
+	<testcase name="every entry can request a party immediately: passerby" time="0.010558" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\party.test.js"/>
+	<testcase name="every entry can request a party immediately: social_guest" time="0.002272" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\party.test.js"/>
+	<testcase name="every entry can request a party immediately: friend_guest" time="0.001330" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\party.test.js"/>
+	<testcase name="every entry can request a party immediately: staff" time="0.001013" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\party.test.js"/>
+	<testcase name="every entry can request a party immediately: owner_bartender" time="0.000708" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\party.test.js"/>
+	<testcase name="opening a party is idempotent and prevents the later duplicate invitation" time="0.002344" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\party.test.js"/>
+	<testcase name="join, play, cooldown, independent response, decline and rejoin complete a real card flow" time="0.007665" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\party.test.js"/>
+	<testcase name="party consent does not bypass elevator, pause, distance, visibility or Last Call" time="0.003880" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\party.test.js"/>
+	<testcase name="a queued walk can be cancelled while waiting for a reply or while paused" time="0.003024" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\party.test.js"/>
+	<testcase name="DeepSeek uses non-thinking mode without leaking vendor parameters to other gateways" time="0.001550" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\provider.test.js"/>
+	<testcase name="both intro and character requests carry the configured DeepSeek model and JSON mode" time="0.032591" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\provider.test.js"/>
+	<testcase name="entry and finish: passerby" time="0.005460" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="entry and finish: social_guest" time="0.001309" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="entry and finish: friend_guest" time="0.000749" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="entry and finish: staff" time="0.000614" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="entry and finish: owner_bartender" time="0.000760" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="unseen character cannot read an event" time="0.002604" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="same signal creates distinct local interpretations" time="0.002451" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="private note reveals gesture, not content, to bystander" time="0.001496" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="boundary cannot be bypassed by attraction" time="0.002844" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="command idempotency, length limit and distance" time="0.002049" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="refusing cards does not stop the night" time="0.004199" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="conditional C and D entry, not unconditional spawning" time="0.025571" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="pause freezes world time" time="0.000749" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="invalid evidence and targets cannot mutate state" time="0.000555" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="delayed autonomous relay keeps causal source" time="0.001354" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="save ownership, resume and next night preserve memories" time="0.005654" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="seed reproduces rules and source logs" time="0.001723" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="player view never serializes private minds or world facts" time="0.002800" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="A star avoids obstacles and blocked corners" time="0.000969" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="model request budget forces explicit offline mode without fetch" time="0.005418" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="exhausted event action budget cannot change relationships" time="0.003083" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="old reliable command remains idempotent throughout a world" time="0.011144" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="batched position reports respect pause and finite coordinates" time="0.000694" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\runtime.test.js"/>
+	<testcase name="every configured location is reachable on the exported Unity grid" time="0.017211" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="full 720-second offline night with navigation: passerby" time="0.162192" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="full 720-second offline night with navigation: social_guest" time="0.108406" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="full 720-second offline night with navigation: friend_guest" time="0.087221" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="full 720-second offline night with navigation: staff" time="0.067105" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="full 720-second offline night with navigation: owner_bartender" time="0.066703" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="seat reservations do not allocate the same endpoint" time="0.014093" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="pending speech waits for physical arrival" time="0.001048" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="old observation actions cannot trigger D later" time="0.008158" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="decision records are owner isolated and preserved" time="0.001332" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="entry willingness adjusts invitations, not relationship history" time="0.000974" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="same seed reproduces an entire rules-mode event sequence" time="0.033612" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="alternate declarative scenario starts an independent world" time="0.000903" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\scenario.test.js"/>
+	<testcase name="HTTP ownership, WebSocket commands and reconnect" time="0.690138" classname="test" file="D:\工作\项目\黑客松\LALAGAME\LALAGAME\BarPrototype\Server\dist\tests\service.test.js"/>
+	<!-- tests 80 -->
+	<!-- suites 0 -->
+	<!-- pass 80 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 9685.9991 -->
+</testsuites>

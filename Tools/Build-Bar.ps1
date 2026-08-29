@@ -1,4 +1,4 @@
-param(
+﻿param(
     [ValidateSet('Prepare', 'Test', 'Build', 'Open', 'Smoke')]
     [string]$Action = 'Prepare',
     [string]$EditorPath = 'D:\unity cn\Editor\Tuanjie.exe'

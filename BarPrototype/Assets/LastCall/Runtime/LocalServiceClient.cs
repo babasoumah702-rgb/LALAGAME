@@ -22,8 +22,14 @@ namespace LastCall
         public string Status { get; private set; } = "正在准备本地关系世界…";
         public string PlayerId { get; private set; }
         public bool Ready { get; private set; }
+        public string BaseUrl => baseUrl;
+        public string Token => token;
+        public int PresentationEpoch { get; private set; }
+        private bool resetPresentation;
         public event Action Changed;
         public event Action<string> Error;
+        public event Action<string> Acknowledged;
+        public event Action<string,string> Rejected;
         private Process service;
         private string baseUrl, token;
         private long commandSequence;
@@ -41,7 +47,12 @@ namespace LastCall
         {
             Application.targetFrameRate = 60;
             Application.runInBackground = true;
-            PlayerId=PlayerPrefs.GetString("LastCall.PlayerId","");
+            bool nightTest=Array.IndexOf(Environment.GetCommandLineArgs(),"-fullNightVerify")>=0;
+            bool scene0Test=Array.IndexOf(Environment.GetCommandLineArgs(),"-scene0Verify")>=0;
+            bool cardTest=Array.IndexOf(Environment.GetCommandLineArgs(),"-cardPlayVerify")>=0;
+            bool sceneOneTest=Array.IndexOf(Environment.GetCommandLineArgs(),"-sceneOneVerify")>=0;
+            bool sceneTwoThreeTest=Array.IndexOf(Environment.GetCommandLineArgs(),"-sceneTwoThreeVerify")>=0;
+            PlayerId=nightTest?"full-night-verification":sceneOneTest?"scene-one-verification":cardTest?"card-play-verification":scene0Test?"scene0-verification":sceneTwoThreeTest?"scene-two-three-verification":PlayerPrefs.GetString("LastCall.PlayerId","");
             if(string.IsNullOrEmpty(PlayerId))
             {
                 PlayerId=Guid.NewGuid().ToString("N");
@@ -63,12 +74,13 @@ namespace LastCall
             };
             startInfo.EnvironmentVariables["PATH"]="/opt/homebrew/bin:/usr/local/bin:"+(startInfo.EnvironmentVariables["PATH"]??"");
             startInfo.EnvironmentVariables["LASTCALL_SESSION_TOKEN"]=token;
-            if(Array.IndexOf(Environment.GetCommandLineArgs(),"-lastCallVerify")>=0)
+            if(Array.IndexOf(Environment.GetCommandLineArgs(),"-lastCallVerify")>=0||scene0Test||cardTest||sceneOneTest||sceneTwoThreeTest||nightTest)
             {
                 var local=Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-                startInfo.EnvironmentVariables["LASTCALL_DATA_DIR"]=Path.Combine(local,"LALAGAME","Verification");
+                startInfo.EnvironmentVariables["LASTCALL_DATA_DIR"]=Path.Combine(local,"LALAGAME",nightTest?"FullNightVerification":sceneOneTest?"SceneOneVerification":cardTest?"CardPlayVerification":scene0Test?"Scene0Verification":sceneTwoThreeTest?"SceneTwoThreeVerification":"Verification");
                 startInfo.EnvironmentVariables["LASTCALL_CONFIG_DIR"]=Path.Combine(local,"LALAGAME","private");
             }
+            if(nightTest||sceneTwoThreeTest){var args=Environment.GetCommandLineArgs();int scale=Array.IndexOf(args,"-fullNightClock");if(scale>=0)startInfo.EnvironmentVariables["LASTCALL_TEST_CLOCK"]=args[scale+1];}
             service=new Process{StartInfo=startInfo};
             service.OutputDataReceived+=(sender,args)=>{if(!string.IsNullOrEmpty(args.Data))incoming.Enqueue(args.Data);};
             service.ErrorDataReceived+=(sender,args)=>{ /* Never print provider details or environment values. */ };
@@ -92,6 +104,7 @@ namespace LastCall
                 try{message=JsonUtility.FromJson<Envelope>(json);}
                 catch{continue;}
                 if(message==null)continue;
+                if(message.type=="reconnected"){resetPresentation=true;continue;}
                 if(message.type=="trace"){UnityEngine.Debug.Log("LASTCALL_TRACE "+message.message);continue;}
                 if(message.ready&&message.port>0)
                 {
@@ -99,8 +112,8 @@ namespace LastCall
                     UnityEngine.Debug.Log("LASTCALL_SERVICE_READY");
                     continue;
                 }
-                if(message.type=="ack"){pending.TryRemove(message.id,out _);continue;}
-                if(message.type=="error"){if(!string.IsNullOrEmpty(message.id))pending.TryRemove(message.id,out _);Fail(message.message);continue;}
+                if(message.type=="ack"){pending.TryRemove(message.id,out _);Acknowledged?.Invoke(message.id);continue;}
+                if(message.type=="error"){if(!string.IsNullOrEmpty(message.id))pending.TryRemove(message.id,out _);Rejected?.Invoke(message.id,message.message);Fail(message.message);continue;}
                 if(message.state!=null&&!string.IsNullOrEmpty(message.state.sessionId))AcceptState(message.state);
             }
         }
@@ -132,7 +145,13 @@ namespace LastCall
             if(State==null||State.sessionId!=state.sessionId)visibleHistory.Clear();
             foreach(var item in state.events??Array.Empty<EventDto>())visibleHistory[item.id]=item;
             state.events=visibleHistory.Values.OrderBy(item=>item.seq).ToArray();
-            State=state;Changed?.Invoke();
+            if(string.IsNullOrEmpty(state.scene1?.phase))state.scene1=null;
+            if(string.IsNullOrEmpty(state.scene2?.phase))state.scene2=null;
+            if(string.IsNullOrEmpty(state.scene3?.phase))state.scene3=null;
+            if(state.story?.chapter<1)state.story=null;
+            if(state.late?.chapter<4)state.late=null;
+            if(state.late!=null&&string.IsNullOrEmpty(state.late.cue?.id))state.late.cue=null;
+            State=state;if(resetPresentation){PresentationEpoch++;resetPresentation=false;}Changed?.Invoke();
         }
         private IEnumerator FetchBootstrap()
         {
@@ -156,7 +175,7 @@ namespace LastCall
             var task=LocalRequest(HttpMethod.Post,path,json);
             while(!task.IsCompleted)yield return null;
             if(task.IsFaulted){Fail("本地请求未完成，请稍后重试。");yield break;}
-            if(readState){var message=JsonUtility.FromJson<Envelope>(task.Result);if(message.state!=null&&!string.IsNullOrEmpty(message.state.sessionId))AcceptState(message.state);}
+            if(readState){resetPresentation=true;var message=JsonUtility.FromJson<Envelope>(task.Result);if(message.state!=null&&!string.IsNullOrEmpty(message.state.sessionId))AcceptState(message.state);}
         }
         private async Task<string> LocalRequest(HttpMethod method,string path,string body)
         {

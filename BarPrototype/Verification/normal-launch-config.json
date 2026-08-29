@@ -1,0 +1,8 @@
+{
+  "pid": 4844,
+  "configured": true,
+  "model": "deepseek-v4-flash",
+  "base": "https://api.deepseek.com",
+  "legacyConfigVisible": true,
+  "stableConfigVisible": false
+}

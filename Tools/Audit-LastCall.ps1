@@ -1,4 +1,4 @@
-$ErrorActionPreference='Stop'
+﻿$ErrorActionPreference='Stop'
 $project=(Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..\BarPrototype')).Path
 $config=Join-Path $env:LOCALAPPDATA 'LALAGAME\private\model.env'
 $keyLine=if(Test-Path -LiteralPath $config){Get-Content -LiteralPath $config | Where-Object { $_.StartsWith('LASTCALL_API_KEY=') } | Select-Object -First 1}else{$null}

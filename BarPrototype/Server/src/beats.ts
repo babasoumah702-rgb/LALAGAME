@@ -1,13 +1,39 @@
 import type {Engine} from './engine.js';
 import {distance} from './navigation.js';
+import {introActive} from './intro.js';
+import {DEFAULT_PACK} from './identity.js';
+// Why the player has a drink waiting depends on how they came in. The legacy path has no entry mode,
+// so it keeps a neutral house greeting rather than claiming the player knows anyone here.
+function openingText(g:Engine,fallback:string){
+  const mode=g.world.intro?.entryMode;
+  if(mode==='solo')return '店里给新来的客人留了一杯。';
+  if(mode==='event_guest')return '今晚有活动，你的那杯已经算在里面了。';
+  if(mode==='friend_invited')return '有人替你留了位置，说你会来。';
+  return fallback;
+}
+// A scene skin swaps the beat's prose for the current identity pack without touching the beat's
+// effect or condition. The invariant anchors keep their fate question, only the surface changes.
+function skinText(g:Engine,beatId:string,fallback:string){
+  const pack=g.scenario.identityPacks[g.world.identityPack]||g.scenario.identityPacks[DEFAULT_PACK];
+  return pack.sceneSkin[beatId]||fallback;
+}
 export function runBeats(g:Engine){
   const w=g.world, u=g.actor('USER');
+  if(introActive(w)||w.scene1)return;
+  // A pending identity revision (from a mid-game prompt change) is applied at the next beat
+  // boundary, keeping established relationship state and memory intact.
+  if(w.pendingPackRevision){
+    w.identityPack=w.pendingPackRevision.packId;
+    w.contextProfile=w.pendingPackRevision.contextProfile;
+    w.pendingPackRevision=undefined;
+  }
   for(const b of g.scenario.beats){
     let availableAt=b.at;
-    if(b.effect==='cards'&&(w.role==='social_guest'||w.entryIntent==='meet_people'))availableAt-=45;
+    if(b.effect==='cards'&&(w.role==='event_guest'||w.entryIntent==='meet_people'))availableAt-=45;
     if(b.effect==='signal'&&w.entryIntent==='romantic_open')availableAt-=30;
     if(b.effect==='cards'&&w.entryIntent==='low_energy')availableAt+=35;
     if(w.elapsed<availableAt||w.beatIds.includes(b.id))continue;
+    if(w.flags.scene0Route&&['enter_a','enter_c'].includes(b.effect))continue;
     let ready=b.condition==='always';
     if(b.condition==='b_available')ready=g.actor('B').active&&!g.actor('B').withdrawn;
     if(b.condition==='past_at_seat')ready=!!w.flags.pastDrink&&g.zone(u).id==='seat13';
@@ -15,9 +41,10 @@ export function runBeats(g:Engine){
     if(!ready)continue;
     w.beatIds.push(b.id);
     switch(b.effect){
-      case 'opening':g.emit('message','BARTENDER','USER','observe',w.night===1?b.text:'欢迎回来。昨晚没说完的，不必假装忘记。');break;
-      case 'signal':g.emit('message','B','USER','probe',b.text);break;
-      case 'cards':w.flags.cardsOffered=true;g.emit('system','OWNER','USER','invite',b.text);break;
+      case 'opening':g.emit('message','BARTENDER','USER','observe',w.night===1?openingText(g,b.text):'欢迎回来。昨晚没说完的，不必假装忘记。');break;
+      // B hosts the room; she does not know the player yet, and a solo entry means nobody was expecting anyone.
+      case 'signal':if(w.intro?.entryMode!=='solo')g.emit('message','B','USER','probe',skinText(g,b.id,b.text));break;
+      case 'cards':if(!w.flags.cardsOffered){w.flags.cardsOffered=true;g.emit('system','OWNER','USER','invite',b.text);}break;
       case 'enter_a':case 'enter_c':case 'enter_d':{
         const id=b.effect.slice(-1).toUpperCase(),a=g.actor(id);
         const p=g.navigation.nearest(g.location('entrance'));
@@ -32,7 +59,7 @@ export function runBeats(g:Engine){
         const candidates=w.actors.filter(a=>a.active&&!['USER','OWNER'].includes(a.id));
         candidates.sort((a,b)=>b.relations.USER.tension-a.relations.USER.tension);
         w.flags.lastTarget=candidates[0]?.id??'BARTENDER';
-        g.emit('system','OWNER','USER','last_call',b.text);break;
+        g.emit('system','OWNER','USER','last_call',skinText(g,b.id,b.text));break;
       }
       case 'close':g.finish();break;
     }

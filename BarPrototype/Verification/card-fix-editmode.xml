@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="20" result="Passed" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-08-28 10:54:13Z" end-time="2026-08-28 10:54:19Z" duration="5.3920948">
+  <test-suite type="TestSuite" id="1030" name="LALAGAME - Last Call" fullname="LALAGAME - Last Call" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-08-28 10:54:13Z" end-time="2026-08-28 10:54:19Z" duration="5.392095" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties />
+    <test-suite type="Assembly" id="1056" name="BarPrototype.EditModeTests.dll" fullname="D:/工作/项目/黑客松/LALAGAME/LALAGAME/BarPrototype/Library/ScriptAssemblies/BarPrototype.EditModeTests.dll" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-08-28 10:54:13Z" end-time="2026-08-28 10:54:19Z" duration="5.382091" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="47368" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+      </properties>
+      <test-suite type="TestSuite" id="1057" name="BarPrototype" fullname="BarPrototype" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-08-28 10:54:13Z" end-time="2026-08-28 10:54:19Z" duration="5.381853" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1058" name="Tests" fullname="BarPrototype.Tests" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-08-28 10:54:13Z" end-time="2026-08-28 10:54:19Z" duration="5.379117" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1031" name="LastCallTests" fullname="BarPrototype.Tests.LastCallTests" classname="BarPrototype.Tests.LastCallTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-08-28 10:54:13Z" end-time="2026-08-28 10:54:16Z" duration="2.592278" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1033" name="LastCallHasNoMissingScriptsOrMaterials" fullname="BarPrototype.Tests.LastCallTests.LastCallHasNoMissingScriptsOrMaterials" methodname="LastCallHasNoMissingScriptsOrMaterials" classname="BarPrototype.Tests.LastCallTests" runstate="Runnable" seed="1250309053" result="Passed" start-time="2026-08-28 10:54:13Z" end-time="2026-08-28 10:54:15Z" duration="1.914543" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1032" name="LastCallHasSeparateSceneAndCharacterPrefab" fullname="BarPrototype.Tests.LastCallTests.LastCallHasSeparateSceneAndCharacterPrefab" methodname="LastCallHasSeparateSceneAndCharacterPrefab" classname="BarPrototype.Tests.LastCallTests" runstate="Runnable" seed="1828850514" result="Passed" start-time="2026-08-28 10:54:15Z" end-time="2026-08-28 10:54:16Z" duration="0.228580" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1035" name="NullStateMessageIsNotAnActiveWorld" fullname="BarPrototype.Tests.LastCallTests.NullStateMessageIsNotAnActiveWorld" methodname="NullStateMessageIsNotAnActiveWorld" classname="BarPrototype.Tests.LastCallTests" runstate="Runnable" seed="1957888410" result="Passed" start-time="2026-08-28 10:54:16Z" end-time="2026-08-28 10:54:16Z" duration="0.205068" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1034" name="OutsideTerraceHasFloorAndBoundary" fullname="BarPrototype.Tests.LastCallTests.OutsideTerraceHasFloorAndBoundary" methodname="OutsideTerraceHasFloorAndBoundary" classname="BarPrototype.Tests.LastCallTests" runstate="Runnable" seed="1683632812" result="Passed" start-time="2026-08-28 10:54:16Z" end-time="2026-08-28 10:54:16Z" duration="0.233016" asserts="0">
+              <properties />
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1036" name="MovementTests" fullname="BarPrototype.Tests.MovementTests" classname="BarPrototype.Tests.MovementTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-08-28 10:54:16Z" end-time="2026-08-28 10:54:16Z" duration="0.011070" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1038" name="DiagonalInputIsNotFaster" fullname="BarPrototype.Tests.MovementTests.DiagonalInputIsNotFaster" methodname="DiagonalInputIsNotFaster" classname="BarPrototype.Tests.MovementTests" runstate="Runnable" seed="890364246" result="Passed" start-time="2026-08-28 10:54:16Z" end-time="2026-08-28 10:54:16Z" duration="0.001323" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1039" name="MovementStaysOnGroundPlane" fullname="BarPrototype.Tests.MovementTests.MovementStaysOnGroundPlane" methodname="MovementStaysOnGroundPlane" classname="BarPrototype.Tests.MovementTests" runstate="Runnable" seed="732472608" result="Passed" start-time="2026-08-28 10:54:16Z" end-time="2026-08-28 10:54:16Z" duration="0.000404" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1041" name="RightMovesTowardsRightOfScreen" fullname="BarPrototype.Tests.MovementTests.RightMovesTowardsRightOfScreen" methodname="RightMovesTowardsRightOfScreen" classname="BarPrototype.Tests.MovementTests" runstate="Runnable" seed="1155967574" result="Passed" start-time="2026-08-28 10:54:16Z" end-time="2026-08-28 10:54:16Z" duration="0.002316" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1040" name="UpMovesTowardsTopOfScreen" fullname="BarPrototype.Tests.MovementTests.UpMovesTowardsTopOfScreen" methodname="UpMovesTowardsTopOfScreen" classname="BarPrototype.Tests.MovementTests" runstate="Runnable" seed="29439083" result="Passed" start-time="2026-08-28 10:54:16Z" end-time="2026-08-28 10:54:16Z" duration="0.000516" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1037" name="ZeroInputDoesNotMove" fullname="BarPrototype.Tests.MovementTests.ZeroInputDoesNotMove" methodname="ZeroInputDoesNotMove" classname="BarPrototype.Tests.MovementTests" runstate="Runnable" seed="1573081364" result="Passed" start-time="2026-08-28 10:54:16Z" end-time="2026-08-28 10:54:16Z" duration="0.001442" asserts="0">
+              <properties />
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1042" name="SceneTests" fullname="BarPrototype.Tests.SceneTests" classname="BarPrototype.Tests.SceneTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-08-28 10:54:16Z" end-time="2026-08-28 10:54:17Z" duration="1.075654" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1044" name="PlayerPrefabHasControllerAndPoseReferences" fullname="BarPrototype.Tests.SceneTests.PlayerPrefabHasControllerAndPoseReferences" methodname="PlayerPrefabHasControllerAndPoseReferences" classname="BarPrototype.Tests.SceneTests" runstate="Runnable" seed="272543610" result="Passed" start-time="2026-08-28 10:54:16Z" end-time="2026-08-28 10:54:16Z" duration="0.252421" asserts="0">
+              <properties />
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1048" name="RoomFitsInCamera" fullname="BarPrototype.Tests.SceneTests.RoomFitsInCamera" classname="BarPrototype.Tests.SceneTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-08-28 10:54:16Z" end-time="2026-08-28 10:54:17Z" duration="0.419876" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1046" name="RoomFitsInCamera(1.777778f)" fullname="BarPrototype.Tests.SceneTests.RoomFitsInCamera(1.777778f)" methodname="RoomFitsInCamera" classname="BarPrototype.Tests.SceneTests" runstate="Runnable" seed="906705201" result="Passed" start-time="2026-08-28 10:54:16Z" end-time="2026-08-28 10:54:17Z" duration="0.198920" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1047" name="RoomFitsInCamera(1.6f)" fullname="BarPrototype.Tests.SceneTests.RoomFitsInCamera(1.6f)" methodname="RoomFitsInCamera" classname="BarPrototype.Tests.SceneTests" runstate="Runnable" seed="308926414" result="Passed" start-time="2026-08-28 10:54:17Z" end-time="2026-08-28 10:54:17Z" duration="0.189955" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-case id="1045" name="SceneHasNoMissingScriptsOrMaterials" fullname="BarPrototype.Tests.SceneTests.SceneHasNoMissingScriptsOrMaterials" methodname="SceneHasNoMissingScriptsOrMaterials" classname="BarPrototype.Tests.SceneTests" runstate="Runnable" seed="1980609739" result="Passed" start-time="2026-08-28 10:54:17Z" end-time="2026-08-28 10:54:17Z" duration="0.206927" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1043" name="SceneHasOnePlayerAndAnActiveRenderPipeline" fullname="BarPrototype.Tests.SceneTests.SceneHasOnePlayerAndAnActiveRenderPipeline" methodname="SceneHasOnePlayerAndAnActiveRenderPipeline" classname="BarPrototype.Tests.SceneTests" runstate="Runnable" seed="1808200646" result="Passed" start-time="2026-08-28 10:54:17Z" end-time="2026-08-28 10:54:17Z" duration="0.195073" asserts="0">
+              <properties />
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1049" name="SceneZeroTests" fullname="BarPrototype.Tests.SceneZeroTests" classname="BarPrototype.Tests.SceneZeroTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-08-28 10:54:17Z" end-time="2026-08-28 10:54:19Z" duration="1.695226" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1051" name="AllSixProductionModelsAndStageTexturesAreSerialized" fullname="BarPrototype.Tests.SceneZeroTests.AllSixProductionModelsAndStageTexturesAreSerialized" methodname="AllSixProductionModelsAndStageTexturesAreSerialized" classname="BarPrototype.Tests.SceneZeroTests" runstate="Runnable" seed="2101980280" result="Passed" start-time="2026-08-28 10:54:17Z" end-time="2026-08-28 10:54:18Z" duration="0.617029" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1055" name="AudioClipsAndLowPassAreIncluded" fullname="BarPrototype.Tests.SceneZeroTests.AudioClipsAndLowPassAreIncluded" methodname="AudioClipsAndLowPassAreIncluded" classname="BarPrototype.Tests.SceneZeroTests" runstate="Runnable" seed="1653216728" result="Passed" start-time="2026-08-28 10:54:18Z" end-time="2026-08-28 10:54:18Z" duration="0.216129" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1052" name="ClosedDoorsAndFrontBoundaryBlockWalking" fullname="BarPrototype.Tests.SceneZeroTests.ClosedDoorsAndFrontBoundaryBlockWalking" methodname="ClosedDoorsAndFrontBoundaryBlockWalking" classname="BarPrototype.Tests.SceneZeroTests" runstate="Runnable" seed="1956311719" result="Passed" start-time="2026-08-28 10:54:18Z" end-time="2026-08-28 10:54:18Z" duration="0.220304" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1053" name="EditableSceneContainsNoMissingScriptsOrShaders" fullname="BarPrototype.Tests.SceneZeroTests.EditableSceneContainsNoMissingScriptsOrShaders" methodname="EditableSceneContainsNoMissingScriptsOrShaders" classname="BarPrototype.Tests.SceneZeroTests" runstate="Runnable" seed="1029618801" result="Passed" start-time="2026-08-28 10:54:18Z" end-time="2026-08-28 10:54:18Z" duration="0.226389" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1054" name="ElevatorAndThresholdHaveContinuousGround" fullname="BarPrototype.Tests.SceneZeroTests.ElevatorAndThresholdHaveContinuousGround" methodname="ElevatorAndThresholdHaveContinuousGround" classname="BarPrototype.Tests.SceneZeroTests" runstate="Runnable" seed="268642691" result="Passed" start-time="2026-08-28 10:54:18Z" end-time="2026-08-28 10:54:19Z" duration="0.203684" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1050" name="ElevatorIsEditableAndHasIndependentDoors" fullname="BarPrototype.Tests.SceneZeroTests.ElevatorIsEditableAndHasIndependentDoors" methodname="ElevatorIsEditableAndHasIndependentDoors" classname="BarPrototype.Tests.SceneZeroTests" runstate="Runnable" seed="738645699" result="Passed" start-time="2026-08-28 10:54:19Z" end-time="2026-08-28 10:54:19Z" duration="0.208692" asserts="0">
+              <properties />
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

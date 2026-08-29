@@ -83,7 +83,7 @@ namespace LastCall
             ScreenCapture.CaptureScreenshot(Path.Combine(output,"entry.png"));
             var save=args.Contains("-lastCallResume")?client.Bootstrap.sessions.FirstOrDefault(s=>s.status=="playing"):null;
             report.resumed=save!=null;
-            client.OpenSession(new SessionRequest{mode=save==null?"new":"resume",sessionId=save?.id,role="social_guest",online=args.Contains("-lastCallOnline"),seed=821});
+            client.OpenSession(new SessionRequest{mode=save==null?"new":"resume",sessionId=save?.id,role="event_guest",online=args.Contains("-lastCallOnline"),seed=821});
             yield return Until(()=>client.State!=null&&game.Avatars.ContainsKey("USER"));
             CheckResult("session_created",client.State!=null&&game.Avatars.ContainsKey("USER"));
             if(client.State==null){Finish();yield break;}

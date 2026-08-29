@@ -1,0 +1,121 @@
+{
+  "configured": true,
+  "model": "deepseek-v4-flash",
+  "passed": false,
+  "synthetic": true,
+  "exchanges": [
+    {
+      "chapter": 1,
+      "player": "今晚推开这扇门，是因为想见你。",
+      "response": "哦？那我可得确认一下——是来见我这个人的，还是来见我桌上这杯酒的？",
+      "action": "speak",
+      "source": "ai",
+      "accepted": true,
+      "requestId": "B:7aecbcf8-4347-4412-8770-1c74da27ef37:2",
+      "elapsedMs": 3208
+    },
+    {
+      "chapter": 1,
+      "player": "我想见你",
+      "response": "你这么直接，我倒有点接不住了。那……先坐下，我请你喝一杯？",
+      "action": "speak",
+      "source": "ai",
+      "accepted": true,
+      "requestId": "B:7aecbcf8-4347-4412-8770-1c74da27ef37:4",
+      "elapsedMs": 2053
+    },
+    {
+      "chapter": 1,
+      "player": "不是合作，我只是想坐下来和你聊一会。",
+      "response": "行，那就不聊项目。来，坐这儿，这杯算我的。",
+      "action": "speak",
+      "source": "ai",
+      "accepted": true,
+      "requestId": "B:7aecbcf8-4347-4412-8770-1c74da27ef37:6",
+      "elapsedMs": 2368
+    },
+    {
+      "chapter": 1,
+      "player": "你叫什么名字？",
+      "response": "X。不过今晚这桌上，你也可以叫我姐姐。",
+      "action": "speak",
+      "source": "ai",
+      "accepted": true,
+      "requestId": "B:7aecbcf8-4347-4412-8770-1c74da27ef37:8",
+      "elapsedMs": 1798
+    },
+    {
+      "chapter": 2,
+      "player": "这首歌听起来有点熟，你喜欢这种音乐吗？",
+      "response": "还行吧，这首我常听。怎么，你想跟我聊音乐？",
+      "action": "speak",
+      "source": "ai",
+      "accepted": true,
+      "requestId": "B:7aecbcf8-4347-4412-8770-1c74da27ef37:10",
+      "elapsedMs": 2126
+    },
+    {
+      "chapter": 4,
+      "player": "这是巧克力做的吗？我能尝一支吗？",
+      "response": "巧克力味的，可以，不过得说好——尝完别就惦记这支了。",
+      "action": "speak",
+      "source": "ai",
+      "accepted": true,
+      "requestId": "B:7aecbcf8-4347-4412-8770-1c74da27ef37:13",
+      "elapsedMs": 2330
+    },
+    {
+      "chapter": 5,
+      "player": "灯熄了，我想先留一会儿。",
+      "response": "行，那我也坐会儿。灯熄了反而安静，你只管待着，我不催你。",
+      "action": "speak",
+      "source": "ai",
+      "accepted": true,
+      "requestId": "B:7aecbcf8-4347-4412-8770-1c74da27ef37:15",
+      "elapsedMs": 2244
+    },
+    {
+      "chapter": 6,
+      "player": "风挺舒服的。我们安静待会儿吧。",
+      "response": "好，那就安静待着。风是挺舒服的。",
+      "action": "speak",
+      "source": "ai",
+      "accepted": true,
+      "requestId": "B:7aecbcf8-4347-4412-8770-1c74da27ef37:17",
+      "elapsedMs": 2069
+    }
+  ],
+  "errors": [
+    {
+      "chapter": 3,
+      "code": "INVALID"
+    }
+  ],
+  "budgets": {
+    "1": {
+      "calls": 4,
+      "tokens": 10937
+    },
+    "2": {
+      "calls": 1,
+      "tokens": 3494
+    },
+    "3": {
+      "calls": 2,
+      "tokens": 7608
+    },
+    "4": {
+      "calls": 1,
+      "tokens": 3677
+    },
+    "5": {
+      "calls": 1,
+      "tokens": 3574
+    },
+    "6": {
+      "calls": 1,
+      "tokens": 3589
+    }
+  },
+  "calls": 10
+}

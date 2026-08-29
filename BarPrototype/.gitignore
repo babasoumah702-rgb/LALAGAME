@@ -3,6 +3,7 @@
 [Oo]bj/
 [Ll]ogs/
 [Uu]ser[Ss]ettings/
+.DS_Store
 Builds/
 *.csproj
 *.sln
@@ -10,6 +11,7 @@ Builds/
 .vs/
 .idea/
 Verification/*.log
+Verification/**/*.log
 Server/node_modules/
 Server/dist/
 Server/node.exe

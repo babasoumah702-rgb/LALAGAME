@@ -1,0 +1,126 @@
+{
+  "configured": true,
+  "model": "deepseek-v4-flash",
+  "passed": true,
+  "synthetic": true,
+  "exchanges": [
+    {
+      "chapter": 1,
+      "player": "今晚推开这扇门，是因为想见你。",
+      "response": "这么直接？那……是想见我，还是想见我兜里那点判断力？",
+      "action": "ask",
+      "source": "ai",
+      "accepted": true,
+      "requestId": "B:cd85ab32-a50f-40c6-bf3c-0b909382c34b:2",
+      "elapsedMs": 2977
+    },
+    {
+      "chapter": 1,
+      "player": "我想见你",
+      "response": "行，这句话我收下了。那你是想先聊，还是想先坐？",
+      "action": "ask",
+      "source": "ai",
+      "accepted": true,
+      "requestId": "B:cd85ab32-a50f-40c6-bf3c-0b909382c34b:4",
+      "elapsedMs": 2167
+    },
+    {
+      "chapter": 1,
+      "player": "不是合作，我只是想坐下来和你聊一会。",
+      "response": "行，那就坐吧。想聊什么？",
+      "action": "ask",
+      "source": "ai",
+      "accepted": true,
+      "requestId": "B:cd85ab32-a50f-40c6-bf3c-0b909382c34b:6",
+      "elapsedMs": 1830
+    },
+    {
+      "chapter": 1,
+      "player": "你叫什么名字？",
+      "response": "X。你可以这么叫我。",
+      "action": "speak",
+      "source": "ai",
+      "accepted": true,
+      "requestId": "B:cd85ab32-a50f-40c6-bf3c-0b909382c34b:8",
+      "elapsedMs": 1851
+    },
+    {
+      "chapter": 2,
+      "player": "这首歌听起来有点熟，你喜欢这种音乐吗？",
+      "response": "嗯，有点熟。这歌适合现在这个点，不吵也不闷。",
+      "action": "speak",
+      "source": "ai",
+      "accepted": true,
+      "requestId": "B:cd85ab32-a50f-40c6-bf3c-0b909382c34b:10",
+      "elapsedMs": 2036
+    },
+    {
+      "chapter": 3,
+      "player": "我想跳过这一题，可以只看着吗？",
+      "response": "可以。那就看着，不说话也行。",
+      "action": "observe",
+      "source": "ai",
+      "accepted": true,
+      "requestId": "B:cd85ab32-a50f-40c6-bf3c-0b909382c34b:12",
+      "elapsedMs": 3396
+    },
+    {
+      "chapter": 4,
+      "player": "这是巧克力做的吗？我能尝一支吗？",
+      "response": "想尝就尝吧，不过别指望它比咖啡更提神。",
+      "action": "ask",
+      "source": "ai",
+      "accepted": true,
+      "requestId": "B:cd85ab32-a50f-40c6-bf3c-0b909382c34b:13",
+      "elapsedMs": 2281
+    },
+    {
+      "chapter": 5,
+      "player": "灯熄了，我想先留一会儿。",
+      "response": "好，那就留一会儿。灯熄了，反而安静。",
+      "action": "speak",
+      "source": "ai",
+      "accepted": true,
+      "requestId": "B:cd85ab32-a50f-40c6-bf3c-0b909382c34b:15",
+      "elapsedMs": 1590
+    },
+    {
+      "chapter": 6,
+      "player": "风挺舒服的。我们安静待会儿吧。",
+      "response": "嗯，风是挺舒服的。那就安静待会儿。",
+      "action": "observe",
+      "source": "ai",
+      "accepted": true,
+      "requestId": "B:cd85ab32-a50f-40c6-bf3c-0b909382c34b:17",
+      "elapsedMs": 2162
+    }
+  ],
+  "errors": [],
+  "budgets": {
+    "1": {
+      "calls": 4,
+      "tokens": 11127
+    },
+    "2": {
+      "calls": 1,
+      "tokens": 3597
+    },
+    "3": {
+      "calls": 2,
+      "tokens": 7583
+    },
+    "4": {
+      "calls": 1,
+      "tokens": 3694
+    },
+    "5": {
+      "calls": 1,
+      "tokens": 3558
+    },
+    "6": {
+      "calls": 1,
+      "tokens": 3520
+    }
+  },
+  "calls": 10
+}

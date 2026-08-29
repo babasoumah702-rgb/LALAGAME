@@ -35,7 +35,7 @@ ModelImporter:
     extraExposedTransformPaths: []
     extraUserProperties: []
     clipAnimations: []
-    isReadable: 0
+    isReadable: 1
     tuanjieGIEnable: 0
     tuanjieGIGenSDFFactor: 1
     tuanjieGIGenSDFBias: 0.25

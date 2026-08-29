@@ -8,9 +8,13 @@ import {randomBytes} from 'node:crypto';
 import {loadScenario} from './config.js';
 import {Engine} from './engine.js';
 import {Store} from './store.js';
-import {dataRoot,ModelAdapter} from './model.js';
+import {dataRoot,ModelAdapter,modelConfigFile} from './model.js';
 import {Navigator,emptyNavigation} from './navigation.js';
 import type {Command} from './types.js';
+import {introActive} from './intro.js';
+import {generateIntro,pendingIntro} from './intro-model.js';
+import {generateReply,applyReadyReplies} from './reply-runtime.js';
+import {TtsAdapter} from './tts.js';
 const root=dirname(dirname(fileURLToPath(import.meta.url)));
 const scenario=loadScenario(join(root,'scenarios','last_call.json'));
 const navFile=join(root,'scenarios','navigation.json');
@@ -19,6 +23,7 @@ mkdirSync(dataRoot,{recursive:true});
 const database=new Store(join(dataRoot,'last-call.db'));
 const token=process.env.LASTCALL_SESSION_TOKEN||randomBytes(32).toString('hex');
 const adapter=new ModelAdapter();
+const tts=new TtsAdapter();
 const app=Fastify({logger:false,bodyLimit:16384});
 await app.register(websocket,{options:{maxPayload:16384}});
 let engine:Engine|undefined;
@@ -31,34 +36,51 @@ app.addHook('onRequest',async(request,reply)=>{
 });
 app.get('/health',async()=>({ready:true,version:1}));
 app.get('/api/bootstrap',async(request)=>{
+  adapter.reload();
   const playerId=String((request.query as any).playerId||'');
-  return {version:1,title:scenario.title,roles:scenario.roles,intents:scenario.intents,styles:scenario.styles,sessions:database.list(playerId),modelConfigured:!!adapter.config.key,model:adapter.config.model};
+  return {version:1,title:scenario.title,roles:scenario.roles,intents:scenario.intents,styles:scenario.styles,choices:scenario.choices,sessions:database.list(playerId),modelConfigured:!!adapter.config.key,model:adapter.config.model,modelConfigFile:modelConfigFile()};
 });
 app.post('/api/session',async(request,reply)=>{
   const body=request.body as any;
   if(!body||typeof body.playerId!=='string'||body.playerId.length>100)return reply.code(400).send({error:'Invalid player ID'});
   if(engine)database.save(engine.world);
   try{
+    adapter.reload();
+    tts.reload();
     const previous=body.sessionId?database.load(body.sessionId,body.playerId):undefined;
     if(body.mode==='resume'||body.mode==='next'){
       if(!previous)return reply.code(404).send({error:'Save not found'});
       const resumed=new Engine(scenario,{playerId:body.playerId},previous,navigation);
       engine=body.mode==='next'?resumed.nextNight():resumed;
+      // Retry only a previous missing-key fallback; never override an explicitly chosen offline mode.
+      if(adapter.config.key&&engine.world.modelReason==='未配置密钥，已使用规则模式'){
+        engine.world.modelMode='online';engine.world.modelReason='已读取模型配置 · '+adapter.config.model;
+      }
     }else{
-      engine=new Engine(scenario,{playerId:body.playerId,role:body.role,entryIntent:body.entryIntent,style:body.style,online:body.online!==false,seed:Number(body.seed)||821},undefined,navigation);
+      engine=new Engine(scenario,{playerId:body.playerId,role:body.role,entryIntent:body.entryIntent,style:body.style,online:body.online!==false,seed:Number(body.seed)||821,opening:body.opening,entryMode:body.entryMode,entryContext:body.entryContext,choices:body.choices,story:body.story},undefined,navigation);
     }
+    engine.voice=tts;
     database.save(engine.world);
+    void generateIntro(engine);
     broadcast();
     return {state:engine.view(true)};
   }catch{return reply.code(400).send({error:'Cannot open this save'});}
 });
 app.get('/api/state',async()=>({state:engine?.view()||null}));
 app.get('/api/reflection',async()=>({reflection:engine?.reflection()||null}));
+app.get('/api/audio/:id',async(request,reply)=>{
+  const id=String((request.params as any).id||'');
+  const bytes=tts.audio(id);
+  if(!bytes)return reply.code(404).send({error:'Not found'});
+  return reply.type(tts.config.format==='mp3'?'audio/mpeg':'audio/wav').send(bytes);
+});
 app.post('/api/save',async()=>{if(engine)database.save(engine.world);return{saved:!!engine};});
 app.post('/api/command',async(request,reply)=>{
   try{
     if(!engine)throw new Error('No active session');
-    engine.command(request.body as Command);
+    const command=request.body as Command;
+    if(command.type==='retry_reply'||command.type==='mode'&&command.online)adapter.reload();
+    engine.command(command);
     return {state:engine.view()};
   }catch(error){return reply.code(400).send({error:message(error)});}
 });
@@ -70,6 +92,7 @@ app.get('/api/events',{websocket:true},socket=>{
     try{
       if(!engine)throw new Error('No active session');
       const command=JSON.parse(buffer.toString()) as Command;
+      if(command.type==='retry_reply'||command.type==='mode'&&command.online)adapter.reload();
       commandId=command.id;
       if(process.env.LASTCALL_TRACE==='1'&&!['position','positions'].includes(command.type))
         process.stdout.write(JSON.stringify({type:'trace',message:JSON.stringify({command:command.type,paused:command.paused,before:engine.world.paused,busy:engine.busy,elapsed:engine.world.elapsed})})+'\n');
@@ -88,7 +111,6 @@ function broadcast(){
   const payload=JSON.stringify({type:'state',version:1,cursor:engine.world.sequence,state:engine.view()});
   for(const socket of sockets)if(socket.readyState===1)socket.send(payload);
 }
-let processing=false;
 let lastTick=performance.now();
 let lastSave=Date.now();
 const timer=setInterval(async()=>{
@@ -96,33 +118,15 @@ const timer=setInterval(async()=>{
   const dt=Math.min(.25,(now-lastTick)/1000);
   lastTick=now;
   if(closing||!engine)return;
-  engine.advance(dt);
-  if(!processing&&!engine.world.paused&&engine.world.status==='playing'){
-    const jobs=engine.dueJobs();
-    if(jobs.length){
-      const active=engine;
-      processing=true;
-      active.busy=true;
-      try{
-        const decisions=await Promise.all(jobs.map(async job=>({job,decision:await adapter.decide(active,job)})));
-        if(engine===active&&active.world.status==='playing'){
-          for(const result of decisions){
-            const {job,decision}=result;
-            const accepted=active.apply(job.actor,decision,job.eventId);
-            database.recordDecision(active.world,job,decision,accepted);
-            if(!accepted){
-              active.world.modelReason='本次建议未通过规则校验，已采用规则回复';
-              const fallback=active.rule(job.actor,job.eventId);
-              const applied=active.apply(job.actor,fallback,job.eventId);
-              database.recordDecision(active.world,job,fallback,applied);
-            }
-          }
-        }
-      }catch{
-        active.world.modelMode='offline';
-        active.world.modelReason='当前推理不可用，已使用规则模式';
-      }finally{active.busy=false;processing=false;}
-    }
+  const testPlayer=['full-night-verification','scene-two-three-verification'].includes(engine.world.playerId);
+  const testDirectory=/(FullNightVerification|SceneTwoThreeVerification)$/.test(String(process.env.LASTCALL_DATA_DIR));
+  const testClock=testPlayer&&testDirectory?Math.max(1,Math.min(4,Number(process.env.LASTCALL_TEST_CLOCK)||1)):1;
+  engine.advance(dt*testClock);
+  applyReadyReplies(engine,database);
+  if(!engine.world.paused&&engine.world.status==='playing'&&!introActive(engine.world)&&!pendingIntro.has(engine)){
+    const active=engine;
+    const running=(active.world.replies||[]).filter(r=>r.status==='running').length;
+    if(running<2)for(const job of active.dueJobs(2-running))void generateReply(active,adapter,job);
   }
   if(Date.now()-lastSave>4000){database.save(engine.world);lastSave=Date.now();}
 },100);

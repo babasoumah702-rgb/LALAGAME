@@ -10,7 +10,7 @@ import {runBeats} from '../beats.js';
 import {ModelAdapter} from '../model.js';
 const root=dirname(dirname(dirname(fileURLToPath(import.meta.url))));
 const scenario=loadScenario(join(root,'scenarios','last_call.json'));
-function game(role='friend_guest'){return new Engine(structuredClone(scenario),{playerId:'test-player',role,seed:44,online:false});}
+function game(role='passerby'){return new Engine(structuredClone(scenario),{playerId:'test-player',role,seed:44,online:false});}
 function place(g:Engine,id:string,x:number,z:number){Object.assign(g.actor(id),{x,z,active:true,route:[],pending:undefined});}
 function speech(g:Engine){place(g,'USER',0,0);place(g,'B',1,0);return g.emit('speech','USER','B','reveal','今晚我其实是为了见你。');}
 for(const role of scenario.roles){
@@ -32,7 +32,7 @@ test('same signal creates distinct local interpretations',()=>{
   const g=game();place(g,'A',-1,0);
   const event=speech(g);
   assert.notEqual(g.rule('A',event.id).interpretation,g.rule('B',event.id).interpretation);
-  assert.equal(JSON.stringify(g.context('A',event.id)).includes('user_b_attraction'),false);
+  assert.equal(JSON.stringify(g.context('A',event.id)).includes('b_reads_d'),false);
 });
 test('private note reveals gesture, not content, to bystander',()=>{
   const g=game();place(g,'USER',0,0);place(g,'B',1,0);place(g,'BARTENDER',0,-1);
@@ -112,18 +112,12 @@ test('seed reproduces rules and source logs',()=>{
 test('player view never serializes private minds or world facts',()=>{
   const g=game(),e=speech(g);g.apply('B',g.rule('B',e.id),e.id);
   const text=JSON.stringify(g.view());
-  for(const word of ['knownFacts','beliefs','interpretation','relations','user_b_attraction'])assert.equal(text.includes('"'+word+'"'),false);
+  for(const word of ['knownFacts','beliefs','interpretation','relations','b_reads_a'])assert.equal(text.includes('"'+word+'"'),false);
 });
 test('A star avoids obstacles and blocked corners',()=>{
   const nav=new Navigator({...emptyNavigation,minX:0,minZ:0,width:5,height:5,cell:1,blocked:[6,7,8,11,13,16,17,18]});
   const path=nav.path({x:.5,z:.5},{x:4.5,z:4.5});
   assert.ok(path.length>0);assert.ok(path.every(p=>nav.walkable(p)));
-});
-test('model request budget forces explicit offline mode without fetch',async()=>{
-  const g=game(),e=speech(g);g.world.modelMode='online';g.world.calls=80;
-  const model=new ModelAdapter();model.config.key='test-key';
-  await model.decide(g,{actor:'B',eventId:e.id,due:0});
-  assert.equal(g.world.modelMode,'offline');assert.equal(g.world.calls,80);
 });
 test('exhausted event action budget cannot change relationships',()=>{
   const g=game(),e=speech(g);

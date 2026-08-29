@@ -1,0 +1,285 @@
+✔ normal and redirected AppData processes read the same profile-private configuration (7.4596ms)
+✔ explicit config directories remain isolated and never silently import a personal key (2.8615ms)
+✔ legacy config remains readable if no stable file exists; environment override is retained (4.9506ms)
+✔ an intentionally empty stable key never falls back to a stale key from a different location (7.0228ms)
+(node:42284) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ config refresh repairs a missing-key fallback save without overriding deliberate offline mode (1329.8053ms)
+✔ each chapter has its own persistent 80 / 120000 ledger, including Scene0 usage (7.1095ms)
+✔ chapter migration retains legacy usage and never adds chapters to classic saves (1.9799ms)
+✖ late model result is charged to its origin chapter and causes no next-chapter action (37.538ms)
+✔ invalid tarot commands do not consume stance or move and can be corrected (9.9236ms)
+✖ unseen questions and gazes do not leak through chapter DTO or NPC context (6.4436ms)
+✔ declined, absent and model-failed players are never automatically refusing (10.339ms)
+✔ Joker counts toward max five, and a boundary can end before three (5.8512ms)
+✔ real portal route goes bar -> corridor -> stairs -> roof with small steps (3.0087ms)
+✔ cross-floor and closed-corridor conversations are not overheard through a flat distance (2.0204ms)
+✖ all five supplied memories are subjective and never become USER factual memory (15.9194ms)
+✔ staying in the bar hides corridor flashbacks but does not stop either area (72.828ms)
+✔ powercut is once, pause stops time, save restores emergency light without replay (5.0253ms)
+✖ unfollowed corridor, solo roof, sit/lie/stand and confirmed ending stay playable (3.8659ms)
+✔ early leaving never requires all chapters and recap excludes unperceived private history (1.0806ms)
+✔ same answers, free text and seed always resolve to the same pack (1.2423ms)
+✔ an explicit choice overrides free text and is not overridden by it (0.1718ms)
+✔ ambiguous or missing domain falls back to the default pack (0.2371ms)
+✔ profile extracts only explicit content and never infers protected attributes (0.1575ms)
+✔ every pack covers A/B/C/D and only skins real beats (0.2188ms)
+✔ identity brief is compressed and carries no raw player input (0.2088ms)
+✔ agent context never serializes raw player background (5.0503ms)
+✔ mid-game revision defers to the next beat boundary and keeps state (5.8525ms)
+✔ no background means the default pack and a runnable night (2.0568ms)
+✔ Scene0 survives a real backend process restart with private text and event deduplication (8987.1256ms)
+✔ Scene 0 is opt-in; legacy initial cast and immediate third drink are unchanged (7.6105ms)
+✔ intro waits for client readiness, freezes on pause, and uses a separate seven-second clock (3.3328ms)
+✔ exactly one background event, different evidence for A/C, no player leak (4.3953ms)
+✔ background perception respects obstruction, distance and facing (1.3612ms)
+✔ phone and private input are idempotent and never become public dialogue (2.9188ms)
+✔ handoff starts third drink once and prevents duplicate A/C arrivals (84.7409ms)
+✔ mid-intro snapshot preserves message, checkpoint and evidence (1.8222ms)
+✔ model invitation rejects leaked names and late results (1.5995ms)
+✔ gateway failure is a local preset fallback, with budget counted and no world loss (31.8284ms)
+✔ production geometry supports A/C perception and a continuous elevator exit (3.0927ms)
+✔ next night does not replay elevator and retains the new arrival route (1.5404ms)
+✔ late network result cannot replace a phone message already on screen (5.1942ms)
+✔ valid JSON is insufficient; extra fields, long text and identity claims are rejected (3.7996ms)
+✔ authentication failure stays online and exposes an explicit retry error (35.2761ms)
+✔ invalid JSON is retried once and never applied (6.0819ms)
+✔ timeout retries count toward budget and preserve events (2.2899ms)
+✔ high attraction cannot override an explicit space request (2.7596ms)
+✔ network disconnect records a safe category and keeps online mode (2.5813ms)
+✔ every entry can request a party immediately: passerby (13.4606ms)
+✔ every entry can request a party immediately: social_guest (1.9129ms)
+✔ every entry can request a party immediately: friend_guest (2.4706ms)
+✔ every entry can request a party immediately: staff (0.7475ms)
+✔ every entry can request a party immediately: owner_bartender (0.5008ms)
+✔ opening a party is idempotent and prevents the later duplicate invitation (0.6312ms)
+✔ join, play, cooldown, independent response, decline and rejoin complete a real card flow (7.1685ms)
+✔ party consent does not bypass elevator, pause, distance, visibility or Last Call (3.146ms)
+✔ a queued walk can be cancelled while waiting for a reply or while paused (1.791ms)
+✔ DeepSeek uses non-thinking mode without leaking vendor parameters to other gateways (1.4438ms)
+✔ both intro and character requests carry the configured DeepSeek model and JSON mode (35.172ms)
+(node:34612) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ entry and finish: passerby (8.7182ms)
+✔ entry and finish: social_guest (1.4594ms)
+✔ entry and finish: friend_guest (1.3259ms)
+✔ entry and finish: staff (1.8607ms)
+✔ entry and finish: owner_bartender (2.0882ms)
+✔ unseen character cannot read an event (2.1852ms)
+✔ same signal creates distinct local interpretations (2.5552ms)
+✔ private note reveals gesture, not content, to bystander (2.1941ms)
+✔ boundary cannot be bypassed by attraction (4.0269ms)
+✔ command idempotency, length limit and distance (4.963ms)
+✔ refusing cards does not stop the night (3.0222ms)
+✔ conditional C and D entry, not unconditional spawning (36.5026ms)
+✔ pause freezes world time (0.6068ms)
+✔ invalid evidence and targets cannot mutate state (0.5505ms)
+✔ delayed autonomous relay keeps causal source (0.7063ms)
+✔ save ownership, resume and next night preserve memories (8.5437ms)
+✔ seed reproduces rules and source logs (3.7185ms)
+✔ player view never serializes private minds or world facts (1.709ms)
+✔ A star avoids obstacles and blocked corners (0.4642ms)
+✔ model request budget stops generation without silently changing mode (4.3202ms)
+✔ exhausted event action budget cannot change relationships (1.7105ms)
+✔ old reliable command remains idempotent throughout a world (12.3851ms)
+✔ batched position reports respect pause and finite coordinates (1.106ms)
+(node:16544) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ every configured location is reachable on the exported Unity grid (19.4283ms)
+✔ full 720-second offline night with navigation: passerby (150.2137ms)
+✔ full 720-second offline night with navigation: social_guest (111.3902ms)
+✔ full 720-second offline night with navigation: friend_guest (98.0381ms)
+✔ full 720-second offline night with navigation: staff (119.8908ms)
+✔ full 720-second offline night with navigation: owner_bartender (97.916ms)
+✔ seat reservations do not allocate the same endpoint (23.2992ms)
+✔ pending speech waits for physical arrival (2.7655ms)
+✔ old observation actions cannot trigger D later (16.5444ms)
+✔ decision records are owner isolated and preserved (4.8638ms)
+✔ entry willingness adjusts invitations, not relationship history (1.4418ms)
+✔ same seed reproduces an entire rules-mode event sequence (92.9543ms)
+✔ alternate declarative scenario starts an independent world (1.6997ms)
+✔ third drink is delivered once through the production navigation and D waits for an interaction (357.9742ms)
+✔ new chapter is opt-in and resume never replays the cup or inserts it in an old save (3.7617ms)
+✔ first conversation targets A without automatically disclosing names (2.9934ms)
+✔ first conversation targets B without automatically disclosing names (3.1095ms)
+✔ first conversation targets C without automatically disclosing names (1.4282ms)
+✔ unheard introductions and gestures never disclose a name or private text (1.0628ms)
+✔ reserved seat requires proximity and records an action rather than a personality judgment (1.3393ms)
+✔ conversation facing survives client yaw reports and releases on movement (0.7668ms)
+✔ missing key keeps the original event and retry is idempotent while the world keeps running (4.8688ms)
+✔ repeated AI response is regenerated once, accepted source stays AI, and pause defers application (30.1067ms)
+✔ ordinary dialogue context includes authors and everyday voice without raw background (0.7484ms)
+✔ unknown names stay hidden in partial hearing, private note gestures and reflection (0.9438ms)
+✔ scene actions require sight, and an idle NPC does not accept stale client facing (0.5882ms)
+✔ a second identical AI response fails without substituting a rules sentence (3.0763ms)
+✔ retry cannot spend beyond the budget or charge a card twice (3.8343ms)
+✔ online photo request cannot override an existing refusal (2.0258ms)
+✖ Scene 3 opens from the Scene 2 deck and picks a reader that is not fixed to the bartender (480.9837ms)
+✔ the first round flips a card, asks a real question and names a first responder (139.9901ms)
+✔ the arc runs light before high tension rather than pure random (116.0542ms)
+✔ the gaze before an answer is recorded and only seen by whoever was looking (101.8216ms)
+✔ the player can answer, skip, deflect, ask back, observe and joke (552.7413ms)
+✖ silence is an event, not a null input (89.6537ms)
+✔ a joker breaks the room open after the tension peaks (96.3337ms)
+✔ the round ends at 3 to 5 cards without exhausting the deck (110.3812ms)
+✔ someone leaves the table and the exit to Scene 4 opens with the player free to choose (122.323ms)
+✔ the view exposes the card and the turn but never tension numbers or hidden targets (79.9718ms)
+✔ the handoff reports observable moves and no verdict about anyone (86.8329ms)
+✔ resume keeps the tarot round and does not reflip the current card (79.7146ms)
+✔ a declined player is never forced to answer and the table continues (90.2242ms)
+✔ Scene 2 opens from the finished Scene 1 without replaying D arrival (64.7423ms)
+✔ cross introduction is a model cue; unheard names never unlock (48.3186ms)
+✔ freeflow moves everyone and records position as a social act (133.8065ms)
+✔ follow, listen and the light game are all valid moves and reach the agents (66.8495ms)
+✔ A2A ripple happens with no player input and respects who could perceive it (95.0252ms)
+✔ the montage passes time through the room and never through a real hour (156.7732ms)
+✖ the table regathers and the bartender leaves the deck, which the player can look at (127.0833ms)
+✔ the handoff carries impressions for Scene 3 and no verdicts (37.8359ms)
+✔ resume keeps the Scene 2 chapter and does not replay the introduction (33.7007ms)
+✔ an old save never gains the new chapters (0.6949ms)
+✔ HTTP ownership, WebSocket commands and reconnect (727.974ms)
+ℹ tests 134
+ℹ suites 0
+ℹ pass 127
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9389.7
+
+✖ failing tests:
+
+test at dist\tests\full-night.test.js:33:1
+✖ late model result is charged to its origin chapter and causes no next-chapter action (37.538ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/full-night.test.js:39:12)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at dist\tests\full-night.test.js:48:1
+✖ unseen questions and gazes do not leak through chapter DTO or NPC context (6.4436ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + {
+  +   actor: 'C',
+  +   gesture: '低头喝了一口',
+  +   order: [
+  +     'B'
+  +   ],
+  +   pauseMs: 643,
+  +   round: 2
+  + }
+  - null
+  
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/full-night.test.js:48:222)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { round: 2, actor: 'C', order: [ 'B' ], pauseMs: 643, gesture: '低头喝了一口' },
+    expected: null,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at dist\tests\full-night.test.js:63:1
+✖ all five supplied memories are subjective and never become USER factual memory (15.9194ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  undefined !== 'CD'
+  
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/full-night.test.js:74:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'CD',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at dist\tests\full-night.test.js:85:1
+✖ unfollowed corridor, solo roof, sit/lie/stand and confirmed ending stay playable (3.8659ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  5 !== 6
+  
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/full-night.test.js:88:91)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 5,
+    expected: 6,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at dist\tests\scene-three.test.js:66:1
+✖ Scene 3 opens from the Scene 2 deck and picks a reader that is not fixed to the bartender (480.9837ms)
+  Error: 请先走近对方，并确认中间没有遮挡
+      at sceneOneCommand (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/scene-one.js:214:15)
+      at handleCommand (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/commands.js:128:9)
+      at Engine.command (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/engine.js:103:25)
+      at reachSceneThree (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:53:7)
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:80:9)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.start (node:internal/test_runner/test:1003:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+
+test at dist\tests\scene-three.test.js:153:1
+✖ silence is an event, not a null input (89.6537ms)
+  AssertionError [ERR_ASSERTION]: not answering produces a world event
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:161:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at dist\tests\scene-two.test.js:135:1
+✖ the table regathers and the bartender leaves the deck, which the player can look at (127.0833ms)
+  Error: 这里没有这个可观察对象
+      at sceneOneCommand (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/scene-one.js:174:19)
+      at handleCommand (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/commands.js:128:9)
+      at Engine.command (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/engine.js:103:25)
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-two.test.js:150:7)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="25" result="Passed" total="25" passed="25" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-08-29 02:59:45Z" end-time="2026-08-29 02:59:51Z" duration="5.8185081">
+  <test-suite type="TestSuite" id="1037" name="LALAGAME - Last Call" fullname="LALAGAME - Last Call" runstate="Runnable" testcasecount="25" result="Passed" start-time="2026-08-29 02:59:45Z" end-time="2026-08-29 02:59:51Z" duration="5.818508" total="25" passed="25" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties />
+    <test-suite type="Assembly" id="1070" name="BarPrototype.EditModeTests.dll" fullname="D:/工作/项目/黑客松/LALAGAME/LALAGAME/BarPrototype/Library/ScriptAssemblies/BarPrototype.EditModeTests.dll" runstate="Runnable" testcasecount="25" result="Passed" start-time="2026-08-29 02:59:45Z" end-time="2026-08-29 02:59:51Z" duration="5.804715" total="25" passed="25" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27832" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+      </properties>
+      <test-suite type="TestSuite" id="1071" name="BarPrototype" fullname="BarPrototype" runstate="Runnable" testcasecount="25" result="Passed" start-time="2026-08-29 02:59:45Z" end-time="2026-08-29 02:59:51Z" duration="5.803767" total="25" passed="25" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1072" name="Tests" fullname="BarPrototype.Tests" runstate="Runnable" testcasecount="25" result="Passed" start-time="2026-08-29 02:59:45Z" end-time="2026-08-29 02:59:51Z" duration="5.800561" total="25" passed="25" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1038" name="LastCallTests" fullname="BarPrototype.Tests.LastCallTests" classname="BarPrototype.Tests.LastCallTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-08-29 02:59:45Z" end-time="2026-08-29 02:59:48Z" duration="2.508584" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1040" name="LastCallHasNoMissingScriptsOrMaterials" fullname="BarPrototype.Tests.LastCallTests.LastCallHasNoMissingScriptsOrMaterials" methodname="LastCallHasNoMissingScriptsOrMaterials" classname="BarPrototype.Tests.LastCallTests" runstate="Runnable" seed="1296361559" result="Passed" start-time="2026-08-29 02:59:45Z" end-time="2026-08-29 02:59:47Z" duration="1.850672" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1039" name="LastCallHasSeparateSceneAndCharacterPrefab" fullname="BarPrototype.Tests.LastCallTests.LastCallHasSeparateSceneAndCharacterPrefab" methodname="LastCallHasSeparateSceneAndCharacterPrefab" classname="BarPrototype.Tests.LastCallTests" runstate="Runnable" seed="1402537612" result="Passed" start-time="2026-08-29 02:59:47Z" end-time="2026-08-29 02:59:47Z" duration="0.207845" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1042" name="NullStateMessageIsNotAnActiveWorld" fullname="BarPrototype.Tests.LastCallTests.NullStateMessageIsNotAnActiveWorld" methodname="NullStateMessageIsNotAnActiveWorld" classname="BarPrototype.Tests.LastCallTests" runstate="Runnable" seed="1290109198" result="Passed" start-time="2026-08-29 02:59:47Z" end-time="2026-08-29 02:59:48Z" duration="0.226145" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1041" name="OutsideTerraceHasFloorAndBoundary" fullname="BarPrototype.Tests.LastCallTests.OutsideTerraceHasFloorAndBoundary" methodname="OutsideTerraceHasFloorAndBoundary" classname="BarPrototype.Tests.LastCallTests" runstate="Runnable" seed="1257748997" result="Passed" start-time="2026-08-29 02:59:48Z" end-time="2026-08-29 02:59:48Z" duration="0.212452" asserts="0">
+              <properties />
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1043" name="MovementTests" fullname="BarPrototype.Tests.MovementTests" classname="BarPrototype.Tests.MovementTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-08-29 02:59:48Z" end-time="2026-08-29 02:59:48Z" duration="0.009841" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <output><![CDATA[GfxDevice renderer is null. Unity cannot update the Ambient Probe and Reflection Probes that the SkyManager generates. Run the Editor without the -nographics argument or generate lighting for your scene.
+]]></output>
+            <test-case id="1045" name="DiagonalInputIsNotFaster" fullname="BarPrototype.Tests.MovementTests.DiagonalInputIsNotFaster" methodname="DiagonalInputIsNotFaster" classname="BarPrototype.Tests.MovementTests" runstate="Runnable" seed="706528671" result="Passed" start-time="2026-08-29 02:59:48Z" end-time="2026-08-29 02:59:48Z" duration="0.001435" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1046" name="MovementStaysOnGroundPlane" fullname="BarPrototype.Tests.MovementTests.MovementStaysOnGroundPlane" methodname="MovementStaysOnGroundPlane" classname="BarPrototype.Tests.MovementTests" runstate="Runnable" seed="419792042" result="Passed" start-time="2026-08-29 02:59:48Z" end-time="2026-08-29 02:59:48Z" duration="0.000396" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1048" name="RightMovesTowardsRightOfScreen" fullname="BarPrototype.Tests.MovementTests.RightMovesTowardsRightOfScreen" methodname="RightMovesTowardsRightOfScreen" classname="BarPrototype.Tests.MovementTests" runstate="Runnable" seed="996181439" result="Passed" start-time="2026-08-29 02:59:48Z" end-time="2026-08-29 02:59:48Z" duration="0.002270" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1047" name="UpMovesTowardsTopOfScreen" fullname="BarPrototype.Tests.MovementTests.UpMovesTowardsTopOfScreen" methodname="UpMovesTowardsTopOfScreen" classname="BarPrototype.Tests.MovementTests" runstate="Runnable" seed="634162399" result="Passed" start-time="2026-08-29 02:59:48Z" end-time="2026-08-29 02:59:48Z" duration="0.000449" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1044" name="ZeroInputDoesNotMove" fullname="BarPrototype.Tests.MovementTests.ZeroInputDoesNotMove" methodname="ZeroInputDoesNotMove" classname="BarPrototype.Tests.MovementTests" runstate="Runnable" seed="1863790770" result="Passed" start-time="2026-08-29 02:59:48Z" end-time="2026-08-29 02:59:48Z" duration="0.001297" asserts="0">
+              <properties />
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1049" name="NightStageTests" fullname="BarPrototype.Tests.NightStageTests" classname="BarPrototype.Tests.NightStageTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-08-29 02:59:48Z" end-time="2026-08-29 02:59:48Z" duration="0.250327" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1055" name="FloorAreaUsesHeight" fullname="BarPrototype.Tests.NightStageTests.FloorAreaUsesHeight" classname="BarPrototype.Tests.NightStageTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-08-29 02:59:48Z" end-time="2026-08-29 02:59:48Z" duration="0.005513" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1051" name="FloorAreaUsesHeight(7.45f,1.0f,-3.0f,&quot;stairs&quot;)" fullname="BarPrototype.Tests.NightStageTests.FloorAreaUsesHeight(7.45f,1.0f,-3.0f,&quot;stairs&quot;)" methodname="FloorAreaUsesHeight" classname="BarPrototype.Tests.NightStageTests" runstate="Runnable" seed="1164724847" result="Passed" start-time="2026-08-29 02:59:48Z" end-time="2026-08-29 02:59:48Z" duration="0.001106" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1052" name="FloorAreaUsesHeight(3.0f,4.3f,5.0f,&quot;rooftop&quot;)" fullname="BarPrototype.Tests.NightStageTests.FloorAreaUsesHeight(3.0f,4.3f,5.0f,&quot;rooftop&quot;)" methodname="FloorAreaUsesHeight" classname="BarPrototype.Tests.NightStageTests" runstate="Runnable" seed="1168323876" result="Passed" start-time="2026-08-29 02:59:48Z" end-time="2026-08-29 02:59:48Z" duration="0.000159" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1053" name="FloorAreaUsesHeight(3.0f,0.09f,-5.9f,&quot;corridor&quot;)" fullname="BarPrototype.Tests.NightStageTests.FloorAreaUsesHeight(3.0f,0.09f,-5.9f,&quot;corridor&quot;)" methodname="FloorAreaUsesHeight" classname="BarPrototype.Tests.NightStageTests" runstate="Runnable" seed="1459974644" result="Passed" start-time="2026-08-29 02:59:48Z" end-time="2026-08-29 02:59:48Z" duration="0.000110" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1054" name="FloorAreaUsesHeight(3.0f,0.09f,4.0f,&quot;bar&quot;)" fullname="BarPrototype.Tests.NightStageTests.FloorAreaUsesHeight(3.0f,0.09f,4.0f,&quot;bar&quot;)" methodname="FloorAreaUsesHeight" classname="BarPrototype.Tests.NightStageTests" runstate="Runnable" seed="1657112477" result="Passed" start-time="2026-08-29 02:59:48Z" end-time="2026-08-29 02:59:48Z" duration="0.000065" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-case id="1050" name="StairLaneHasContinuousFloorAndNoCorridorWallAcrossIt" fullname="BarPrototype.Tests.NightStageTests.StairLaneHasContinuousFloorAndNoCorridorWallAcrossIt" methodname="StairLaneHasContinuousFloorAndNoCorridorWallAcrossIt" classname="BarPrototype.Tests.NightStageTests" runstate="Runnable" seed="109787675" result="Passed" start-time="2026-08-29 02:59:48Z" end-time="2026-08-29 02:59:48Z" duration="0.244082" asserts="0">
+              <properties />
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1056" name="SceneTests" fullname="BarPrototype.Tests.SceneTests" classname="BarPrototype.Tests.SceneTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-08-29 02:59:48Z" end-time="2026-08-29 02:59:49Z" duration="1.204331" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <output><![CDATA[GfxDevice renderer is null. Unity cannot update the Ambient Probe and Reflection Probes that the SkyManager generates. Run the Editor without the -nographics argument or generate lighting for your scene.
+]]></output>
+            <test-case id="1058" name="PlayerPrefabHasControllerAndPoseReferences" fullname="BarPrototype.Tests.SceneTests.PlayerPrefabHasControllerAndPoseReferences" methodname="PlayerPrefabHasControllerAndPoseReferences" classname="BarPrototype.Tests.SceneTests" runstate="Runnable" seed="143960562" result="Passed" start-time="2026-08-29 02:59:48Z" end-time="2026-08-29 02:59:48Z" duration="0.236955" asserts="0">
+              <properties />
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1062" name="RoomFitsInCamera" fullname="BarPrototype.Tests.SceneTests.RoomFitsInCamera" classname="BarPrototype.Tests.SceneTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-08-29 02:59:48Z" end-time="2026-08-29 02:59:49Z" duration="0.486939" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <output><![CDATA[GfxDevice renderer is null. Unity cannot update the Ambient Probe and Reflection Probes that the SkyManager generates. Run the Editor without the -nographics argument or generate lighting for your scene.
+]]></output>
+              <test-case id="1060" name="RoomFitsInCamera(1.777778f)" fullname="BarPrototype.Tests.SceneTests.RoomFitsInCamera(1.777778f)" methodname="RoomFitsInCamera" classname="BarPrototype.Tests.SceneTests" runstate="Runnable" seed="1960739626" result="Passed" start-time="2026-08-29 02:59:48Z" end-time="2026-08-29 02:59:49Z" duration="0.230265" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1061" name="RoomFitsInCamera(1.6f)" fullname="BarPrototype.Tests.SceneTests.RoomFitsInCamera(1.6f)" methodname="RoomFitsInCamera" classname="BarPrototype.Tests.SceneTests" runstate="Runnable" seed="2001657253" result="Passed" start-time="2026-08-29 02:59:49Z" end-time="2026-08-29 02:59:49Z" duration="0.227022" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-case id="1059" name="SceneHasNoMissingScriptsOrMaterials" fullname="BarPrototype.Tests.SceneTests.SceneHasNoMissingScriptsOrMaterials" methodname="SceneHasNoMissingScriptsOrMaterials" classname="BarPrototype.Tests.SceneTests" runstate="Runnable" seed="1311216044" result="Passed" start-time="2026-08-29 02:59:49Z" end-time="2026-08-29 02:59:49Z" duration="0.254008" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1057" name="SceneHasOnePlayerAndAnActiveRenderPipeline" fullname="BarPrototype.Tests.SceneTests.SceneHasOnePlayerAndAnActiveRenderPipeline" methodname="SceneHasOnePlayerAndAnActiveRenderPipeline" classname="BarPrototype.Tests.SceneTests" runstate="Runnable" seed="841818060" result="Passed" start-time="2026-08-29 02:59:49Z" end-time="2026-08-29 02:59:49Z" duration="0.223545" asserts="0">
+              <properties />
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1063" name="SceneZeroTests" fullname="BarPrototype.Tests.SceneZeroTests" classname="BarPrototype.Tests.SceneZeroTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-08-29 02:59:49Z" end-time="2026-08-29 02:59:51Z" duration="1.823315" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <output><![CDATA[GfxDevice renderer is null. Unity cannot update the Ambient Probe and Reflection Probes that the SkyManager generates. Run the Editor without the -nographics argument or generate lighting for your scene.
+]]></output>
+            <test-case id="1065" name="AllSixProductionModelsAndStageTexturesAreSerialized" fullname="BarPrototype.Tests.SceneZeroTests.AllSixProductionModelsAndStageTexturesAreSerialized" methodname="AllSixProductionModelsAndStageTexturesAreSerialized" classname="BarPrototype.Tests.SceneZeroTests" runstate="Runnable" seed="5842621" result="Passed" start-time="2026-08-29 02:59:49Z" end-time="2026-08-29 02:59:50Z" duration="0.752615" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1069" name="AudioClipsAndLowPassAreIncluded" fullname="BarPrototype.Tests.SceneZeroTests.AudioClipsAndLowPassAreIncluded" methodname="AudioClipsAndLowPassAreIncluded" classname="BarPrototype.Tests.SceneZeroTests" runstate="Runnable" seed="1842875698" result="Passed" start-time="2026-08-29 02:59:50Z" end-time="2026-08-29 02:59:50Z" duration="0.206529" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1066" name="ClosedDoorsAndFrontBoundaryBlockWalking" fullname="BarPrototype.Tests.SceneZeroTests.ClosedDoorsAndFrontBoundaryBlockWalking" methodname="ClosedDoorsAndFrontBoundaryBlockWalking" classname="BarPrototype.Tests.SceneZeroTests" runstate="Runnable" seed="912823215" result="Passed" start-time="2026-08-29 02:59:50Z" end-time="2026-08-29 02:59:51Z" duration="0.209557" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1067" name="EditableSceneContainsNoMissingScriptsOrShaders" fullname="BarPrototype.Tests.SceneZeroTests.EditableSceneContainsNoMissingScriptsOrShaders" methodname="EditableSceneContainsNoMissingScriptsOrShaders" classname="BarPrototype.Tests.SceneZeroTests" runstate="Runnable" seed="1129599496" result="Passed" start-time="2026-08-29 02:59:51Z" end-time="2026-08-29 02:59:51Z" duration="0.220488" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1068" name="ElevatorAndThresholdHaveContinuousGround" fullname="BarPrototype.Tests.SceneZeroTests.ElevatorAndThresholdHaveContinuousGround" methodname="ElevatorAndThresholdHaveContinuousGround" classname="BarPrototype.Tests.SceneZeroTests" runstate="Runnable" seed="386939493" result="Passed" start-time="2026-08-29 02:59:51Z" end-time="2026-08-29 02:59:51Z" duration="0.214671" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1064" name="ElevatorIsEditableAndHasIndependentDoors" fullname="BarPrototype.Tests.SceneZeroTests.ElevatorIsEditableAndHasIndependentDoors" methodname="ElevatorIsEditableAndHasIndependentDoors" classname="BarPrototype.Tests.SceneZeroTests" runstate="Runnable" seed="1087723540" result="Passed" start-time="2026-08-29 02:59:51Z" end-time="2026-08-29 02:59:51Z" duration="0.214934" asserts="0">
+              <properties />
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

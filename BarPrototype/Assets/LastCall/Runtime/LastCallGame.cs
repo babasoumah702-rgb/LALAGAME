@@ -13,6 +13,8 @@ namespace LastCall
     public sealed class LastCallGame : MonoBehaviour
     {
         public GameObject characterPrefab;
+        public LastCallArtCatalog artCatalog;
+        public SceneZeroController Intro { get; private set; }
         public LocalServiceClient Client { get; private set; }
         public LastCallInterface Interface { get; private set; }
         public readonly Dictionary<string, ActorAvatar> Avatars = new Dictionary<string, ActorAvatar>();
@@ -21,11 +23,19 @@ namespace LastCall
         private void Awake()
         {
             Client = GetComponent<LocalServiceClient>();
+            LastCallArtCatalog.Current=artCatalog;
+            Intro=FindObjectOfType<SceneZeroController>();
+            if(Intro)Intro.Bind(this);
             Interface = gameObject.AddComponent<LastCallInterface>();
             Interface.Game = this;
             Client.Changed += ApplyState;
             OtomeStage.Open();
+            foreach(var text in FindObjectsOfType<TextMesh>())WorldTextDepth.Apply(text);
             gameObject.AddComponent<DirectorLens>().Game = this;
+            gameObject.AddComponent<DialogueBubbles>().Game = this;
+            gameObject.AddComponent<SceneOnePresentation>().Game = this;
+            gameObject.AddComponent<SceneTwoPresentation>().Game = this;
+            gameObject.AddComponent<NightStage>().Game=this;gameObject.AddComponent<NightPresentation>().Game=this;
         }
         private void ApplyState()
         {
@@ -48,10 +58,22 @@ namespace LastCall
                     avatar.Setup(data.id, data.id == "USER");
                     avatar.Place(data);
                     OtomeCast.Dress(instance, data.id);
+                    if(state.story!=null)instance.AddComponent<CastActionAdapter>();
+                    // Server routes avoid live character footprints. Let two routed actors clear a
+                    // narrow doorway without CharacterController deadlock; room and prop collision
+                    // remains enabled, so nobody can walk through walls or furniture.
+                    var body=instance.GetComponent<CharacterController>();
+                    foreach(var other in Avatars.Values)
+                    {
+                        var otherBody=other.GetComponent<CharacterController>();
+                        if(body&&otherBody)Physics.IgnoreCollision(body,otherBody,true);
+                    }
                     Avatars.Add(data.id, avatar);
                     MakeName(avatar, data.name, data.id);
                 }
                 avatar.State = data;
+                var nameLabel=avatar.transform.Find("Name")?.GetComponent<TextMesh>();
+                if(nameLabel){nameLabel.text=data.name;nameLabel.gameObject.SetActive(state.intro==null||state.intro.version==0);}
                 avatar.gameObject.SetActive(true);
                 var actual = new Vector2(avatar.transform.position.x, avatar.transform.position.z);
                 if (Vector2.Distance(actual, new Vector2(data.x, data.z)) > .65f) avatar.Place(data);
@@ -71,12 +93,13 @@ namespace LastCall
             mesh.fontSize = 64;
             mesh.anchor = TextAnchor.MiddleCenter;
             mesh.color = new Color(.93f, .93f, .95f);
+            WorldTextDepth.Apply(mesh);
         }
         private void Update()
         {
             var state = Client.State;
             if (state == null) return;
-            bool blocked = state.paused || state.busy || state.status != "playing" || Interface.Blocking;
+            bool blocked = state.paused || state.status != "playing" || (Interface.Blocking&&!FullNightVerification.Running) || NightPresentation.CinematicActive || (Intro&&Intro.Active);
             foreach (var avatar in Avatars.Values)
                 if (avatar.gameObject.activeSelf) avatar.Tick(blocked);
             if (Time.unscaledTime >= nextReport && state.status == "playing" && !blocked)
@@ -100,6 +123,8 @@ namespace LastCall
                 var ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
                 if (Physics.Raycast(ray, out var hit, 100))
                 {
+                    var item=hit.collider.GetComponent<SceneOneObject>();
+                    if(item&&state.scene1!=null)Client.Send(new CommandDto{type="observe_object",objectTarget=item.objectId});
                     var avatar = hit.collider.GetComponentInParent<ActorAvatar>();
                     if (avatar && !avatar.IsPlayer) Interface.Select(avatar.ActorId);
                 }
@@ -114,7 +139,7 @@ namespace LastCall
         }
         private void OnApplicationFocus(bool focus)
         {
-            if (!focus && Client?.State?.status == "playing") Interface.Pause(true);
+            if (!focus && !FullNightVerification.Running && Client?.State?.status == "playing") Interface.Pause(true);
         }
         private void OnDestroy() { if (Client) Client.Changed -= ApplyState; }
     }
@@ -127,6 +152,8 @@ namespace LastCall
         private FixedRoomCamera room;
         private float lookYaw = 205, lookPitch = 8;
         private bool armed, walking;
+        private bool userLook;
+        public void TakePose(float yaw,float pitch){lookYaw=yaw;lookPitch=Mathf.DeltaAngle(0,pitch);armed=true;walking=false;}
         private void Awake()
         {
             cam = Camera.main;
@@ -148,6 +175,8 @@ namespace LastCall
         }
         private void LateUpdate()
         {
+            if(NightPresentation.CinematicActive)return;
+            if(Game&&Game.Intro&&Game.Intro.Active)return;
             if (!cam) cam = Camera.main;
             if (!cam) return;
             cam.orthographic = false;
@@ -160,9 +189,12 @@ namespace LastCall
             ActorAvatar them = null;
             var focusId = Game && Game.Interface ? Game.Interface.FocusId : "";
             if (Game && !string.IsNullOrEmpty(focusId)) Game.Avatars.TryGetValue(focusId, out them);
+            bool conversation=player&&player.State!=null&&!string.IsNullOrEmpty(player.State.conversationTarget);
+            if(conversation&&Game.Avatars.TryGetValue(player.State.conversationTarget,out var partner))them=partner;
             bool approaching = player && player.State != null && player.State.route != null && player.State.route.Length > 0 && them;
             if (!approaching && playing && !blocked && Keyboard.current != null)
             {
+                if(conversation&&!userLook&&(Keyboard.current.qKey.isPressed||Keyboard.current.cKey.isPressed||Keyboard.current.rKey.isPressed||Keyboard.current.fKey.isPressed)){Game.Client.Send(new CommandDto{type="release_facing"});userLook=true;}
                 float turn = 110f * Time.unscaledDeltaTime;
                 if (Keyboard.current.qKey.isPressed) lookYaw -= turn;
                 if (Keyboard.current.cKey.isPressed) lookYaw += turn;
@@ -171,6 +203,7 @@ namespace LastCall
             }
             if (!approaching && playing && !blocked && Mouse.current != null && Mouse.current.rightButton.isPressed)
             {
+                if(conversation&&!userLook){Game.Client.Send(new CommandDto{type="release_facing"});userLook=true;}
                 var delta = Mouse.current.delta.ReadValue();
                 lookYaw += delta.x * .12f;
                 lookPitch = Mathf.Clamp(lookPitch - delta.y * .12f, -72f, 78f);
@@ -184,8 +217,9 @@ namespace LastCall
                     armed = true;
                 }
                 HideSelf(player);
-                cam.transform.position = player.transform.position + Vector3.up * 1.55f;
-                if (approaching) FacePerson(them);
+                cam.transform.position = player.transform.position + Vector3.up * (player.State?.posture=="lie"?.3f:player.State?.posture=="sit"||Game.Client?.State?.scene1?.seated==true?1.08f:1.55f);
+                if(!conversation)userLook=false;
+                if (approaching||conversation&&!userLook) FacePerson(them);
                 else if (walking && them) FacePerson(them, true);
                 cam.transform.rotation = Quaternion.Euler(lookPitch, lookYaw, 0);
                 var visualRoot = player.GetComponent<PlayerMotor>()?.VisualRoot;
@@ -198,7 +232,7 @@ namespace LastCall
         private void FacePerson(ActorAvatar them, bool snap = false)
         {
             if (!them || !cam) return;
-            var dir = them.transform.position + Vector3.up * 1.45f - cam.transform.position;
+            var dir = them.HeadAnchor-Vector3.up*.18f - cam.transform.position;
             dir.y = Mathf.Clamp(dir.y, -2f, 2f);
             if (dir.sqrMagnitude < .01f) return;
             var euler = Quaternion.LookRotation(dir).eulerAngles;
@@ -243,8 +277,19 @@ namespace LastCall
         public static Texture2D Bar()
         {
             if (bar) return bar;
-            bar = Read("otome-bar", false);
+            bar = Read("skin-bar", false) ?? Read("otome-bar", false);
             return bar;
+        }
+
+        public static Texture2D Tile(string id)
+        {
+            var key = "tile:" + id;
+            if (sheets.TryGetValue(key, out var cached) && cached) return cached;
+            var texture = Read(id, false);
+            if (!texture) return null;
+            texture.wrapMode = TextureWrapMode.Repeat;
+            sheets[key] = texture;
+            return texture;
         }
 
         public static Texture2D Picture(string id)
@@ -310,6 +355,20 @@ namespace LastCall
             return material;
         }
 
+        public static Material Skin(Color tint, Texture texture, float smoothness, float metallic = 0f, float tile = 4f)
+        {
+            var material = Cloth(tint, smoothness, metallic);
+            if (texture)
+            {
+                material.mainTexture = texture;
+                if (material.HasProperty("_BaseMap")) material.SetTexture("_BaseMap", texture);
+                if (material.HasProperty("_MainTex")) material.SetTexture("_MainTex", texture);
+                material.SetTextureScale("_BaseMap", new Vector2(tile, tile));
+                material.SetTextureScale("_MainTex", new Vector2(tile, tile));
+            }
+            return material;
+        }
+
         public static Color Hex(string hex)
         {
             ColorUtility.TryParseHtmlString("#" + hex, out var color);
@@ -318,6 +377,11 @@ namespace LastCall
 
         private static Texture2D Read(string id, bool punch)
         {
+            if(LastCallArtCatalog.Current)
+            {
+                var asset=LastCallArtCatalog.Current.Texture(id);
+                if(asset)return asset;
+            }
             foreach (var ext in new[] { ".png", ".jpg", ".jpeg" })
             {
                 var path = Path.Combine(Application.dataPath, "LastCall/Stage", id + ext);
@@ -356,57 +420,60 @@ namespace LastCall
             if (GameObject.Find("Last Call | otome")) return;
             var root = new GameObject("Last Call | otome").transform;
             RecolorRoom();
-            CoolLights();
+            WarmLights();
             RenameSign();
             Mural(root);
+            Photos(root);
             Motifs(root);
-            RenderSettings.ambientSkyColor = OtomeArt.Hex("D4DAE2") * .72f;
-            RenderSettings.ambientEquatorColor = OtomeArt.Hex("7A828C") * .7f;
-            RenderSettings.ambientGroundColor = OtomeArt.Hex("1A1C20") * .7f;
-            RenderSettings.ambientIntensity = 1.15f;
-            if (Camera.main) Camera.main.backgroundColor = OtomeArt.Hex("141820");
+            RenderSettings.ambientSkyColor = OtomeArt.Hex("A8A0E8") * .92f;
+            RenderSettings.ambientEquatorColor = OtomeArt.Hex("6A5FB8") * .85f;
+            RenderSettings.ambientGroundColor = OtomeArt.Hex("221F3A") * .85f;
+            RenderSettings.ambientIntensity = 1.6f;
+            if (Camera.main) Camera.main.backgroundColor = OtomeArt.Hex("262040");
         }
 
         private static void RecolorRoom()
         {
+            var plaster = OtomeArt.Tile("skin-plaster");
+            var wood = OtomeArt.Tile("skin-wood");
+            var leather = OtomeArt.Tile("skin-leather");
+            var floor = OtomeArt.Tile("skin-floor");
             foreach (var mesh in Object.FindObjectsOfType<Renderer>())
             {
+                if(mesh.GetComponentInParent<SceneZeroController>())continue;
                 if (!mesh || mesh.GetComponentInParent<ActorAvatar>() || mesh.GetComponentInParent<Canvas>()) continue;
                 if (mesh.name.StartsWith("Last Call |")) continue;
-                var color = Map(mesh.name);
-                if (!color.HasValue) continue;
-                mesh.sharedMaterial = OtomeArt.Flat(color.Value);
-                mesh.shadowCastingMode = ShadowCastingMode.Off;
+                var n = mesh.name.ToLowerInvariant();
+                if (n.Contains("jacket")) continue;
+                Material skin = null;
+                if (n.Contains("plaster")) skin = OtomeArt.Skin(Color.white, plaster, .14f, 0, 4.5f);
+                else if (n.Contains("oak") || n.Contains("plank") || n.Contains("rug")) skin = OtomeArt.Skin(Color.white, floor, .32f, 0, 5f);
+                else if (n.Contains("walnut") || n.Contains("wainscot") || n.Contains("panel") || n.Contains("coffee")) skin = OtomeArt.Skin(Color.white, wood, .22f, 0, 3.2f);
+                else if (n.Contains("leather")) skin = OtomeArt.Skin(Color.white, leather, .38f, 0, 2.4f);
+                else if (n.Contains("stage")) skin = OtomeArt.Cloth(OtomeArt.Hex("141210"), .08f);
+                else if (n.Contains("brass")) skin = OtomeArt.Cloth(OtomeArt.Hex("C4925A"), .55f, .65f);
+                else if (n.Contains("iron")) skin = OtomeArt.Cloth(OtomeArt.Hex("2A2A30"), .28f, .45f);
+                else if (n.Contains("cream")) skin = OtomeArt.Cloth(OtomeArt.Hex("E8D4B8"), .18f);
+                if (skin == null) continue;
+                mesh.sharedMaterial = skin;
+                mesh.shadowCastingMode = ShadowCastingMode.On;
             }
         }
 
-        private static Color? Map(string name)
-        {
-            var n = name.ToLowerInvariant();
-            if (n.Contains("plaster")) return OtomeArt.Hex("C4C0BA");
-            if (n.Contains("wainscot") || n.Contains("panel")) return OtomeArt.Hex("2A2A2E");
-            if (n.Contains("walnut")) return OtomeArt.Hex("1A1A1E");
-            if (n.Contains("oak")) return OtomeArt.Hex("3A3A40");
-            if (n.Contains("leather")) return OtomeArt.Hex("2A2A2C");
-            if (n.Contains("rug")) return OtomeArt.Hex("1C1C20");
-            if (n.Contains("stage")) return OtomeArt.Hex("101012");
-            if (n.Contains("jacket")) return null;
-            return null;
-        }
-
-        private static void CoolLights()
+        private static void WarmLights()
         {
             foreach (var light in Object.FindObjectsOfType<Light>())
             {
+                if(light.GetComponentInParent<SceneZeroController>())continue;
                 if (light.type == LightType.Directional)
                 {
-                    light.color = OtomeArt.Hex("EEF2F6");
-                    light.intensity = 1.28f;
+                    light.color = OtomeArt.Hex("C8CCFF");
+                    light.intensity = 1.65f;
                 }
                 else
                 {
-                    light.color = OtomeArt.Hex("D8DEE6");
-                    light.intensity = Mathf.Max(1.15f, light.intensity * 1.15f);
+                    light.color = OtomeArt.Hex("B0A8F0");
+                    light.intensity = Mathf.Max(1.5f, light.intensity * 1.4f);
                 }
             }
         }
@@ -417,7 +484,7 @@ namespace LastCall
                 if (label.text == "AMBER ROOM")
                 {
                     label.text = "LA LA LAND";
-                    label.color = OtomeArt.Hex("E8EEF4");
+                    label.color = OtomeArt.Hex("F0C8A0");
                 }
         }
 
@@ -434,17 +501,39 @@ namespace LastCall
             plate.transform.localScale = new Vector3(6.4f, 6.4f / aspect, 1);
             Object.Destroy(plate.GetComponent<Collider>());
             var mesh = plate.GetComponent<Renderer>();
-            mesh.sharedMaterial = OtomeArt.Flat(Color.white, texture);
+            mesh.sharedMaterial = OtomeArt.Cloth(Color.white, .12f);
+            if (texture)
+            {
+                mesh.sharedMaterial.mainTexture = texture;
+                if (mesh.sharedMaterial.HasProperty("_BaseMap")) mesh.sharedMaterial.SetTexture("_BaseMap", texture);
+            }
+            mesh.shadowCastingMode = ShadowCastingMode.On;
+        }
+
+        private static void Photos(Transform root)
+        {
+            var texture = OtomeArt.Tile("skin-photos");
+            if (!texture) return;
+            var plate = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            plate.name = "Last Call | photo wall";
+            plate.transform.SetParent(root, false);
+            plate.transform.position = new Vector3(5.88f, 1.72f, 2.15f);
+            plate.transform.rotation = Quaternion.Euler(0, -90, 0);
+            var aspect = texture.width / (float)Mathf.Max(1, texture.height);
+            plate.transform.localScale = new Vector3(2.4f, 2.4f / aspect, 1);
+            Object.Destroy(plate.GetComponent<Collider>());
+            var mesh = plate.GetComponent<Renderer>();
+            mesh.sharedMaterial = OtomeArt.Skin(Color.white, texture, .1f, 0, 1f);
             mesh.shadowCastingMode = ShadowCastingMode.Off;
         }
 
         private static void Motifs(Transform root)
         {
             var table = new Vector3(1.65f, 0, -1.8f);
-            Cube("empty chair", table + new Vector3(-.7f, .42f, .1f), new Vector3(.38f, .08f, .38f), OtomeArt.Hex("2A2A2E"), root);
-            Cube("empty chair back", table + new Vector3(-.7f, .72f, -.12f), new Vector3(.38f, .55f, .06f), OtomeArt.Hex("2A2A2E"), root);
-            Cube("third drink", table + new Vector3(.08f, .8f, -.1f), new Vector3(.08f, .16f, .07f), OtomeArt.Hex("D8DEE4"), root);
-            Cube("second glass", table + new Vector3(-.16f, .78f, .08f), new Vector3(.07f, .13f, .07f), OtomeArt.Hex("C8D0D8"), root);
+            Cube("empty chair", table + new Vector3(-.7f, .42f, .1f), new Vector3(.38f, .08f, .38f), OtomeArt.Hex("5A1820"), root);
+            Cube("empty chair back", table + new Vector3(-.7f, .72f, -.12f), new Vector3(.38f, .55f, .06f), OtomeArt.Hex("5A1820"), root);
+            Cube("third drink", table + new Vector3(.08f, .8f, -.1f), new Vector3(.08f, .16f, .07f), OtomeArt.Hex("F0C8A0"), root);
+            Cube("second glass", table + new Vector3(-.16f, .78f, .08f), new Vector3(.07f, .13f, .07f), OtomeArt.Hex("E8D4B8"), root);
         }
 
         private static void Cube(string name, Vector3 position, Vector3 scale, Color color, Transform parent)
@@ -456,7 +545,7 @@ namespace LastCall
             go.transform.localScale = scale;
             Object.Destroy(go.GetComponent<Collider>());
             var mesh = go.GetComponent<Renderer>();
-            mesh.sharedMaterial = OtomeArt.Flat(color);
+            mesh.sharedMaterial = OtomeArt.Cloth(color, .28f);
             mesh.shadowCastingMode = ShadowCastingMode.Off;
         }
     }
@@ -467,8 +556,8 @@ namespace LastCall
 
         public static bool Wear(GameObject instance, string actorId)
         {
-            if (Loader == null) return false;
-            var source = Loader(actorId);
+            var source = LastCallArtCatalog.Current?LastCallArtCatalog.Current.Model(actorId):null;
+            if(!source&&Loader!=null)source=Loader(actorId);
             if (!source) return false;
             var visual = instance.GetComponent<PlayerMotor>()?.VisualRoot;
             if (!visual) return false;
@@ -482,6 +571,12 @@ namespace LastCall
             var pose = instance.GetComponent<CharacterPose>();
             if (pose) pose.enabled = false;
             Fit(model, instance.transform, HeightOf(actorId));
+            if(HumanoidCastAnimator.Supports(actorId)&&model.GetComponentInChildren<SkinnedMeshRenderer>())
+            {
+                var motion=instance.GetComponent<HumanoidCastAnimator>();
+                if(!motion)motion=instance.AddComponent<HumanoidCastAnimator>();
+                motion.Configure(model);
+            }
             return true;
         }
 

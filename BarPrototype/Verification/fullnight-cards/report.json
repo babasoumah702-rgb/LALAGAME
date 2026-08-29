@@ -1,0 +1,54 @@
+{
+    "passed": true,
+    "checks": [
+        {
+            "name": "service_ready",
+            "passed": true
+        },
+        {
+            "name": "default_role_starts_locked",
+            "passed": true
+        },
+        {
+            "name": "locked_card_can_be_inspected",
+            "passed": true
+        },
+        {
+            "name": "default_role_joins_without_three_minute_wait",
+            "passed": true
+        },
+        {
+            "name": "ui_card_reaches_backend",
+            "passed": true
+        },
+        {
+            "name": "automatic_physical_approach",
+            "passed": true
+        },
+        {
+            "name": "cooldown_explained",
+            "passed": true
+        },
+        {
+            "name": "independent_npc_response",
+            "passed": true
+        },
+        {
+            "name": "second_card_effect_applied",
+            "passed": true
+        },
+        {
+            "name": "leave_party_without_ending_night",
+            "passed": true
+        },
+        {
+            "name": "can_rejoin",
+            "passed": true
+        },
+        {
+            "name": "reflection_still_works",
+            "passed": true
+        }
+    ],
+    "errors": []
+}

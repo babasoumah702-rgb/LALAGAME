@@ -7,7 +7,7 @@ import {loadScenario} from '../config.js';
 import {Store} from '../store.js';
 const scenario=loadScenario('scenarios/last_call.json');
 const navigation=new Navigator(JSON.parse(readFileSync('scenarios/navigation.json','utf8')));
-const create=(role='friend_guest')=>new Engine(scenario,{playerId:'simulation',seed:821,role,online:false},undefined,navigation);
+const create=(role='passerby')=>new Engine(scenario,{playerId:'simulation',seed:821,role,online:false},undefined,navigation);
 function pump(g:Engine){
   g.advance(.2);
   for(const a of g.world.actors.filter(a=>a.active&&a.route.length)){

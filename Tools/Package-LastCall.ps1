@@ -1,4 +1,4 @@
-$ErrorActionPreference='Stop'
+﻿$ErrorActionPreference='Stop'
 $project=(Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..\BarPrototype')).Path
 $build=Join-Path $project 'Builds\LastCall-Windows'
 & (Join-Path $PSScriptRoot 'Audit-LastCall.ps1')

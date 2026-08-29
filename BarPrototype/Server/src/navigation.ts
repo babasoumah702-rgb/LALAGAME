@@ -1,5 +1,5 @@
 import type {Navigation,Point} from './types.js';
-export const distance=(a:Point,b:Point)=>Math.hypot(a.x-b.x,a.z-b.z);
+export const distance=(a:Point,b:Point)=>Math.hypot(a.x-b.x,a.z-b.z,(a.y??0)-(b.y??0));
 export class Navigator {
   blocked:Set<number>;
   constructor(public data:Navigation) { this.blocked=new Set(data.blocked); }

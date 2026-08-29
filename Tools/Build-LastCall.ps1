@@ -1,4 +1,4 @@
-param([switch]$Prepare)
+﻿param([switch]$Prepare)
 $ErrorActionPreference='Stop'
 $project=Join-Path $PSScriptRoot '..\BarPrototype'
 $project=(Resolve-Path -LiteralPath $project).Path

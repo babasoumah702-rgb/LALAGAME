@@ -1,0 +1,103 @@
+{
+    "passed": false,
+    "kind": "visible native resumed travel regression",
+    "clockScale": "3",
+    "checks": [
+        {
+            "name": "service_ready",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "travel_controls_unpaused",
+            "detail": "",
+            "passed": false
+        },
+        {
+            "name": "real_stairs_entered",
+            "detail": "",
+            "passed": false
+        },
+        {
+            "name": "render_stairs",
+            "detail": "mean=24.2",
+            "passed": true
+        },
+        {
+            "name": "roof_reached_without_teleport",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "render_scene6-roof-1280x720",
+            "detail": "mean=24.4",
+            "passed": true
+        },
+        {
+            "name": "resolution_scene6-roof(1280, 720)",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "render_scene6-roof-1920x1080",
+            "detail": "mean=23.6",
+            "passed": true
+        },
+        {
+            "name": "resolution_scene6-roof(1920, 1080)",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "render_scene6-roof-1280x800",
+            "detail": "mean=25.0",
+            "passed": true
+        },
+        {
+            "name": "resolution_scene6-roof(1280, 800)",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "roof_sit",
+            "detail": "",
+            "passed": false
+        },
+        {
+            "name": "render_roof-sit",
+            "detail": "mean=24.4",
+            "passed": true
+        },
+        {
+            "name": "roof_lie",
+            "detail": "",
+            "passed": false
+        },
+        {
+            "name": "render_roof-lie",
+            "detail": "mean=24.4",
+            "passed": true
+        },
+        {
+            "name": "waits_for_end_confirmation",
+            "detail": "",
+            "passed": false
+        },
+        {
+            "name": "render_ending-aerial",
+            "detail": "mean=24.4",
+            "passed": true
+        },
+        {
+            "name": "perception_based_recap",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "render_recap",
+            "detail": "mean=24.4",
+            "passed": true
+        }
+    ],
+    "errors": []
+}

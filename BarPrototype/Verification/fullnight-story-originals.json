@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Scene 3：塔罗牌局.md",
+    "sha256": "c662ce9117d687e14bddffe74c5225d745cc40cdc745150d74a5b8ba9b00ed7a",
+    "identical": true
+  },
+  {
+    "name": "Scene 4：走廊（抽烟）.md",
+    "sha256": "7de4ed106f6b0ed705aff3e7652429d06f5fd2cb5e52b08da2a0d1f180ecc0a4",
+    "identical": true
+  },
+  {
+    "name": "Scene 5：回到酒吧：散场前的流动夜色.md",
+    "sha256": "9d6833950129f0814e773de55fa67decda6d3854b07637bed17a8137a98963e0",
+    "identical": true
+  },
+  {
+    "name": "Scene 6： 露台 收尾.md",
+    "sha256": "e655e14a70b74da63b6f06f06dcc0ca1cc0282aab8e4a8e2d22b44676cfcc3bf",
+    "identical": true
+  },
+  {
+    "name": "scene2：动态社交场.md",
+    "sha256": "f104e9e83b1274a2815126f5486d4e7dc22b155c0302c9be906f349ac6e05813",
+    "identical": true
+  },
+  {
+    "name": "Scene 1：第三杯（飞书可见文本快照）.txt",
+    "identical": null,
+    "status": "browser_visible_text_snapshots_with_authoritative_remote_link",
+    "source": "https://my.feishu.cn/docx/CbDndComEoTlQ4xwDWmcfZXbnTd",
+    "sha256": "2c8b798983df928ff6b291bf268e5bd8e783ef07c0addbdce7cad8af1fde056c"
+  }
+]

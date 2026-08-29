@@ -1,0 +1,9 @@
+{
+  "calls": 1,
+  "tokens": 216,
+  "durationMs": 1487,
+  "messageSource": "model",
+  "status": "在线生成",
+  "accepted": true,
+  "note": "Synthetic private-free context. This checks gateway compatibility, not seven-second render timing."
+}

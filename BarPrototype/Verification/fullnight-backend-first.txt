@@ -1,0 +1,406 @@
+✔ normal and redirected AppData processes read the same profile-private configuration (7.9191ms)
+✔ explicit config directories remain isolated and never silently import a personal key (5.2106ms)
+✔ legacy config remains readable if no stable file exists; environment override is retained (6.5203ms)
+✔ an intentionally empty stable key never falls back to a stale key from a different location (8.1523ms)
+(node:15784) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ config refresh repairs a missing-key fallback save without overriding deliberate offline mode (844.4016ms)
+✔ same answers, free text and seed always resolve to the same pack (1.406ms)
+✔ an explicit choice overrides free text and is not overridden by it (0.2244ms)
+✔ ambiguous or missing domain falls back to the default pack (0.386ms)
+✔ profile extracts only explicit content and never infers protected attributes (0.3586ms)
+✔ every pack covers A/B/C/D and only skins real beats (0.4762ms)
+✔ identity brief is compressed and carries no raw player input (0.5546ms)
+✔ agent context never serializes raw player background (6.3626ms)
+✔ mid-game revision defers to the next beat boundary and keeps state (5.4914ms)
+✔ no background means the default pack and a runnable night (1.8299ms)
+✔ Scene0 survives a real backend process restart with private text and event deduplication (8662.1125ms)
+✔ Scene 0 is opt-in; legacy initial cast and immediate third drink are unchanged (5.765ms)
+✔ intro waits for client readiness, freezes on pause, and uses a separate seven-second clock (1.3038ms)
+✔ exactly one background event, different evidence for A/C, no player leak (1.514ms)
+✔ background perception respects obstruction, distance and facing (1.7229ms)
+✔ phone and private input are idempotent and never become public dialogue (2.7613ms)
+✔ handoff starts third drink once and prevents duplicate A/C arrivals (63.1277ms)
+✔ mid-intro snapshot preserves message, checkpoint and evidence (2.9169ms)
+✔ model invitation rejects leaked names and late results (1.348ms)
+✔ gateway failure is a local preset fallback, with budget counted and no world loss (22.394ms)
+✔ production geometry supports A/C perception and a continuous elevator exit (5.6353ms)
+✔ next night does not replay elevator and retains the new arrival route (1.2978ms)
+✔ late network result cannot replace a phone message already on screen (2.9466ms)
+✔ valid JSON is insufficient; extra fields, long text and identity claims are rejected (2.2638ms)
+✔ authentication failure stays online and exposes an explicit retry error (34.3077ms)
+✔ invalid JSON is retried once and never applied (4.5165ms)
+✔ timeout retries count toward budget and preserve events (1.5147ms)
+✔ high attraction cannot override an explicit space request (1.4423ms)
+✔ network disconnect records a safe category and keeps online mode (1.4818ms)
+✔ every entry can request a party immediately: passerby (10.5047ms)
+✔ every entry can request a party immediately: social_guest (1.0822ms)
+✔ every entry can request a party immediately: friend_guest (1.2555ms)
+✔ every entry can request a party immediately: staff (0.9607ms)
+✔ every entry can request a party immediately: owner_bartender (0.9119ms)
+✔ opening a party is idempotent and prevents the later duplicate invitation (0.9881ms)
+✔ join, play, cooldown, independent response, decline and rejoin complete a real card flow (4.3933ms)
+✔ party consent does not bypass elevator, pause, distance, visibility or Last Call (2.5166ms)
+✔ a queued walk can be cancelled while waiting for a reply or while paused (1.5306ms)
+✔ DeepSeek uses non-thinking mode without leaking vendor parameters to other gateways (1.1384ms)
+✔ both intro and character requests carry the configured DeepSeek model and JSON mode (27.7413ms)
+(node:41972) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ entry and finish: passerby (7.1645ms)
+✔ entry and finish: social_guest (1.4832ms)
+✔ entry and finish: friend_guest (0.8539ms)
+✔ entry and finish: staff (0.6784ms)
+✔ entry and finish: owner_bartender (0.6325ms)
+✔ unseen character cannot read an event (1.1457ms)
+✔ same signal creates distinct local interpretations (1.3361ms)
+✔ private note reveals gesture, not content, to bystander (0.6713ms)
+✔ boundary cannot be bypassed by attraction (2.0498ms)
+✔ command idempotency, length limit and distance (2.1563ms)
+✔ refusing cards does not stop the night (4.2467ms)
+✔ conditional C and D entry, not unconditional spawning (31.1006ms)
+✔ pause freezes world time (1.3405ms)
+✔ invalid evidence and targets cannot mutate state (0.6534ms)
+✔ delayed autonomous relay keeps causal source (0.8035ms)
+✔ save ownership, resume and next night preserve memories (3.5352ms)
+✔ seed reproduces rules and source logs (1.0004ms)
+✔ player view never serializes private minds or world facts (0.8678ms)
+✔ A star avoids obstacles and blocked corners (0.2981ms)
+✔ model request budget stops generation without silently changing mode (3.301ms)
+✔ exhausted event action budget cannot change relationships (0.8846ms)
+✔ old reliable command remains idempotent throughout a world (6.4983ms)
+✔ batched position reports respect pause and finite coordinates (0.9495ms)
+(node:20336) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ every configured location is reachable on the exported Unity grid (14.3871ms)
+✔ full 720-second offline night with navigation: passerby (120.3387ms)
+✔ full 720-second offline night with navigation: social_guest (72.7243ms)
+✔ full 720-second offline night with navigation: friend_guest (72.542ms)
+✔ full 720-second offline night with navigation: staff (83.6915ms)
+✔ full 720-second offline night with navigation: owner_bartender (62.8216ms)
+✔ seat reservations do not allocate the same endpoint (14.9842ms)
+✔ pending speech waits for physical arrival (0.9808ms)
+✔ old observation actions cannot trigger D later (8.27ms)
+✔ decision records are owner isolated and preserved (1.426ms)
+✔ entry willingness adjusts invitations, not relationship history (0.9796ms)
+✔ same seed reproduces an entire rules-mode event sequence (68.7507ms)
+✔ alternate declarative scenario starts an independent world (0.9419ms)
+✔ third drink is delivered once through the production navigation and D waits for an interaction (240.8376ms)
+✔ new chapter is opt-in and resume never replays the cup or inserts it in an old save (2.7671ms)
+✔ first conversation targets A without automatically disclosing names (1.7521ms)
+✔ first conversation targets B without automatically disclosing names (0.8497ms)
+✔ first conversation targets C without automatically disclosing names (0.6333ms)
+✔ unheard introductions and gestures never disclose a name or private text (1.091ms)
+✔ reserved seat requires proximity and records an action rather than a personality judgment (1.0026ms)
+✔ conversation facing survives client yaw reports and releases on movement (0.5359ms)
+✔ missing key keeps the original event and retry is idempotent while the world keeps running (3.0724ms)
+✔ repeated AI response is regenerated once, accepted source stays AI, and pause defers application (18.2205ms)
+✔ ordinary dialogue context includes authors and everyday voice without raw background (1.2705ms)
+✔ unknown names stay hidden in partial hearing, private note gestures and reflection (0.9133ms)
+✔ scene actions require sight, and an idle NPC does not accept stale client facing (0.4487ms)
+✔ a second identical AI response fails without substituting a rules sentence (1.7765ms)
+✔ retry cannot spend beyond the budget or charge a card twice (1.8495ms)
+✔ online photo request cannot override an existing refusal (0.8727ms)
+✖ Scene 3 opens from the Scene 2 deck and picks a reader that is not fixed to the bartender (158.7593ms)
+✖ the first round flips a card, asks a real question and names a first responder (130.8737ms)
+✖ the arc runs light before high tension rather than pure random (84.8168ms)
+✖ the gaze before an answer is recorded and only seen by whoever was looking (85.0276ms)
+✖ the player can answer, skip, deflect, ask back, observe and joke (80.1986ms)
+✖ silence is an event, not a null input (70.4988ms)
+✖ a joker breaks the room open after the tension peaks (64.7132ms)
+✖ the round ends at 3 to 5 cards without exhausting the deck (68.5205ms)
+✖ someone leaves the table and the exit to Scene 4 opens with the player free to choose (73.2829ms)
+✖ the view exposes the card and the turn but never tension numbers or hidden targets (65.8162ms)
+✖ the handoff reports observable moves and no verdict about anyone (62.318ms)
+✖ resume keeps the tarot round and does not reflip the current card (63.8457ms)
+✖ a declined player is never forced to answer and the table continues (68.3851ms)
+✔ Scene 2 opens from the finished Scene 1 without replaying D arrival (52.1518ms)
+✖ the cross introduction unlocks D name once and keeps the profession vague (36.4913ms)
+✔ freeflow moves everyone and records position as a social act (100.0458ms)
+✔ follow, listen and the light game are all valid moves and reach the agents (35.1425ms)
+✔ A2A ripple happens with no player input and respects who could perceive it (53.1449ms)
+✖ the montage passes time through the room and never through a real hour (94.1505ms)
+✖ the table regathers and the bartender leaves the deck, which the player can look at (84.0629ms)
+✖ the handoff carries impressions for Scene 3 and no verdicts (35.6276ms)
+✖ resume keeps the Scene 2 chapter and does not replay the introduction (33.7562ms)
+✔ an old save never gains the new chapters (0.5257ms)
+✔ HTTP ownership, WebSocket commands and reconnect (575.6296ms)
+ℹ tests 120
+ℹ suites 0
+ℹ pass 102
+ℹ fail 18
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8951.8232
+
+✖ failing tests:
+
+test at dist\tests\scene-three.test.js:66:1
+✖ Scene 3 opens from the Scene 2 deck and picks a reader that is not fixed to the bartender (158.7593ms)
+  TypeError: Cannot read properties of undefined (reading 'level')
+      at ruleDecision (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/decisions.js:44:30)
+      at Engine.rule (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/engine.js:197:32)
+      at tick (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:27:109)
+      at tickUntil (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:42:9)
+      at reachSceneThree (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:56:15)
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:68:5)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.start (node:internal/test_runner/test:1003:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+
+test at dist\tests\scene-three.test.js:86:1
+✖ the first round flips a card, asks a real question and names a first responder (130.8737ms)
+  TypeError: Cannot read properties of undefined (reading 'level')
+      at ruleDecision (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/decisions.js:44:30)
+      at Engine.rule (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/engine.js:197:32)
+      at tick (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:27:109)
+      at tickUntil (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:42:9)
+      at reachSceneThree (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:56:15)
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:88:5)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+
+test at dist\tests\scene-three.test.js:98:1
+✖ the arc runs light before high tension rather than pure random (84.8168ms)
+  TypeError: Cannot read properties of undefined (reading 'level')
+      at ruleDecision (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/decisions.js:44:30)
+      at Engine.rule (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/engine.js:197:32)
+      at tick (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:27:109)
+      at tickUntil (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:42:9)
+      at reachSceneThree (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:56:15)
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:100:5)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+
+test at dist\tests\scene-three.test.js:110:1
+✖ the gaze before an answer is recorded and only seen by whoever was looking (85.0276ms)
+  TypeError: Cannot read properties of undefined (reading 'level')
+      at ruleDecision (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/decisions.js:44:30)
+      at Engine.rule (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/engine.js:197:32)
+      at tick (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:27:109)
+      at tickUntil (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:42:9)
+      at reachSceneThree (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:56:15)
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:112:5)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+
+test at dist\tests\scene-three.test.js:127:1
+✖ the player can answer, skip, deflect, ask back, observe and joke (80.1986ms)
+  TypeError: Cannot read properties of undefined (reading 'level')
+      at ruleDecision (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/decisions.js:44:30)
+      at Engine.rule (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/engine.js:197:32)
+      at tick (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:27:109)
+      at tickUntil (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:42:9)
+      at reachSceneThree (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:56:15)
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:130:9)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+
+test at dist\tests\scene-three.test.js:153:1
+✖ silence is an event, not a null input (70.4988ms)
+  TypeError: Cannot read properties of undefined (reading 'level')
+      at ruleDecision (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/decisions.js:44:30)
+      at Engine.rule (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/engine.js:197:32)
+      at tick (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:27:109)
+      at tickUntil (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:42:9)
+      at reachSceneThree (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:56:15)
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:155:5)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+
+test at dist\tests\scene-three.test.js:166:1
+✖ a joker breaks the room open after the tension peaks (64.7132ms)
+  TypeError: Cannot read properties of undefined (reading 'level')
+      at ruleDecision (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/decisions.js:44:30)
+      at Engine.rule (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/engine.js:197:32)
+      at tick (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:27:109)
+      at tickUntil (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:42:9)
+      at reachSceneThree (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:56:15)
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:168:15)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+
+test at dist\tests\scene-three.test.js:177:1
+✖ the round ends at 3 to 5 cards without exhausting the deck (68.5205ms)
+  TypeError: Cannot read properties of undefined (reading 'level')
+      at ruleDecision (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/decisions.js:44:30)
+      at Engine.rule (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/engine.js:197:32)
+      at tick (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:27:109)
+      at tickUntil (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:42:9)
+      at reachSceneThree (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:56:15)
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:179:5)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+
+test at dist\tests\scene-three.test.js:186:1
+✖ someone leaves the table and the exit to Scene 4 opens with the player free to choose (73.2829ms)
+  TypeError: Cannot read properties of undefined (reading 'level')
+      at ruleDecision (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/decisions.js:44:30)
+      at Engine.rule (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/engine.js:197:32)
+      at tick (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:27:109)
+      at tickUntil (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:42:9)
+      at reachSceneThree (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:56:15)
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:188:5)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+
+test at dist\tests\scene-three.test.js:198:1
+✖ the view exposes the card and the turn but never tension numbers or hidden targets (65.8162ms)
+  TypeError: Cannot read properties of undefined (reading 'level')
+      at ruleDecision (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/decisions.js:44:30)
+      at Engine.rule (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/engine.js:197:32)
+      at tick (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:27:109)
+      at tickUntil (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:42:9)
+      at reachSceneThree (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:56:15)
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:200:5)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+
+test at dist\tests\scene-three.test.js:212:1
+✖ the handoff reports observable moves and no verdict about anyone (62.318ms)
+  TypeError: Cannot read properties of undefined (reading 'level')
+      at ruleDecision (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/decisions.js:44:30)
+      at Engine.rule (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/engine.js:197:32)
+      at tick (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:27:109)
+      at tickUntil (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:42:9)
+      at reachSceneThree (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:56:15)
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:214:5)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+
+test at dist\tests\scene-three.test.js:224:1
+✖ resume keeps the tarot round and does not reflip the current card (63.8457ms)
+  TypeError: Cannot read properties of undefined (reading 'level')
+      at ruleDecision (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/decisions.js:44:30)
+      at Engine.rule (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/engine.js:197:32)
+      at tick (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:27:109)
+      at tickUntil (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:42:9)
+      at reachSceneThree (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:56:15)
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:226:5)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+
+test at dist\tests\scene-three.test.js:237:1
+✖ a declined player is never forced to answer and the table continues (68.3851ms)
+  TypeError: Cannot read properties of undefined (reading 'level')
+      at ruleDecision (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/decisions.js:44:30)
+      at Engine.rule (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/engine.js:197:32)
+      at tick (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:27:109)
+      at tickUntil (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:42:9)
+      at reachSceneThree (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:56:15)
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:239:5)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+
+test at dist\tests\scene-two.test.js:59:1
+✖ the cross introduction unlocks D name once and keeps the profession vague (36.4913ms)
+  AssertionError [ERR_ASSERTION]: D name unlocks through the introduction
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-two.test.js:66:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at dist\tests\scene-two.test.js:112:1
+✖ the montage passes time through the room and never through a real hour (94.1505ms)
+  TypeError: Cannot read properties of undefined (reading 'level')
+      at ruleDecision (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/decisions.js:44:30)
+      at Engine.rule (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/engine.js:197:32)
+      at tick (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-two.test.js:27:109)
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-two.test.js:121:5)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+
+test at dist\tests\scene-two.test.js:131:1
+✖ the table regathers and the bartender leaves the deck, which the player can look at (84.0629ms)
+  TypeError: Cannot read properties of undefined (reading 'level')
+      at ruleDecision (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/decisions.js:44:30)
+      at Engine.rule (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/engine.js:197:32)
+      at tick (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-two.test.js:27:109)
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-two.test.js:139:5)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+
+test at dist\tests\scene-two.test.js:149:1
+✖ the handoff carries impressions for Scene 3 and no verdicts (35.6276ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(h.knownCharacters.includes('D'))
+  
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-two.test.js:158:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at dist\tests\scene-two.test.js:164:1
+✖ resume keeps the Scene 2 chapter and does not replay the introduction (33.7562ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-two.test.js:173:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -29,7 +29,7 @@ namespace LastCall
                 Client.Send(new CommandDto{type="mode",online=Client.State.mode!="online"});
                 ShowPause();
             });
-            ActionButton(body,"离场并回看",30,258,460,44,()=>{
+            if(Client.State.intro?.phase!="elevator")ActionButton(body,"离场并回看",30,258,460,44,()=>{
                 Pause(false);
                 Client.Send(new CommandDto{type="leave"});
             });
@@ -74,7 +74,7 @@ namespace LastCall
         private void ShowNotes()
         {
             OpenNotes("你知道的，和你还不知道的",body=>{
-                string text=string.Join("\n\n",Client.State.events.Select(e=>e.time+"  "+e.name+" / "+SourceLabel(e.source)+"\n"+e.text));
+                string text=string.Join("\n\n",Client.State.events.Select(e=>e.time+"  "+e.name+" / "+SourceLabel(e.source)+" · "+GenerationLabel(e.generationSource)+"\n"+e.text));
                 ScrollText(body,text.Length>0?text:"这里会记录你亲见、旁听和被告知的事。它不是全知日志。");
             });
         }
@@ -96,14 +96,18 @@ namespace LastCall
         private void ShowParty()
         {
             OpenNotes("最后一局 · 可以参加，也可以拒绝",body=>{
-                Label(body,Client.State.cardsOffered?"老板娘已经发出邀请。加入后可使用七张情境牌。":"牌局还没有开始。你仍然可以移动、观察和使用五种社交意图。",30,90,680,100,20);
-                if(Client.State.cardsOffered)
+                partyStatus=Label(body,Client.State.cardsJoined?"你已加入牌局。六张情境牌现在可用；「最后一次表达」在 Last Call 时开放。":
+                    Client.State.cardsOffered?"老板娘已经发出邀请。加入后即可使用六张情境牌。":"不用等营业计时：可以现在请老板娘开局并加入。五种入口都可以参加。",30,90,680,100,20);
+                Label(body,"玩法：选人物 → 选牌 → 选一句表达或自己输入 → 出牌。\n距离太远会先走近。没有强制回答、胜负或扣分。",30,340,680,90,17,muted);
+                if(Client.State.cardsJoined)
                 {
-                    ActionButton(body,"加入牌局",30,236,330,60,()=>{CloseNotes();Client.Send(new CommandDto{type="join"});},true);
-                    ActionButton(body,"这次先不参加",380,236,330,60,()=>{CloseNotes();Client.Send(new CommandDto{type="decline"});});
+                    ActionButton(body,"开始选牌",30,236,330,60,()=>{CloseNotes();SelectCard("truth");},true);
+                    ActionButton(body,"退出牌局，继续聊天",380,236,330,60,()=>{CloseNotes();Client.Send(new CommandDto{type="decline"});});
                 }
-                else if(new[]{"staff","owner_bartender","social_guest"}.Contains(Client.State.role))
-                    ActionButton(body,"邀请大家来一局",30,236,680,60,()=>{CloseNotes();Client.Send(new CommandDto{type="invite_game"});},true);
+                else{
+                    ActionButton(body,Client.State.cardsOffered?"加入牌局":"请老板娘开局并加入",30,236,330,60,()=>StartCoroutine(StartPartyWhenReady()),true);
+                    ActionButton(body,"先不参加",380,236,330,60,()=>{CloseNotes();if(Client.State.cardsOffered)Client.Send(new CommandDto{type="decline"});});
+                }
             });
         }
         private void ShowReflection()
@@ -123,7 +127,7 @@ namespace LastCall
                 Client.OpenSession(new SessionRequest{mode="next",sessionId=previous});
             },true);
             ActionButton(body,"换个入口，独立新开局",372,520,340,46,()=>{
-                notesVisible=false;entryVisible=true;BuildEntry();
+                notesVisible=false;entryVisible=true;entryPage=0;BuildEntry();
             });
             ActionButton(body,"保存并退出",28,576,684,32,Quit);
         }

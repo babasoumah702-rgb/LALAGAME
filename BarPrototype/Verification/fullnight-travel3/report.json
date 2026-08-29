@@ -1,0 +1,33 @@
+{
+    "passed": false,
+    "kind": "visible native resumed travel regression",
+    "clockScale": "3",
+    "checks": [
+        {
+            "name": "service_ready",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "travel_controls_unpaused",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "real_stairs_entered",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "render_stairs",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "roof_reached_without_teleport",
+            "detail": "",
+            "passed": false
+        }
+    ],
+    "errors": []
+}

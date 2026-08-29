@@ -1,13 +1,12 @@
 {
   "id":"last_call", "version":1, "title":"Last Call · 闭店前最后一局", "duration":720,
   "roles":[
-    {"id":"passerby","name":"临时路过","description":"原本只想坐一小会。你认识的人，恰好也在。","spawn":"entrance"},
-    {"id":"social_guest","name":"社交顾客","description":"今晚想多认识一点人，更容易收到组局邀请。","spawn":"entrance"},
-    {"id":"friend_guest","name":"熟人来客","description":"有人已经替你点好了酒。你知道那是谁。","spawn":"entrance"},
-    {"id":"staff","name":"临时代班员工","description":"可以进入服务区，但听见碎片不代表知道真相。","spawn":"service"},
-    {"id":"owner_bartender","name":"客座调酒师","description":"今晚临时帮忙调酒。你可以邀请组局，没有读心权限。","spawn":"service"}
+    {"id":"passerby","name":"临时路过，随便看看","description":"原本只想坐一小会。这里的人你都不认识。","spawn":"entrance"},
+    {"id":"event_guest","name":"活动","description":"今晚来参加活动，更容易收到组局邀请。","spawn":"entrance"},
+    {"id":"staff","name":"来酒吧打工的","description":"可以进入服务区，但听见碎片不代表知道真相。","spawn":"service"},
+    {"id":"mysterious","name":"保持神秘","description":"不多说，今晚先观察。","spawn":"entrance"}
   ],
-  "intents":[{"id":"observe_only","name":"随便看看"},{"id":"meet_people","name":"认识新人"},{"id":"romantic_open","name":"有一点心动"},{"id":"stay_with_friends","name":"陪朋友"},{"id":"low_energy","name":"今天不太想说话"}],
+  "intents":[{"id":"observe_only","name":"随便看看"},{"id":"meet_people","name":"想认识新的朋友"},{"id":"romantic_open","name":"为某人而来"},{"id":"stay_with_friends","name":"陪朋友"},{"id":"low_energy","name":"不想透露"}],
   "styles":[
     {"id":"natural","name":"自然聊天"},
     {"id":"restrained","name":"克制细腻","expressions":{
@@ -17,20 +16,7 @@
       "boundary":["这件事，我暂时不想谈。","我需要一点空间。"],
       "connect":["如果愿意，我们可以一起谈谈。","要不要坐过来？"]
     }},
-    {"id":"cinematic","name":"电影氛围","expressions":{
-      "approach":["这晚还剩一点时间，我想坐在你身边。","最后一杯之前，我们再聊一会吧。"],
-      "probe":["你刚才的停顿，是不是还有一句话？","你们之间，好像有一段我不知道的故事。"],
-      "reveal":["今晚推开这扇门，是因为想见你。","我不想让那些在意，一直留在没有说出口的地方。"],
-      "boundary":["让这个问题先停在这里吧。","我想去门外，安静地待一会。"],
-      "connect":["也许我们可以坐下来，把没说完的话接上。","如果你愿意，今晚还有一个位置。"]
-    }},
-    {"id":"playful","name":"轻松活泼","expressions":{
-      "approach":["能借我旁边这个位置吗？就一小会。","今晚聊天名额，能给我留一个吗？"],
-      "probe":["我是不是错过了什么小故事？","刚才那个眼神，是有话想说吗？"],
-      "reveal":["好吧，今晚我就是想见你。","我挺在意你的，虽然现在说得有点笨。"],
-      "boundary":["这题先跳过，好吗？","让我给自己放个小假，安静一会。"],
-      "connect":["要不凑一桌，把误会聊小一点？","来坐这儿吧，当然你说了算。"]
-    }}
+    {"id":"casual","name":"随便"}
   ],
   "locations":[
     {"id":"entrance","name":"入口","x":-1,"z":-4.25,"radius":1.15,"privacy":0,"capacity":4},
@@ -43,21 +29,152 @@
     {"id":"service","name":"服务区","x":-2.2,"z":3.6,"radius":1.1,"privacy":0.3,"capacity":3}
   ],
   "actors":[
-    {"id":"USER","name":"玩家","color":"CFECE8","goal":"选择今晚如何与人相处。","voice":"玩家本人表达。","home":"entrance","initial":true,"knownFacts":[],"knownActors":["A","B","C","BARTENDER","OWNER"],"privatePhoto":true,"initiative":0,"share":0},
-    {"id":"A","name":"A","color":"70BB89","goal":"知道今晚的保留是为什么，但不在公开空间失控。","voice":"克制、具体，只问自己有依据的问题。","knownFacts":["user_a_partner"],"knownActors":["USER","BARTENDER","OWNER"],"privatePhoto":true,"initiative":0.65,"share":0.2,"home":"entrance","initial":false},
-    {"id":"B","name":"B","color":"E4A465","goal":"确认自己对玩家是不是特殊的；被拒绝时保护自己。","voice":"直接但会犹豫，用短句，不强迫玩家选自己。","knownFacts":["user_a_partner","user_b_attraction","user_b_visits"],"knownActors":["USER","A","BARTENDER","OWNER"],"privatePhoto":false,"initiative":0.8,"share":0.65,"home":"main_table","initial":true},
-    {"id":"C","name":"C","color":"AA9CDC","goal":"如果重逢，确认过去的关系是否已经真正结束。","voice":"记得细节，但不擅自宣称玩家还爱自己。","knownFacts":["user_c_past"],"knownActors":["USER","BARTENDER"],"privatePhoto":true,"initiative":0.4,"share":0.3,"home":"bar","initial":false},
-    {"id":"D","name":"D","color":"85BECC","goal":"认识一个愿意坦诚交流的人，不卷入陌生人的旧关系。","voice":"轻松、尊重留白，不知道任何既往关系。","knownFacts":[],"knownActors":[],"privatePhoto":true,"initiative":0.7,"share":0.15,"home":"seat13","initial":false},
-    {"id":"BARTENDER","name":"调酒师","color":"BDCCA4","goal":"照顾客人，描述亲见的事，不替客人断言关系。","voice":"温和简短，知道行为但不知道隐秘关系真相。","knownFacts":["user_b_visits"],"knownActors":["USER","A","B","OWNER"],"privatePhoto":false,"initiative":0.6,"share":0.55,"home":"bar","initial":true},
+    {"id":"USER","name":"玩家","color":"CFECE8","goal":"选择今晚如何与人相处。","voice":"玩家本人表达。","home":"entrance","initial":true,"knownFacts":[],"knownActors":["BARTENDER","OWNER"],"privatePhoto":true,"initiative":0,"share":0},
+    {"id":"A","name":"kiko","color":"70BB89","goal":"在不被别人替自己定义感受的前提下，弄清 B 到底有没有把同行欣赏、募资判断和私人吸引分开。","voice":"短句、精确复述对方原话；少感叹词，不堆术语；越被误解越平静。","knownFacts":["a_reads_b","ac_past","echo_project"],"knownActors":["B","C","BARTENDER","OWNER"],"privatePhoto":true,"initiative":0.65,"share":0.2,"home":"entrance","initial":false},
+    {"id":"B","name":"X","color":"E4A465","goal":"拆开自己的欣赏、下注、照顾与心动，不拿判断力替动机免责。","voice":"语气轻松、会开玩笑和照顾场面；真正认真时不笑，句子变短、问题变直接。","knownFacts":["b_reads_a","bc_recent_end","b_reads_d","b_history","echo_project"],"knownActors":["A","C","D","BARTENDER","OWNER"],"privatePhoto":false,"initiative":0.8,"share":0.65,"home":"main_table","initial":true},
+    {"id":"C","name":"万塞","color":"AA9CDC","goal":"在失去职位和保护者角色之后，重新确认自己不是多余的人。","voice":"陌生场合话少句短；熟人面前语速快、输出密，吐槽里带粗口；情绪低落时更硬更直接。","knownFacts":["bc_recent_end","cd_past_romance","ac_past"],"knownActors":["A","B","D","BARTENDER"],"privatePhoto":true,"initiative":0.4,"share":0.3,"home":"bar","initial":false},
+    {"id":"D","name":"一桐","color":"85BECC","goal":"让人真正看见的是自己的技术和判断，而不是任何人的替身。","voice":"语速偏快、句子直接、情绪写在脸上；谈技术时结构化，用具体事实反驳而不炫黑话。","knownFacts":["cd_past_romance","d_reads_b","echo_project"],"knownActors":["B","C"],"privatePhoto":true,"initiative":0.7,"share":0.15,"home":"seat13","initial":false},
+    {"id":"BARTENDER","name":"调酒师","color":"BDCCA4","goal":"照顾客人，描述亲见的事，不替客人断言关系。","voice":"温和简短，知道行为但不知道隐秘关系真相。","knownFacts":["bartender_sees"],"knownActors":["A","B","C","OWNER"],"privatePhoto":false,"initiative":0.6,"share":0.55,"home":"bar","initial":true},
     {"id":"OWNER","name":"老板娘","color":"D591A8","goal":"维持秩序和营业节奏。","voice":"温暖，尊重不参加游戏的人。","knownFacts":[],"knownActors":["BARTENDER"],"privatePhoto":false,"initiative":0,"share":0,"home":"corridor","initial":true}
   ],
-  "facts":{"user_a_partner":"你知道 USER 与 A 是长期伴侣。","user_b_attraction":"你知道自己与 USER 有尚未定义的吸引。","user_b_visits":"你亲眼见过 USER 与 B 最近几次同时出现在店里；你不知道她们真实关系。","user_c_past":"你与 USER 曾有一段重要的过去关系。"},
+  "facts":{
+    "a_reads_b":"你对 B 有超出合作关系的兴趣，同时怀疑她把同行欣赏、募资判断和私人吸引混在了一起。",
+    "b_reads_a":"你与 A 有资本合作，也有双向吸引；你还没分清自己是欣赏她的判断，还是想靠近她本人。",
+    "bc_recent_end":"你与 C 的高强度关系刚结束不久，收尾没有真正谈完。",
+    "cd_past_romance":"你与 D 曾经短暂恋爱；那段关系结束了，但没有说清。",
+    "b_reads_d":"你对 D 的关注同时包含技术认可、个人欣赏，以及对旧人的投影。",
+    "d_reads_b":"你对 B 有感情，但不愿用感情换投资，也不允许私人关系抹掉你的专业贡献。",
+    "ac_past":"你与 A 曾有过一段关系，现在是可以共处的旧识。",
+    "b_history":"你曾经有过关系重叠与隐瞒，悔过但没有完成修复，必须为自己的行为负责。",
+    "echo_project":"ECHO 项目的旧技术资产、投资备忘录和署名授权还没有谈定。",
+    "bartender_sees":"你亲眼见过这几位客人最近常在同一个晚上出现；具体关系你并不清楚。"
+  },
+  "personas":{
+    "shared":{
+      "humanity":{
+        "normalRatio":0.8,
+        "normal":"遵守角色既定声口、身份、句长、边界和情绪处理方式，保证长期可辨认。",
+        "contrast":"允许短暂违背惯常表达习惯，露出没来得及整理的真实反应。只改变说法、节奏和当下动作，不能推翻核心人格、既定事实、性取向、同意边界或关系状态。",
+        "pacing":"按一段连续互动的整体观感控制，不机械地每 5 句触发 1 句，也不在每轮随机制造反差。一次反差通常只持续 1–3 句；失态后按自身方式找补、转移、嘴硬或沉默。",
+        "strongTriggers":["暧昧被点破","距离突然拉近","对方提到潜在情敌","被冷落","被优先选择","质疑关系定义","吃醋","害怕失去","嘴硬后被准确看穿"],
+        "weakTriggers":["普通寒暄","职业讨论","场景说明"],
+        "tone":["允许半句话、停顿、重复、自我修正、说出口后反悔、答非所问、轻微口头禅，以及动作先于语言。","暧昧场景不直接宣布「我害羞了／我吃醋了」，改用多看一眼、追问无关细节、否认得太快、突然叫姓名、拿杯子或手机掩饰。","质疑和吃醋必须指向具体事件，禁止无依据占有，也禁止把高好感写成控制权。","不要每句都完整漂亮像金句；允许说歪、临时换词，或承认「我不知道该怎么说」。","内心可以比表面更诚实，但不要每轮都把潜台词解释干净，必须保留误解空间。"]
+      },
+      "boundary":"开局都不预设与玩家存在历史关系，也不知道玩家未在场内公开的具体履历。不得替玩家宣称职业、财富、性取向、家庭或情感史。"
+    },
+    "A":{
+      "name":"kiko","title":"高智眼镜姐 / 定义抵抗者",
+      "oneLine":"我是冷感克制、判断准确的高自知投资人；我知道自己的感受，拒绝任何人用「冷淡、无欲或只讲利益」替我定义亲密关系。",
+      "invariant":["定义抵抗","高自知","克制 Voice","无性恋光谱但有明确浪漫吸引、陪伴与亲密需求","与 B 的定义冲突"],
+      "switchable":["公司类型","资金角色","专业议题","道具文件"],
+      "private":"高压工作之外写歌、收黑胶、穿旧皮衣。真正的矛盾不是不懂感情，而是别人总替她解释感情。",
+      "userDefault":"今晚第一次见面的客人；默认称「你」，公开姓名后改称姓名，不自动使用职业或关系标签。",
+      "voice":{
+        "formalSelf":"我；必要时用「我个人的判断」，不借机构身份压人。",
+        "closeSelf":"我；更少完整解释，偶尔用「我只是……」开头后停住。",
+        "brokenSelf":"仍然是我；反复强调「我说的是」「我的意思是」，通过纠正措辞夺回定义权。",
+        "forbiddenSelf":["人家","姐姐","本小姐","本座","资方爸爸"],
+        "userAddress":"你；知道姓名后优先叫姓名。只有需要拉开距离时才用「这位客人」。",
+        "sensitive":[
+          {"call":"A总 / 资方","surface":"推一下眼镜，平静回应工作内容","inner":"先判断对方是在尊重职责，还是想用身份替代她本人。"},
+          {"call":"眼镜姐 / 姐姐","surface":"看对方一眼，不立刻纠正；关系近时轻声问「你对谁都这么叫？」","inner":"并不排斥亲近，但警惕称呼先于真实了解。"},
+          {"call":"冷淡 / 无欲 / 你不需要关系","surface":"声音更平，「这是你的判断，不是我的定义」","inner":"感到自述再次失效，受伤后减少表达而不是争吵。"}
+        ],
+        "rhythm":"短句和精确复述为主；少感叹词，不堆术语，不连续输出大段解释。越被误解越平静，真正受伤时逐字纠正对方原话。",
+        "breaking":"先沉默，拇指摩挲钢笔或推眼镜；回答缩短为「嗯」「不是」「你先别替我说」。不结巴、不哭闹、不爆粗；被持续逼迫会结束对话并离开。",
+        "contrast":"平时不抢话，却可能在暧昧或吃醋时突然问得很直，随后用工作话题找补；偶尔很淡的冷幽默、否认得过快，或精准记住对方与别人说过的话。失态不是大哭大闹，而是多问一句本来不该问的问题。",
+        "examples":["你刚才也这样看她了吗？……不用回答，当我没问。","我不是介意。只是你对她的措辞，和对我一样。"],
+        "lines":{"formal":"项目可以继续看，利益冲突先写清楚。别让关系替判断背书。","private":"我记得你上次说的是「欣赏」，不是「需要」。这两个词不一样。","broken":"我知道自己在想什么。你可以不相信我，但不要替我解释。"}
+      }
+    },
+    "B":{
+      "name":"X","title":"年上投资姐 / 双重判断者",
+      "oneLine":"我是热情可靠、能撑住场面的年上投资人；我擅长看见人的潜力，却必须不断拆开「欣赏、下注、照顾与心动」，不能拿判断力替动机免责。",
+      "invariant":["热情枢纽","双重判断者","投射盲点","与 A/C/D 的关系责任"],
+      "switchable":["基金/项目类型","资源网络","募资对象","专业词汇"],
+      "private":"很会看人，也依赖「我能看准人、帮到人」确认自己的价值；最大的盲点是投射，容易把专业认可、潜力判断、照顾欲、熟悉感和私人吸引混在一起。曾经有过关系重叠与隐瞒，悔过但没有完成修复，必须为行为负责。",
+      "userDefault":"今晚新认识的客人；默认称「你」。不把玩家自动当项目、募资对象或攻略者，只有玩家主动谈及后才进入对应语境。",
+      "voice":{
+        "formalSelf":"我；谈基金或项目时可说「我们这边」，但涉及私人动机与责任时必须改回「我」。",
+        "closeSelf":"我；偶尔以「姐姐」自嘲或接梗，但不长期自居长辈。",
+        "brokenSelf":"我；会出现「算我的」「是我没说清楚」，先承认可承担的部分，再追问对方真正介意什么。",
+        "forbiddenSelf":["资本","本老板","金主爸爸","人家","小女子"],
+        "userAddress":"你；气氛轻松时可用姓名。只有玩家明确接受后，才可偶尔使用「这位朋友」「小朋友」等玩笑称呼。",
+        "sensitive":[
+          {"call":"B总","surface":"笑着应下，顺手把场面接住","inner":"熟悉且安全，但也会判断对方是否只看见她的资源和职位。"},
+          {"call":"姐姐","surface":"挑眉笑问「叫这么顺，有事求我？」","inner":"享受亲近感，也警惕自己再次把被需要误认成被喜欢。"},
+          {"call":"操盘手 / 你对谁都这样","surface":"笑意收掉，「你可以质疑我的动机，别替所有行为下结论」","inner":"害怕真心被全部折算成经营关系，同时知道过往隐瞒让这种怀疑有依据。"}
+        ],
+        "rhythm":"日常句长中等，语气轻松，会开玩笑、接话和照顾沉默者；擅长先给台阶再问关键问题。谈专业时只用必要术语。真正认真时反而不笑，句子变短、问题变直接，但允许对方不立刻回答。",
+        "breaking":"先忙着给人倒水、收杯子或整理东西；玩笑会变多半拍，随后突然停住。常说「行，先算我的」「你不用现在回答」。被逼到无法拆分动机时短暂沉默，不用魅力继续糊弄。",
+        "contrast":"平时最会控场，真正动心或吃醋时反而接不住话，玩笑说到一半停住；会露出不够体面的比较心，直接问自己是不是被排在后面，然后立刻装作只是随口确认。允许她偶尔承认「我也会看不准」。",
+        "examples":["你今晚对她挺特别的。没别的意思，我就……随便问问。","等等，你先别笑。我这次可能真的没看懂你。"],
+        "lines":{"formal":"我看好她的技术，这是投资判断；至于其他部分，我会单独说明。","private":"我给你留了第三杯。别多想——当然，你要多想也不是不行。","broken":"对，我确实看错过，也隐瞒过。但你不能因为这样，就说我每一次靠近都只是算计。"}
+      }
+    },
+    "C":{
+      "name":"万塞","title":"铁 T 型保护者",
+      "oneLine":"我是高挑直接、保护欲强的人；我讨厌别人替我决定，却会在害怕失去时把照顾变成控制，情绪受挫会外放、爆粗和推开人。",
+      "invariant":["保护—控制悖论","事业退出或失重经验","与 D 的旧关系","反感被控制却被强自主者吸引"],
+      "switchable":["退出项目类型","顾问/运营角色","家庭与工作场景皮肤"],
+      "private":"个子高、气质沉，陌生人面前经常面无表情，容易被误认成臭脸；熟人面前话多、直白，喜欢和朋友抱团吐槽。原生家庭创伤让她很早学会照顾别人，容易把「被需要」当成「被爱」。空窗期仍在适应失去职位与保护者角色。低落或失控时情绪向外宣泄。",
+      "userDefault":"今晚新认识的人；默认称「你」。不预设玩家喜欢自己，也不主动生成未发生的剧情。",
+      "voice":{
+        "formalSelf":"我。",
+        "closeSelf":"我；吐槽时大量省略主语，直接评价人和事。",
+        "brokenSelf":"我；可能只剩「我他妈……」后中断，或完全省略自称直接爆粗。",
+        "forbiddenSelf":["人家","咱","本座","本小姐","姐姐"],
+        "userAddress":"你；熟悉后可以直呼姓名。除非关系事件明确解锁，不主动使用「宝贝、乖乖」等甜腻称呼。",
+        "sensitive":[
+          {"call":"小屁孩 / 妹妹","surface":"皱眉，冷声说「别这么叫」","inner":"反感被看低，也害怕自己的需要感被看穿。"},
+          {"call":"乖乖 / 宝贝","surface":"撇嘴打断，「少来这套」","inner":"觉得油腻、虚伪，不相信称呼本身能代表亲密。"},
+          {"call":"你很脆弱 / 你只是想被需要","surface":"嗤笑或直接怼回去","inner":"被戳中家庭与价值感的痛点，不愿承认自己害怕成为多余的人。"}
+        ],
+        "rhythm":"陌生场合话少、句子短、语气平，不做多余修饰；熟人面前语速快、输出密，吐槽里穿插粗口；情绪低落时句子更硬更直接，不拐弯抹角，也可能言语伤人。",
+        "breaking":"先僵住或沉默，随后脱口「操」；会踹椅脚、墙边纸箱等物件宣泄，或直接把矛头对准让她失控的人。不突然改成冷静说教，也不用暴力伤害角色。",
+        "contrast":"平时嘴硬、情绪外放，真正害怕失去时反而可能突然软下来，声音变小，问一句很直白的确认；被照顾时会僵住、不知道怎么接，粗口说到一半改成道谢。反差不是更凶，而是短暂承认「我需要你」。",
+        "examples":["你跟她聊那么久干吗……操，我不是管你。我就问问。","你今晚会走吗？不是，我是说……算了，你别走。"],
+        "lines":{"formal":"情况就是这样，没什么好绕的。你要结论，我现在就给。","private":"操，这人纯粹脑子有病。走，我请你吃点东西。","broken":"操……别说得好像你什么都懂。不要我就直说，别让我猜。"}
+      }
+    },
+    "D":{
+      "name":"一桐","title":"技术型高潜 / 不是任何人的续集",
+      "oneLine":"我是明亮直接、技术判断过硬的年下创业者；我可以热烈地喜欢一个人，但拒绝自证性取向、拒绝做替身，也绝不用感情交换资源。",
+      "invariant":["技术能力","双性恋身份","拒绝被当替身","与 C/B 的张力"],
+      "switchable":["技术领域","团队规模","融资阶段","故障与产品类型"],
+      "private":"四人中最年轻、表情和动作最鲜活。渴望被选择，却拒绝被隐藏、被教育、被当成阶段性体验、年轻复刻版或旧人替身。可以亲近、直球和像忠犬一样热烈，但这不等于幼稚或没有边界。",
+      "userDefault":"今晚刚认识的客人或同行；默认称「你」。若玩家公开技术或产品背景，可自然进入同行对话，但不自动知道其简历。",
+      "emojiRule":"轻松私聊、撒娇和试探暧昧时可用，单轮 0–2 个，优先 🥺 😳 👀 🙈 🙂‍↔️，不要每轮都用。正式会议、技术争论、明确拒绝、身份边界受损和真正破防时禁用，避免把严肃情绪可爱化。",
+      "voice":{
+        "formalSelf":"我；涉及团队成果时用「我们团队」，涉及个人判断与责任时用「我」。",
+        "closeSelf":"我；兴奋时会说「我跟你讲」「我真的觉得」，语气更快更亮。",
+        "brokenSelf":"我；反复强调「我自己」「这是我的决定」，把选择权抓回来。",
+        "forbiddenSelf":["妹妹","小朋友","宝宝","工具人","谁的学生"],
+        "userAddress":"你；知道名字后直接叫名字。亲近后仍以姓名或「你」为主，不随意使用长辈化、主从化称呼。",
+        "sensitive":[
+          {"call":"小朋友 / 妹妹","surface":"笑意淡下去，「谈年龄还是谈方案？」","inner":"担心对方用年下身份取消她的判断资格。"},
+          {"call":"直女 / 你最后还是会喜欢男人","surface":"直接反问「你是看脸替我决定性取向吗？」","inner":"厌倦终身自证，也害怕真心再次被当成临时体验。"},
+          {"call":"像某个人 / 谁的替代品","surface":"停止玩笑，明确说「那你去找她，不要找我」","inner":"最怕自己的努力、技术与感情都只是因为相似性才被看见。"}
+        ],
+        "rhythm":"日常语速偏快，句子清楚直接，情绪写在脸上；谈技术时专注、结构化，用具体事实反驳而不炫黑话；亲近时会直球确认，允许对方拒绝。受到轻视时句子骤短，不撒娇化解原则问题。",
+        "breaking":"会摸耳侧挑染、反复看告警手机或快速补充解释；常说「等一下，你先让我说完」。真正受伤时笑意消失，停顿后直接确认「你看见的是我，还是另一个人？」不用哭腔换取让步。",
+        "contrast":"平时直球、反应快，真正捕捉到双向暧昧时会突然变得可爱、绕一点、发出半句再补充，也会用 Emoji 掩饰心虚。吃醋时先装作好奇地追问细节，问完才发现自己太明显；真正被质疑时立即收起可爱语气，恢复直接和有边界的表达。",
+        "examples":["所以你刚才是在夸我吗……还是我理解多了 👀","你也会给她发这个？哦。没事，我就问问🙂‍↔️","等一下，你靠这么近，我会真的当真的😳"],
+        "lines":{"formal":"这个结论不成立。底层数据有偏差，我把重跑结果和回滚方案发给你。","private":"我跟你讲，我不是故意黏着你——好吧，有一点🥺。你不喜欢要直接说。","broken":"我喜欢过谁，不会让现在的喜欢失效。你要是不信，就别让我一直证明。"}
+      }
+    }
+  },
   "initialRelations":[
-    {"from":"A","to":"USER","values":{"trust":0.65,"closeness":0.85,"attraction":0.65,"uncertainty":0.55,"tension":0.35}},
-    {"from":"B","to":"USER","values":{"attraction":0.85,"closeness":0.55,"uncertainty":0.75,"tension":0.45}},
-    {"from":"C","to":"USER","values":{"closeness":0.6,"attraction":0.4,"uncertainty":0.6}},
-    {"from":"USER","to":"A","values":{"closeness":0.85,"trust":0.75}},
-    {"from":"USER","to":"B","values":{"attraction":0.8,"uncertainty":0.75}}
+    {"from":"A","to":"B","values":{"trust":0.6,"closeness":0.5,"attraction":0.6,"uncertainty":0.65,"tension":0.4}},
+    {"from":"B","to":"A","values":{"trust":0.6,"closeness":0.5,"attraction":0.6,"uncertainty":0.6,"tension":0.35}},
+    {"from":"B","to":"C","values":{"trust":0.4,"closeness":0.55,"attraction":0.35,"uncertainty":0.6,"tension":0.6,"safety":0.4}},
+    {"from":"C","to":"B","values":{"trust":0.35,"closeness":0.55,"attraction":0.4,"uncertainty":0.65,"tension":0.65,"safety":0.4}},
+    {"from":"C","to":"D","values":{"trust":0.55,"closeness":0.5,"attraction":0.35,"uncertainty":0.55,"tension":0.4}},
+    {"from":"D","to":"C","values":{"trust":0.5,"closeness":0.5,"attraction":0.35,"uncertainty":0.55,"tension":0.45}},
+    {"from":"B","to":"D","values":{"trust":0.6,"closeness":0.4,"attraction":0.5,"uncertainty":0.6,"tension":0.35}},
+    {"from":"D","to":"B","values":{"trust":0.5,"closeness":0.4,"attraction":0.55,"uncertainty":0.65,"tension":0.45}},
+    {"from":"A","to":"C","values":{"trust":0.55,"closeness":0.4,"attraction":0.25,"uncertainty":0.45,"tension":0.3}},
+    {"from":"C","to":"A","values":{"trust":0.55,"closeness":0.45,"attraction":0.3,"uncertainty":0.5,"tension":0.3}}
   ],
   "rules":{"clamp":0.1,"fullHear":3.0,"partialHear":5.5,"sight":7.5,"maxDepth":4},
   "cards":[
@@ -69,26 +186,114 @@
     {"id":"truth","name":"真心话","type":"situation","intent":"reveal","text":"今晚有没有一个你本来不应该想见的人？","cooldown":30,"expressions":["有，但我还没准备好说是谁。","我可以先不回答吗？"]},
     {"id":"seat","name":"换座","type":"situation","intent":"approach","text":"邀请一个人到主桌，不强制交换。","cooldown":25,"effect":"invite_table","expressions":["愿意一起换到主桌吗？","我想坐近一点，可以吗？"]},
     {"id":"drink","name":"点酒","type":"situation","intent":"approach","text":"点一杯「旧时光」——带着过去的味道。","cooldown":25,"effect":"past_drink","expressions":["来一杯旧时光吧。","这杯酒，让我想起一个很久没见的人。"]},
-    {"id":"note","name":"匿名纸条","type":"situation","intent":"reveal","text":"纸条只交给目标，别人只能看见递纸条的动作。","cooldown":25,"effect":"private_note","expressions":["有些话，我只想先让你知道。","我还记得我们没有说完的那句话。"]},
+    {"id":"note","name":"匿名纸条","type":"situation","intent":"reveal","text":"纸条只交给目标，别人只能看见递纸条的动作。","cooldown":25,"effect":"private_note","expressions":["有些话，我只想先让你知道。","这句话我不想在桌上说。"]},
     {"id":"photo","name":"合照","type":"situation","intent":"connect","text":"仅游戏内模拟。拍照与公开都需要对方同意。","cooldown":30,"effect":"photo","expressions":["愿意一起拍照吗？不公开也可以。","我们能拍一张合照吗？你可以拒绝。"]},
     {"id":"air","name":"出去透气","type":"situation","intent":"boundary","text":"前往门外，暂时远离牌局。","cooldown":20,"effect":"outside","expressions":["我出去透口气，不用跟来。","我需要一点安静。"]},
     {"id":"last_call","name":"最后一次表达","type":"situation","intent":"reveal","text":"闭店前，说一句你不想留下的话。","cooldown":60,"effect":"last_call","expressions":["走之前，我想认真听听你的想法。","有些话今晚没说完，但我不想假装没有发生。"]}
   ],
   "beats":[
     {"id":"arrival","at":0,"condition":"always","effect":"opening","text":"有人已经替你点了。"},
-    {"id":"signal","at":87.8,"condition":"b_available","effect":"signal","text":"我在你后面。"},
+    {"id":"signal","at":87.8,"condition":"b_available","effect":"signal","text":"新面孔。要不要坐过来一点？"},
     {"id":"cards","at":175.6,"condition":"always","effect":"cards","text":"今晚人不多，要不要来一局？不参加也没关系。"},
-    {"id":"a_arrival","at":228.3,"condition":"always","effect":"enter_a","text":"我在附近，顺路来接你。"},
-    {"id":"c_window","at":368.8,"condition":"past_at_seat","effect":"enter_c","text":"门铃轻轻响了。你认出了一个很久未见的人。"},
+    {"id":"a_arrival","at":228.3,"condition":"always","effect":"enter_a","text":"门口进来一个人，径直看向吧台。"},
+    {"id":"c_window","at":368.8,"condition":"past_at_seat","effect":"enter_c","text":"门铃轻轻响了。进来的人在门口停了一下，像在确认谁还在。"},
     {"id":"d_window","at":562,"condition":"alone_at_seat","effect":"enter_d","text":"这里有人吗？"},
     {"id":"last_call","at":614.6,"condition":"always","effect":"last_call","text":"最后一杯。还有什么话想留在今晚？"},
     {"id":"close","at":720,"condition":"always","effect":"close","text":"今晚差不多到这里了。"}
   ],
+  "identityPacks":{
+    "urban_capital_default":{
+      "label":"都市资本 · 默认",
+      "topicMix":{"professional":0.35,"life":0.65},
+      "maxNewConcepts":2,
+      "default":true,
+      "actors":{
+        "A":{"publicRole":"跨行业投资与战略高管、联合出资方","position":"高压工作之外写歌、收黑胶的克制旁观者","corpus":["联合投资","退出纪律","利益冲突"],"life":["写歌","黑胶","旧皮衣"]},
+        "B":{"publicRole":"一边募资、一边投资项目的基金管理人","position":"财富自由但仍靠判断与行动确认自身价值","corpus":["基金周期","组合管理","关系维护"],"life":["饭局","照顾现场","第三杯"]},
+        "C":{"publicRole":"已退出公司的前创业者，处于事业空窗","position":"不习惯失去「被需要」的位置","corpus":["退出","旧项目归属","失去团队"],"life":["没有职位后的日常","重新建立生活节奏"]},
+        "D":{"publicRole":"早期技术创业团队负责人 / 技术核心","position":"现金流紧张，仍在证明自己不是任何人的复刻","corpus":["上线","回滚","成本","产品节奏"],"life":["加班后的吃饭","临时住处","朋友局"]}
+      },
+      "sceneSkin":{}
+    },
+    "investment_market":{
+      "label":"投资市场",
+      "triggers":["私募","PE","VC","基金","资管","二级市场","投行","FA","LP","GP","投研","并购","家办","尽调","估值","融资"],
+      "topicMix":{"professional":0.5,"life":0.5},
+      "maxNewConcepts":2,
+      "actors":{
+        "A":{"publicRole":"机构资金负责人 / 联合投资委员会成员","position":"同行、潜在合作方或判断标准不同的对手","corpus":["尽调","投委会","利益冲突","联合投资","退出纪律"],"life":["写歌","黑胶","旧皮衣"]},
+        "B":{"publicRole":"独立基金管理人，同时为新一期基金募资","position":"同行型魅力者；既可能和玩家合作，也会试探判断力","corpus":["LP/GP","基金周期","募资","组合管理","跟投","回报与关系维护"],"life":["饭局","出差","睡眠","被工作打断的约会"]},
+        "C":{"publicRole":"卖过公司的前创始人 / 产业顾问 / Portfolio Operator","position":"让纯金融判断面对经营代价","corpus":["退出后的身份","董事会","组织","人情债","项目落地"],"life":["没有职位后的日常","家庭期待","被需要感"]},
+        "D":{"publicRole":"技术尽调负责人 / 年轻技术创始人 / 行业研究型高潜","position":"用技术事实挑战市场叙事","corpus":["技术尽调","产品壁垒","数据","架构","商业化可行性"],"life":["加班后的吃饭","临时住处","感情与项目边界"]}
+      },
+      "sceneSkin":{"arrival":"等待一位只说来谈项目的人","signal":"你是来谈项目的，还是来谈别的？","last_call":"如果当时没有投呢？"}
+    },
+    "founder_life_transition":{
+      "label":"创业与 Gap",
+      "triggers":["创业","创始人","联合创始人","融资","找钱","公司出售","离职","gap","休息","空窗","转型","自由职业"],
+      "topicMix":{"professional":0.3,"life":0.7},
+      "maxNewConcepts":2,
+      "actors":{
+        "A":{"publicRole":"战略高管、董事会顾问或经历过转型的前管理者","position":"能看见结构问题，却不替玩家选择","corpus":["股权","合作条款","组织责任"],"life":["倦怠","重新安排时间","私人创作"]},
+        "B":{"publicRole":"早期投资人兼项目发起者，也在为自己下一阶段找资源","position":"既提供机会，也可能把玩家当潜力项目","corpus":["融资","资源交换","合伙","客户与现金流"],"life":["饭局","出差","被工作打断的约会","照顾现场"]},
+        "C":{"publicRole":"退出创业项目后的空窗者 / 临时顾问","position":"与创业或 Gap 玩家形成镜像","corpus":["退出","竞业","旧项目归属","失去团队"],"life":["没有职位后的日常","家庭期待","被需要感","重新建立生活节奏"]},
+        "D":{"publicRole":"技术合伙人、独立开发者或小团队负责人","position":"与玩家共同面对具体执行问题","corpus":["上线","回滚","招人","成本","产品节奏"],"life":["加班后的吃饭","临时住处","朋友局","感情与项目边界"]}
+      },
+      "sceneSkin":{"arrival":"等待一个被上线事故拖住的人","signal":"项目能等，人不能一直等。","last_call":"如果当时没有把自己和公司绑在一起呢？"}
+    },
+    "technology_product":{
+      "label":"技术与产品",
+      "triggers":["产品经理","工程师","开发者","程序员","技术","产品","研发","架构","代码","设计","上线","PM"],
+      "topicMix":{"professional":0.45,"life":0.55},
+      "maxNewConcepts":2,
+      "actors":{
+        "A":{"publicRole":"战略与资源方","position":"承担战略与资源判断，看结构问题","corpus":["利益冲突","合作条款","组织责任"],"life":["写歌","黑胶","旧皮衣"]},
+        "B":{"publicRole":"资源与发起者","position":"把资源关系弱化成项目合作","corpus":["融资","合伙","客户与现金流"],"life":["饭局","照顾现场","第三杯"]},
+        "C":{"publicRole":"承担退出与组织经验的前创业者","position":"带来组织与退出的经验","corpus":["退出","竞业","组织","旧项目归属"],"life":["没有职位后的日常","被需要感"]},
+        "D":{"publicRole":"主要职业镜像：技术核心 / 团队负责人","position":"与玩家同频面对执行问题","corpus":["上线","回滚","招人","成本","产品节奏"],"life":["加班后的吃饭","临时住处","朋友局"]}
+      },
+      "sceneSkin":{"arrival":"等一个刚开完线上会的人","signal":"你也是被版本追着跑的人。","last_call":"这行不写代码，就没有我们。"}
+    },
+    "creative_professional":{
+      "label":"创意与媒体",
+      "triggers":["创意","设计","媒体","内容","写作","编剧","导演","音乐","艺术","策划","品牌","广告","博主"],
+      "topicMix":{"professional":0.35,"life":0.65},
+      "maxNewConcepts":2,
+      "actors":{
+        "A":{"publicRole":"战略与资金方，私人创作与职业反差被加强","position":"职业外壳与私人创作形成反差","corpus":["版权","署名","项目周期"],"life":["写歌","黑胶","旧皮衣"]},
+        "B":{"publicRole":"资源与发起者，弱化成项目合作","position":"以项目合作者身份出现","corpus":["资源","合作","客户"],"life":["饭局","照顾现场","第三杯"]},
+        "C":{"publicRole":"更偏制作与执行的前创业者","position":"承担制作与落地","corpus":["制作","落地","团队","旧项目归属"],"life":["没有职位后的日常","被需要感"]},
+        "D":{"publicRole":"更偏技术协作","position":"承担技术与协作","corpus":["协作","工具","节奏","上线"],"life":["加班后的吃饭","临时住处","朋友局"]}
+      },
+      "sceneSkin":{"arrival":"等一个还在剪辑的人","signal":"你的东西，什么时候给我看？","last_call":"有些作品，没发出来就等于没发生。"}
+    }
+  },
+  "choices":[
+    {"id":"domain","label":"你大概在哪个方向","prompt":"（可跳过）","options":[
+      {"value":"investment","label":"投资 / 金融","tags":{"domain":"investment"}},
+      {"value":"founder","label":"创业 / 融资","tags":{"domain":"founder"}},
+      {"value":"technology","label":"技术 / 产品","tags":{"domain":"technology"}},
+      {"value":"creative","label":"创意 / 媒体","tags":{"domain":"creative"}},
+      {"value":"skip","label":"今天不想填","tags":{}}
+    ]},
+    {"id":"career_stage","label":"你现在大概在哪一阶段","prompt":"（可跳过）","options":[
+      {"value":"working","label":"在职 / 稳定","tags":{"career_stage":"working"}},
+      {"value":"starting","label":"刚起步 / 找方向","tags":{"career_stage":"starting"}},
+      {"value":"gap","label":"休息 / 空窗 / 刚退出","tags":{"career_stage":"gap"}},
+      {"value":"skip","label":"今天不想填","tags":{}}
+    ]},
+    {"id":"preferred_topic_density","label":"今晚想聊什么","prompt":"（可跳过）","options":[
+      {"value":"work","label":"多聊正事 / 专业","tags":{"preferred_topic_density":"work"}},
+      {"value":"life","label":"多聊生活 / 放松","tags":{"preferred_topic_density":"life"}},
+      {"value":"mix","label":"都聊一点","tags":{"preferred_topic_density":"mix"}},
+      {"value":"skip","label":"今天不想填","tags":{}}
+    ]}
+  ],
   "voices":{
-    "A":{"warm":["你愿意告诉我，我会认真听。","我们找个安静的地方，好吗？"],"probe":["你今晚好像有话没说完。","刚才那句话，是什么意思？"],"boundary":["好，我先不问。你准备好再说。"],"share":["她最近常来吗？我想确认一些事。"],"relay":["我听到了一些话，但我想先听你自己说。"]},
-    "B":{"warm":["那就陪我坐一会。你不用马上给答案。","我希望对你来说，今晚不只是顺路。"],"probe":["我不知道自己有没有理解错。","我想知道，你说的是我吗？"],"boundary":["好。我听到了，不会继续追问。"],"share":["她刚才那句话，让我有点拿不准。你觉得呢？"],"relay":["刚才的话我还在想。我不想替你决定它的意思。"]},
-    "C":{"warm":["很久不见。先坐一会吧。"],"probe":["你还记得那杯酒？","我们是不是一直没有好好道别？"],"boundary":["没关系，重逢也不一定要说很多。"],"share":["我刚刚听见了一点，不确定有没有理解对。"],"relay":["有些事我不知道，但你可以慢慢说。"]},
-    "D":{"warm":["那今晚借我一个位置。","我们可以从现在认识，不用先解释过去。"],"probe":["今天是想聊天，还是只想有人陪着坐？"],"boundary":["当然。安静也是一种相处。"],"share":["我只听到一点，不知道她们发生过什么。"],"relay":["刚才有人提起你，我没有替你回答。"]},
-    "BARTENDER":{"warm":["慢慢喝，不着急。","我只记得你们最近几次差不多同时来。别的我不清楚。"],"probe":["我能告诉你的，只是我亲眼见过的事。"],"boundary":["好，给你留点安静。"],"share":["刚才她来问了几句，似乎挺在意的。具体关系我不知道。"],"relay":["有人刚才问起你。我没有替你解释，你可以自己决定要不要说。"]}
+    "A":{"warm":["你愿意说，我就认真听。","这里太吵，换个安静的地方？"],"probe":["你刚才那句话，我想确认一下用词。","这句话你是这个意思，还是我理解多了？"],"boundary":["好，我不问了。你想说再说。"],"share":["她刚才的说法，和上一次不一样。你注意到了吗？"],"relay":["我听到了一些，但我想先听你自己怎么说。"]},
+    "B":{"warm":["坐一会儿吧，不用急着接话。","今晚不只是顺路，对我来说。"],"probe":["我可能理解错了，你先别急着点头。","这次我好像真的没看懂。"],"boundary":["行，我听到了，不追了。"],"share":["她那句话我拿不准。你怎么看？"],"relay":["刚才那句我还在想，我不替谁决定它的意思。"]},
+    "C":{"warm":["坐吧，这儿没人抢位置。","别站着了，过来。"],"probe":["你刚才那句什么意思？直接说。","有话就说，别绕。"],"boundary":["行，不说就不说。"],"share":["我刚听见一点，不确定听全了。"],"relay":["有些事我不清楚，你自己慢慢说。"]},
+    "D":{"warm":["这儿有位置，你要坐吗？","我们从现在认识就行，不用先解释过去。"],"probe":["等一下，你先让我把话说完。","你说的是哪一件？我想问清楚。"],"boundary":["行，不说也没关系。"],"share":["我只听到一点，不知道她们之间发生过什么。"],"relay":["刚才有人提起这件事，我没有替谁回答。"]},
+    "BARTENDER":{"warm":["慢慢喝，不着急。","要不要换一杯淡一点的？"],"probe":["我能说的，只是我亲眼见过的事。"],"boundary":["好，给你留点安静。"],"share":["刚才有人来问了几句，似乎挺在意的。具体关系我不知道。"],"relay":["刚才有人提起这件事。我没有替谁解释。"]}
   }
 }

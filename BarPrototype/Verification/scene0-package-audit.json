@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "files": 2740,
+  "bytes": 653039147,
+  "keyConfigured": true,
+  "issues": [],
+  "note": "Checks the runtime tree, excluding Unity DoNotShip symbols. Reports file names only, never credential values."
+}

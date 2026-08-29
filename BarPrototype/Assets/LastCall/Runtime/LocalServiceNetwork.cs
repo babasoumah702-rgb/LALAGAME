@@ -21,6 +21,7 @@ namespace LastCall
                     socket.Options.SetRequestHeader("Authorization", "Bearer " + token);
                     string endpoint = baseUrl.Replace("http://", "ws://") + "/api/events";
                     await socket.ConnectAsync(new Uri(endpoint), cancellation.Token);
+                    incoming.Enqueue("{\"type\":\"reconnected\"}");
                     while(controls.TryDequeue(out _)){}
                     foreach (var pair in pending.OrderBy(p=>p.Key)) controls.Enqueue(pair.Value);
                     _=SendPump(socket);

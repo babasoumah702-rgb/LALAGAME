@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:yousandi.cn,2023:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8ec611ed7c900c41b57bccde91612c1, type: 3}
+  m_Name: ArtCatalog
+  m_EditorClassIdentifier: 
+  models:
+  - id: A
+    prefab: {fileID: 5553087265615679311, guid: 5034e3e0fd1a3744c9219dbea1c0a39d, type: 3}
+  - id: B
+    prefab: {fileID: 3159405087970304895, guid: 5de5c5304b3ee264e985e64173b061f0, type: 3}
+  - id: C
+    prefab: {fileID: 1364408318508236460, guid: 4b2bbc99a971b9c4fb2d41f4000f9cdd, type: 3}
+  - id: D
+    prefab: {fileID: 412724965536075437, guid: db0b60ecb4fb3504a9e7cfeb6eaa2171, type: 3}
+  - id: OWNER
+    prefab: {fileID: 2573944498595146582, guid: 43ccd2e2e1501dd419d55ca3f916dabd, type: 3}
+  - id: BARTENDER
+    prefab: {fileID: 4276606119807595874, guid: 2e9ec0488a1563d489ef04b8168b65ae, type: 3}
+  textures:
+  - id: A
+    texture: {fileID: 2800000, guid: 9ab5f4034591347b388228fb141e4cc7, type: 3}
+  - id: B
+    texture: {fileID: 2800000, guid: af23d0e8a9d4d49af986924456ebbd2f, type: 3}
+  - id: BARTENDER
+    texture: {fileID: 2800000, guid: fc009b1df7c944e27a4b18e775faf7a6, type: 3}
+  - id: C
+    texture: {fileID: 2800000, guid: 219e4076f65ee490484bc546b2e4c932, type: 3}
+  - id: D
+    texture: {fileID: 2800000, guid: 1dba8ebf0b4184de89c87f874d918042, type: 3}
+  - id: otome-bar
+    texture: {fileID: 2800000, guid: a41ef5502e5cb4b70906e48ab22d8078, type: 3}
+  - id: OWNER
+    texture: {fileID: 2800000, guid: 6e23ea958c52c4d8fb1cae309eaaf220, type: 3}
+  - id: skin-bar
+    texture: {fileID: 2800000, guid: 0da60d80a81b644888f7ad09155424f8, type: 3}
+  - id: skin-floor
+    texture: {fileID: 2800000, guid: 8941750fce3d24253b11fef60f383b71, type: 3}
+  - id: skin-leather
+    texture: {fileID: 2800000, guid: e89d9df8e2f94496795811480fa3964e, type: 3}
+  - id: skin-photos
+    texture: {fileID: 2800000, guid: 0acf8c78d138d4dd3acaea12f2be45d4, type: 3}
+  - id: skin-plaster
+    texture: {fileID: 2800000, guid: 68a9591ee1d62422b92ae1e2c4bc5055, type: 3}
+  - id: skin-wood
+    texture: {fileID: 2800000, guid: baa8423a5667f46fcb0f773f11a41f04, type: 3}
+  - id: USER
+    texture: {fileID: 2800000, guid: 31dcdeb542f28476abeee304f832b5a6, type: 3}

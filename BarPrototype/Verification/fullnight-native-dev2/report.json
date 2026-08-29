@@ -1,0 +1,203 @@
+{
+    "passed": false,
+    "kind": "visible native story flow",
+    "clockScale": "3",
+    "checks": [
+        {
+            "name": "service_ready",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "elevator_to_bar",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "render_scene1-first-person-1280x720",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "resolution_scene1-first-person(1280, 720)",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "render_scene1-first-person-1920x1080",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "resolution_scene1-first-person(1920, 1080)",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "render_scene1-first-person-1280x800",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "resolution_scene1-first-person(1280, 800)",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "third_drink_placed",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "original_cast_adapted",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "render_third-drink",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "scene2_from_single_arrival",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "render_scene2-social",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "passive_social_reaches_tarot",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "perceived_card_text",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "render_scene3-card-1280x720",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "resolution_scene3-card(1280, 720)",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "render_scene3-card-1920x1080",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "resolution_scene3-card(1920, 1080)",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "render_scene3-card-1280x800",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "resolution_scene3-card(1280, 800)",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "tarot_decline_reachable",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "scene4_after_tarot",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "walked_into_corridor",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "render_scene4-corridor",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "corridor_save_resumes",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "resume_no_bubble_replay",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "scene5_even_without_more_dialogue",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "render_scene5-return",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "powercut_emergency",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "render_powercut-1280x720",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "resolution_powercut(1280, 720)",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "render_powercut-1920x1080",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "resolution_powercut(1920, 1080)",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "render_powercut-1280x800",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "resolution_powercut(1280, 800)",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "real_stairs_entered",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "render_stairs",
+            "detail": "",
+            "passed": true
+        },
+        {
+            "name": "roof_reached_without_teleport",
+            "detail": "",
+            "passed": false
+        }
+    ],
+    "errors": []
+}

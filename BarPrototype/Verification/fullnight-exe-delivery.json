@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "runtime": "D:\\工作\\项目\\黑客松\\LALAGAME\\LALAGAME\\BarPrototype\\Builds\\FullNight-Windows-Humanoid-20260829-v2",
+  "executable": "D:\\工作\\项目\\黑客松\\LALAGAME\\LALAGAME\\BarPrototype\\Builds\\FullNight-Windows-Humanoid-20260829-v2\\LastCall.exe",
+  "exeSha256": "61263a2aad52e1be6961139f628d00eb2abaf6799134f69f4062bc5e33178f1b",
+  "files": 890,
+  "bytes": 394450633.0,
+  "smokeReport": "D:\\工作\\项目\\黑客松\\LALAGAME\\LALAGAME\\BarPrototype\\Verification\\fullnight-exe-smoke-Humanoid-20260829-v2\\report.json",
+  "archiveCreated": false
+}

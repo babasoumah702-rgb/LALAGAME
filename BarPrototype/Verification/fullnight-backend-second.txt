@@ -1,0 +1,245 @@
+✔ normal and redirected AppData processes read the same profile-private configuration (10.7416ms)
+✔ explicit config directories remain isolated and never silently import a personal key (4.4149ms)
+✔ legacy config remains readable if no stable file exists; environment override is retained (3.0823ms)
+✔ an intentionally empty stable key never falls back to a stale key from a different location (3.9475ms)
+(node:48208) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ config refresh repairs a missing-key fallback save without overriding deliberate offline mode (794.3493ms)
+✔ same answers, free text and seed always resolve to the same pack (2.0499ms)
+✔ an explicit choice overrides free text and is not overridden by it (0.3468ms)
+✔ ambiguous or missing domain falls back to the default pack (0.2734ms)
+✔ profile extracts only explicit content and never infers protected attributes (0.2136ms)
+✔ every pack covers A/B/C/D and only skins real beats (0.307ms)
+✔ identity brief is compressed and carries no raw player input (0.3434ms)
+✔ agent context never serializes raw player background (5.9061ms)
+✔ mid-game revision defers to the next beat boundary and keeps state (7.2076ms)
+✔ no background means the default pack and a runnable night (2.0602ms)
+✔ Scene0 survives a real backend process restart with private text and event deduplication (8731.6886ms)
+✔ Scene 0 is opt-in; legacy initial cast and immediate third drink are unchanged (5.4571ms)
+✔ intro waits for client readiness, freezes on pause, and uses a separate seven-second clock (1.4527ms)
+✔ exactly one background event, different evidence for A/C, no player leak (1.9363ms)
+✔ background perception respects obstruction, distance and facing (1.5735ms)
+✔ phone and private input are idempotent and never become public dialogue (2.2889ms)
+✔ handoff starts third drink once and prevents duplicate A/C arrivals (70.2921ms)
+✔ mid-intro snapshot preserves message, checkpoint and evidence (2.5507ms)
+✔ model invitation rejects leaked names and late results (3.3195ms)
+✔ gateway failure is a local preset fallback, with budget counted and no world loss (20.2944ms)
+✔ production geometry supports A/C perception and a continuous elevator exit (2.0361ms)
+✔ next night does not replay elevator and retains the new arrival route (1.6626ms)
+✔ late network result cannot replace a phone message already on screen (2.3645ms)
+✔ valid JSON is insufficient; extra fields, long text and identity claims are rejected (1.3793ms)
+✔ authentication failure stays online and exposes an explicit retry error (24.5736ms)
+✔ invalid JSON is retried once and never applied (3.0474ms)
+✔ timeout retries count toward budget and preserve events (1.2757ms)
+✔ high attraction cannot override an explicit space request (2.6158ms)
+✔ network disconnect records a safe category and keeps online mode (2.4045ms)
+✔ every entry can request a party immediately: passerby (9.7518ms)
+✔ every entry can request a party immediately: social_guest (1.0059ms)
+✔ every entry can request a party immediately: friend_guest (1.3766ms)
+✔ every entry can request a party immediately: staff (0.8723ms)
+✔ every entry can request a party immediately: owner_bartender (0.4916ms)
+✔ opening a party is idempotent and prevents the later duplicate invitation (0.5372ms)
+✔ join, play, cooldown, independent response, decline and rejoin complete a real card flow (2.8879ms)
+✔ party consent does not bypass elevator, pause, distance, visibility or Last Call (1.3473ms)
+✔ a queued walk can be cancelled while waiting for a reply or while paused (0.9349ms)
+✔ DeepSeek uses non-thinking mode without leaking vendor parameters to other gateways (2.0068ms)
+✔ both intro and character requests carry the configured DeepSeek model and JSON mode (32.3343ms)
+(node:37284) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ entry and finish: passerby (7.7132ms)
+✔ entry and finish: social_guest (1.6238ms)
+✔ entry and finish: friend_guest (1.7511ms)
+✔ entry and finish: staff (1.2486ms)
+✔ entry and finish: owner_bartender (1.2381ms)
+✔ unseen character cannot read an event (1.9343ms)
+✔ same signal creates distinct local interpretations (1.777ms)
+✔ private note reveals gesture, not content, to bystander (1.1494ms)
+✔ boundary cannot be bypassed by attraction (2.3768ms)
+✔ command idempotency, length limit and distance (2.5961ms)
+✔ refusing cards does not stop the night (2.4058ms)
+✔ conditional C and D entry, not unconditional spawning (33.3785ms)
+✔ pause freezes world time (0.8699ms)
+✔ invalid evidence and targets cannot mutate state (0.8436ms)
+✔ delayed autonomous relay keeps causal source (1.1809ms)
+✔ save ownership, resume and next night preserve memories (5.7693ms)
+✔ seed reproduces rules and source logs (1.162ms)
+✔ player view never serializes private minds or world facts (0.9396ms)
+✔ A star avoids obstacles and blocked corners (0.2971ms)
+✔ model request budget stops generation without silently changing mode (3.4797ms)
+✔ exhausted event action budget cannot change relationships (4.3289ms)
+✔ old reliable command remains idempotent throughout a world (8.5235ms)
+✔ batched position reports respect pause and finite coordinates (0.8948ms)
+(node:45800) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ every configured location is reachable on the exported Unity grid (13.2393ms)
+✔ full 720-second offline night with navigation: passerby (145.1795ms)
+✔ full 720-second offline night with navigation: social_guest (95.3768ms)
+✔ full 720-second offline night with navigation: friend_guest (90.3793ms)
+✔ full 720-second offline night with navigation: staff (74.0168ms)
+✔ full 720-second offline night with navigation: owner_bartender (63.8742ms)
+✔ seat reservations do not allocate the same endpoint (19.9044ms)
+✔ pending speech waits for physical arrival (2.2971ms)
+✔ old observation actions cannot trigger D later (10.8181ms)
+✔ decision records are owner isolated and preserved (1.7459ms)
+✔ entry willingness adjusts invitations, not relationship history (1.15ms)
+✔ same seed reproduces an entire rules-mode event sequence (75.6825ms)
+✔ alternate declarative scenario starts an independent world (1.1358ms)
+✔ third drink is delivered once through the production navigation and D waits for an interaction (256.4704ms)
+✔ new chapter is opt-in and resume never replays the cup or inserts it in an old save (3.6021ms)
+✔ first conversation targets A without automatically disclosing names (2.1825ms)
+✔ first conversation targets B without automatically disclosing names (0.8663ms)
+✔ first conversation targets C without automatically disclosing names (0.6469ms)
+✔ unheard introductions and gestures never disclose a name or private text (0.5557ms)
+✔ reserved seat requires proximity and records an action rather than a personality judgment (0.6583ms)
+✔ conversation facing survives client yaw reports and releases on movement (0.4452ms)
+✔ missing key keeps the original event and retry is idempotent while the world keeps running (2.9312ms)
+✔ repeated AI response is regenerated once, accepted source stays AI, and pause defers application (19.2133ms)
+✔ ordinary dialogue context includes authors and everyday voice without raw background (0.5638ms)
+✔ unknown names stay hidden in partial hearing, private note gestures and reflection (1.4508ms)
+✔ scene actions require sight, and an idle NPC does not accept stale client facing (0.5301ms)
+✔ a second identical AI response fails without substituting a rules sentence (3.1916ms)
+✔ retry cannot spend beyond the budget or charge a card twice (3.043ms)
+✔ online photo request cannot override an existing refusal (2.0986ms)
+✖ Scene 3 opens from the Scene 2 deck and picks a reader that is not fixed to the bartender (349.2681ms)
+✔ the first round flips a card, asks a real question and names a first responder (118.1239ms)
+✔ the arc runs light before high tension rather than pure random (111.6206ms)
+✔ the gaze before an answer is recorded and only seen by whoever was looking (108.7215ms)
+✔ the player can answer, skip, deflect, ask back, observe and joke (543.7664ms)
+✖ silence is an event, not a null input (96.2436ms)
+✔ a joker breaks the room open after the tension peaks (100.7484ms)
+✔ the round ends at 3 to 5 cards without exhausting the deck (114.266ms)
+✔ someone leaves the table and the exit to Scene 4 opens with the player free to choose (123.9827ms)
+✔ the view exposes the card and the turn but never tension numbers or hidden targets (87.3029ms)
+✔ the handoff reports observable moves and no verdict about anyone (101.3691ms)
+✔ resume keeps the tarot round and does not reflip the current card (85.9959ms)
+✔ a declined player is never forced to answer and the table continues (96.0845ms)
+✔ Scene 2 opens from the finished Scene 1 without replaying D arrival (61.1296ms)
+✖ the cross introduction unlocks D name once and keeps the profession vague (38.277ms)
+✔ freeflow moves everyone and records position as a social act (92.4005ms)
+✔ follow, listen and the light game are all valid moves and reach the agents (36.0934ms)
+✔ A2A ripple happens with no player input and respects who could perceive it (56.6363ms)
+✔ the montage passes time through the room and never through a real hour (137.3224ms)
+✖ the table regathers and the bartender leaves the deck, which the player can look at (114.7461ms)
+✖ the handoff carries impressions for Scene 3 and no verdicts (44.139ms)
+✖ resume keeps the Scene 2 chapter and does not replay the introduction (37.0809ms)
+✔ an old save never gains the new chapters (0.634ms)
+✔ HTTP ownership, WebSocket commands and reconnect (593.3631ms)
+ℹ tests 120
+ℹ suites 0
+ℹ pass 114
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9108.6453
+
+✖ failing tests:
+
+test at dist\tests\scene-three.test.js:66:1
+✖ Scene 3 opens from the Scene 2 deck and picks a reader that is not fixed to the bartender (349.2681ms)
+  Error: 请先走近对方，并确认中间没有遮挡
+      at sceneOneCommand (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/scene-one.js:214:15)
+      at handleCommand (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/commands.js:128:9)
+      at Engine.command (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/engine.js:103:25)
+      at reachSceneThree (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:53:7)
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:80:9)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.start (node:internal/test_runner/test:1003:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+
+test at dist\tests\scene-three.test.js:153:1
+✖ silence is an event, not a null input (96.2436ms)
+  AssertionError [ERR_ASSERTION]: not answering produces a world event
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-three.test.js:161:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at dist\tests\scene-two.test.js:59:1
+✖ the cross introduction unlocks D name once and keeps the profession vague (38.277ms)
+  AssertionError [ERR_ASSERTION]: D name unlocks through the introduction
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-two.test.js:66:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at dist\tests\scene-two.test.js:131:1
+✖ the table regathers and the bartender leaves the deck, which the player can look at (114.7461ms)
+  AssertionError [ERR_ASSERTION]: the invitation stays a light semantic cue
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-two.test.js:144:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at dist\tests\scene-two.test.js:149:1
+✖ the handoff carries impressions for Scene 3 and no verdicts (44.139ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(h.knownCharacters.includes('D'))
+  
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-two.test.js:158:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at dist\tests\scene-two.test.js:164:1
+✖ resume keeps the Scene 2 chapter and does not replay the introduction (37.0809ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///D:/%E5%B7%A5%E4%BD%9C/%E9%A1%B9%E7%9B%AE/%E9%BB%91%E5%AE%A2%E6%9D%BE/LALAGAME/LALAGAME/BarPrototype/Server/dist/tests/scene-two.test.js:173:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,5 +1,5 @@
 {
   "name":"LastCall.Runtime",
-  "references":["BarPrototype.Runtime","Unity.InputSystem","UnityEngine.UI"],
+  "references":["BarPrototype.Runtime","Unity.InputSystem","UnityEngine.UI","UnityEngine.UnityWebRequestModule","UnityEngine.UnityWebRequestAudioModule"],
   "autoReferenced":true
 }

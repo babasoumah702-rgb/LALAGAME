@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,64 +7,109 @@ namespace LastCall
 {
     public sealed partial class LastCallInterface
     {
+        private int entryPage,entryRole=-2,entryIntent=-2,entryStyle=-2;
+        private string entrySettingsSection="",entryModeOverride="",entryBackground="";
+        private string choiceDomain="skip",choiceCareer="skip",choiceDensity="skip";
+        private readonly string[] entryModes={"solo","friend_invited","event_guest"};
+        private readonly string[] entryModeNames={"独自来","朋友邀约","活动参与"};
+
         private void BuildEntry()
         {
-            Clear(root);
-            entryVisible=true;
-            entryPanel=Box("Entry",root,0,0,Width,Height);
-            Fill(entryPanel);
-            var plate=OtomeArt.Bar();
-            if(plate)
-            {
-                var photo=Box("Painting",entryPanel,0,0,Width,Height);
-                Fill(photo);
-                var image=photo.gameObject.AddComponent<RawImage>();
-                image.texture=plate;
-                image.color=Color.white;
-                image.raycastTarget=false;
-            }
-            var veil=Panel("Veil",entryPanel,0,0,Width,Height,new Color(.06f,.06f,.08f,plate?0.48f:0.94f));
-            Fill(veil);
-            float left=(Width-760)/2;
-            var form=Panel("Arrival",entryPanel,left,55,760,610,ink);
-            Panel("Brass",form,0,0,4,610,gold);
-            Label(form,"LALAGAME  /  LA LA LAND",28,22,700,52,34);
-            Label(form,"闭店前最后一局",30,78,650,34,23);
-            Label(form,"今晚，你带着怎样的自己来到这里？可跳过。\n门里面的夜已经开始。第三杯还在桌上，椅子是空的。",30,119,700,60,17,muted);
+            Clear(root);entryVisible=true;introUIVisible=false;
+            entryPanel=Box("Entry",root,0,0,Width,Height);Fill(entryPanel);
+            var plate=OtomeArt.Bar();if(plate){var photo=Box("Painting",entryPanel,0,0,Width,Height);Fill(photo);var image=photo.gameObject.AddComponent<RawImage>();image.texture=plate;image.raycastTarget=false;}
+            Fill(Panel("Veil",entryPanel,0,0,Width,Height,new Color(.035f,.03f,.04f,.72f)));
+            var form=Panel("Arrival",entryPanel,(Width-900)/2,(Height-650)/2,900,650,ink);
+            Panel("Brass",form,0,0,3,650,new Color(.64f,.45f,.28f));Label(form,"LA LA LAND",34,22,820,46,32);
             var config=Client.Bootstrap;
-            if(config==null)
+            if(config==null){Label(form,"今晚见。",34,88,780,40,25);Label(form,Client.Status,34,210,780,80,20);ActionButton(form,"退出",34,535,180,44,Quit);return;}
+            if(entryPage==0){BuildEntryLanding(form,config);return;}
+            if(entryPage>=1&&entryPage<=3){BuildEntryQuestion(form,config);return;}
+            BuildEntrySettings(form,config);
+        }
+
+        private void BuildEntryLanding(Transform form,BootstrapDto config)
+        {
+            Label(form,"今晚见。",34,82,780,42,25);Label(form,"新游戏只需回答三个问题；每页选择一次，点「下一步」继续。",34,130,780,34,16,muted);
+            ActionButton(form,"开始新的夜晚",34,205,520,58,()=>{entryPage=1;BuildEntry();},true);
+            var save=config.sessions?.FirstOrDefault();if(save!=null)ActionButton(form,"继续上次的夜晚",34,280,520,52,()=>Client.OpenSession(new SessionRequest{mode="resume",sessionId=save.id}));
+            ActionButton(form,"更多设置",34,349,250,46,()=>{entryPage=4;entrySettingsSection="";BuildEntry();});
+            ActionButton(form,online?"在线模型 · 开":"离线规则模式",304,349,250,46,()=>{online=!online;BuildEntry();});
+            Label(form,"更多设置包含赴约方式、可选背景和三项话题偏好，不进入主路径。",34,418,650,44,14,muted);ActionButton(form,"退出",34,540,180,44,Quit);
+        }
+
+        private void BuildEntryQuestion(Transform form,BootstrapDto config)
+        {
+            string title=entryPage==1?"今晚以什么身份来？":entryPage==2?"今晚想做什么？":"喜欢什么样的聊天风格？";
+            Label(form,"新游戏  "+entryPage+" / 3",34,86,300,28,15,gold);Label(form,title,34,126,540,50,29);
+            Label(form,"选择一项后，点击右下角「下一步」。",34,178,540,30,14,muted);
+            var labels=entryPage==1?config.roles.Select(x=>x.name).ToArray():entryPage==2?config.intents.Select(x=>x.name).ToArray():config.styles.Select(x=>x.name).ToArray();
+            int current=entryPage==1?entryRole:entryPage==2?entryIntent:entryStyle;
+            // 右侧竖排侧边栏：三个页面共用同一套布局，样式零差异。
+            const float sx=580,sy=230,sw=286,sh=46,gap=20;
+            for(int i=0;i<labels.Length;i++)
             {
-                Label(form,Client.Status,30,225,680,90,20);
-                ActionButton(form,"退出",30,515,180,45,Quit);
-                return;
+                int index=i;var b=ActionButton(form,labels[i],sx,sy+i*(sh+gap),sw,sh,()=>SelectEntryAnswer(entryPage,index));
+                b.name="Entry answer "+entryPage+" "+index;SetChoiceState(b,current==index,current!=index);
             }
-            Label(form,"01  今晚的入口",30,187,700,26,15,gold);
-            for(int i=0;i<config.roles.Length;i++)
+            ActionButton(form,"返回",530,570,160,48,()=>{entryPage=entryPage==1?0:entryPage-1;BuildEntry();});
+            var next=ActionButton(form,"下一步",706,570,160,48,()=>AdvanceEntry(),true);
+            next.name="Entry next "+entryPage;next.interactable=current>=0;
+        }
+
+        private void SelectEntryAnswer(int page,int index)
+        {
+            if(page==1)entryRole=index;else if(page==2)entryIntent=index;else entryStyle=index;
+            BuildEntry();
+        }
+        private void AdvanceEntry()
+        {
+            if(entryPage<3){entryPage=entryPage+1;BuildEntry();}else StartNewNight();
+        }
+        private void StartNewNight()
+        {
+            var config=Client.Bootstrap;if(config==null)return;
+            string role=entryRole>=0&&entryRole<config.roles.Length?config.roles[entryRole].id:"passerby";
+            string intent=entryIntent>=0&&entryIntent<config.intents.Length?config.intents[entryIntent].id:"observe_only";
+            string style=entryStyle>=0&&entryStyle<config.styles.Length?config.styles[entryStyle].id:"natural";
+            string mode=!string.IsNullOrEmpty(entryModeOverride)?entryModeOverride:role=="event_guest"||role=="staff"?"event_guest":"solo";
+            Client.OpenSession(new SessionRequest{role=role,entryIntent=intent,style=style,online=online,mode="new",opening="scene0_v1",story="scene1_v1",entryMode=mode,entryContext=entryBackground,
+                choices=new ChoiceAnswersDto{domain=choiceDomain,career_stage=choiceCareer,preferred_topic_density=choiceDensity}});
+        }
+
+        private void BuildEntrySettings(Transform form,BootstrapDto config)
+        {
+            Label(form,"更多设置",34,84,600,44,26);
+            if(string.IsNullOrEmpty(entrySettingsSection))
             {
-                int index=i;
-                string title=(i==roleIndex?"● ":"")+config.roles[i].name;
-                ActionButton(form,title,30+(i%3)*235,222+(i/3)*52,220,44,()=>{roleIndex=index;BuildEntry();},i==roleIndex);
+                Label(form,"这些内容全部可跳过，不影响三步主路径。",34,132,700,30,15,muted);
+                var entries=new[]{("arrival","赴约方式"),("background","补充今晚为什么来"),("domain","行业方向"),("career_stage","当前阶段"),("preferred_topic_density","今晚话题")};
+                for(int i=0;i<entries.Length;i++){string id=entries[i].Item1;ActionButton(form,entries[i].Item2,34+(i%2)*395,190+(i/2)*66,370,50,()=>{entrySettingsSection=id;BuildEntry();});}
+                ActionButton(form,online?"在线模型 · 开":"规则模式 · 离线",34,408,370,50,()=>{online=!online;BuildEntry();});ActionButton(form,"返回首页",34,550,220,44,()=>{entryPage=0;BuildEntry();},true);return;
             }
-            roleDetail=Label(form,config.roles[roleIndex].description,30,327,700,38,16,muted);
-            Label(form,"02  参与意愿与表达方式",30,375,700,25,15,gold);
-            ActionButton(form,config.intents[intentIndex].name,30,411,220,42,()=>{
-                intentIndex=(intentIndex+1)%config.intents.Length;BuildEntry();
-            },true);
-            ActionButton(form,config.styles[styleIndex].name,265,411,220,42,()=>{
-                styleIndex=(styleIndex+1)%config.styles.Length;BuildEntry();
-            });
-            ActionButton(form,online?"在线模型 · 开":"规则模式 · 离线",500,411,220,42,()=>{online=!online;BuildEntry();});
-            Label(form,"在线模式会把本局表达发送到你配置的模型网关。角色均为虚构成年人。\n离线模式不调用模型。语音未开放；存档仅保存在本机。",30,463,700,48,13,muted);
-            ActionButton(form,"推门，开始今晚",30,531,330,48,()=>{
-                Client.OpenSession(new SessionRequest{
-                    role=config.roles[roleIndex].id,entryIntent=config.intents[intentIndex].id,
-                    style=config.styles[styleIndex].id,online=online,mode="new"
-                });
-            },true);
-            var save=config.sessions?.FirstOrDefault();
-            if(save!=null)
-                ActionButton(form,"继续上次的夜晚",375,531,220,48,()=>Client.OpenSession(new SessionRequest{mode="resume",sessionId=save.id}));
-            ActionButton(form,"退出",610,531,110,48,Quit);
+            if(entrySettingsSection=="background")
+            {
+                Label(form,"补充今晚为什么来 · 可跳过",34,140,760,34,20,gold);var background=InputBox(form,34,200,765,150);
+                ((Text)background.placeholder).text="不填写也可以直接开始。最多 200 字。";background.text=entryBackground;background.onValueChanged.AddListener(v=>entryBackground=v);
+                var skip=ActionButton(form,"跳过 · 不补充背景",34,378,765,48,()=>{entryBackground="";BuildEntry();});
+                SetChoiceState(skip,string.IsNullOrWhiteSpace(entryBackground),!string.IsNullOrWhiteSpace(entryBackground));
+            }else if(entrySettingsSection=="arrival")
+            {
+                Label(form,"赴约方式 · 可跳过",34,140,760,34,20,gold);
+                for(int i=0;i<entryModes.Length;i++){int index=i;var b=ActionButton(form,entryModeNames[i],34,200+i*60,765,48,()=>{entryModeOverride=entryModes[index];BuildEntry();});SetChoiceState(b,entryModeOverride==entryModes[i],entryModeOverride!=entryModes[i]);}
+                var skip=ActionButton(form,"跳过 · 根据身份自动匹配",34,380,765,48,()=>{entryModeOverride="";BuildEntry();});SetChoiceState(skip,string.IsNullOrEmpty(entryModeOverride),!string.IsNullOrEmpty(entryModeOverride));
+            }else BuildOptionalChoice(form,config,entrySettingsSection);
+            ActionButton(form,"返回更多设置",34,550,260,44,()=>{entrySettingsSection="";BuildEntry();},true);
+        }
+        private void BuildOptionalChoice(Transform form,BootstrapDto config,string id)
+        {
+            var choice=config.choices?.FirstOrDefault(c=>c.id==id);if(choice==null)return;Label(form,choice.label+" · 可跳过",34,140,760,34,20,gold);
+            string current=id=="domain"?choiceDomain:id=="career_stage"?choiceCareer:choiceDensity;
+            for(int i=0;i<choice.options.Length;i++)
+            {
+                var opt=choice.options[i];string value=opt.value;var b=ActionButton(form,opt.label,34+(i%2)*395,200+(i/2)*62,370,48,()=>{if(id=="domain")choiceDomain=value;else if(id=="career_stage")choiceCareer=value;else choiceDensity=value;BuildEntry();});
+                SetChoiceState(b,current==value,current!=value);
+            }
         }
         private void Quit()
         {
