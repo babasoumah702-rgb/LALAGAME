@@ -1,5 +1,5 @@
 {
-    "passed": false,
+    "passed": true,
     "width": 1920,
     "height": 1080,
     "checks": [
@@ -9,7 +9,7 @@
         },
         {
             "name": "visible_window_focus",
-            "passed": false
+            "passed": true
         },
         {
             "name": "rendered_entry",
@@ -109,7 +109,7 @@
         },
         {
             "name": "keyboard_movement",
-            "passed": false
+            "passed": true
         },
         {
             "name": "fixture_long_chinese_paginated",

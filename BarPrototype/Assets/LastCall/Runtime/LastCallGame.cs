@@ -33,6 +33,7 @@ namespace LastCall
             foreach(var text in FindObjectsOfType<TextMesh>())WorldTextDepth.Apply(text);
             gameObject.AddComponent<DirectorLens>().Game = this;
             gameObject.AddComponent<DialogueBubbles>().Game = this;
+            gameObject.AddComponent<BgmPlayer>();
             gameObject.AddComponent<SceneOnePresentation>().Game = this;
             gameObject.AddComponent<SceneTwoPresentation>().Game = this;
             gameObject.AddComponent<NightStage>().Game=this;gameObject.AddComponent<NightPresentation>().Game=this;

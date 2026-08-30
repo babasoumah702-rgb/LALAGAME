@@ -71,16 +71,16 @@ namespace LastCall
             if(Click("在线模型 · 开"))yield return null;
             CheckResult("entry_landing_has_three_step_path",Visible("开始新的夜晚")&&Visible("更多设置"));
             Click("开始新的夜晚");yield return Until(()=>Visible("临时路过"),3);
-            CheckResult("entry_page1_all_answers",c.Bootstrap.roles.All(x=>Visible(x.name))&&Visible("跳过这个问题"));
-            Click(c.Bootstrap.roles[0].name);yield return Until(()=>Visible(c.Bootstrap.intents[0].name),3);Click("返回上一题");yield return Until(()=>Visible(c.Bootstrap.roles[0].name),3);
+            CheckResult("entry_page1_all_answers",c.Bootstrap.roles.All(x=>Visible(x.name))&&Visible("下一步")&&Visible("返回"));
+            Click(c.Bootstrap.roles[0].name);yield return null;Click("下一步");yield return Until(()=>Visible(c.Bootstrap.intents[0].name),3);Click("返回");yield return Until(()=>Visible(c.Bootstrap.roles[0].name),3);
             CheckResult("entry_back_keeps_role",Disabled(c.Bootstrap.roles[0].name));
-            Click(c.Bootstrap.roles[1].name);yield return Until(()=>Visible(c.Bootstrap.intents[0].name),3);
-            CheckResult("entry_page2_all_answers",c.Bootstrap.intents.All(x=>Visible(x.name))&&Visible("跳过这个问题"));
-            Click(c.Bootstrap.intents[0].name);yield return Until(()=>Visible(c.Bootstrap.styles[0].name),3);Click("返回上一题");yield return Until(()=>Visible(c.Bootstrap.intents[0].name),3);
+            Click(c.Bootstrap.roles[1].name);yield return null;Click("下一步");yield return Until(()=>Visible(c.Bootstrap.intents[0].name),3);
+            CheckResult("entry_page2_all_answers",c.Bootstrap.intents.All(x=>Visible(x.name))&&Visible("下一步")&&Visible("返回"));
+            Click(c.Bootstrap.intents[0].name);yield return null;Click("下一步");yield return Until(()=>Visible(c.Bootstrap.styles[0].name),3);Click("返回");yield return Until(()=>Visible(c.Bootstrap.intents[0].name),3);
             CheckResult("entry_back_keeps_intent",Disabled(c.Bootstrap.intents[0].name));
-            Click(c.Bootstrap.intents[1].name);yield return Until(()=>Visible(c.Bootstrap.styles[0].name),3);
-            CheckResult("entry_page3_all_answers",c.Bootstrap.styles.All(x=>Visible(x.name))&&Visible("跳过这个问题"));
-            Click(c.Bootstrap.styles[0].name);
+            Click(c.Bootstrap.intents[1].name);yield return null;Click("下一步");yield return Until(()=>Visible(c.Bootstrap.styles[0].name),3);
+            CheckResult("entry_page3_all_answers",c.Bootstrap.styles.All(x=>Visible(x.name))&&Visible("下一步")&&Visible("返回"));
+            Click(c.Bootstrap.styles[0].name);yield return null;Click("下一步");
             yield return Until(()=>c.State?.intro?.phase=="bar",25);CheckResult("scene0_handoff",c.State?.scene1!=null&&c.State.intro.phase=="bar");
             if(c.State?.scene1==null){Finish();yield break;}
             yield return new WaitForSecondsRealtime(.6f);CheckResult("light_ui",game.Interface.SceneOneMode);foreach(var castId in new[]{"A","B","C"})CheckHumanoid(castId);CheckResult("a_seated_pose",(game.Avatars["A"].GetComponent<CastActionAdapter>()?.IsSeated==true||game.Avatars["A"].GetComponent<SceneOneSeatedPose>()?.IsSeated==true));yield return Shot("first-meeting");

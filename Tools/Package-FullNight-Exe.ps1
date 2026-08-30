@@ -1,4 +1,7 @@
-param([Parameter(Mandatory=$true)][string]$Label)
+param(
+    [Parameter(Mandatory=$true)][string]$Label,
+    [string[]]$Cases=@('fullnight-native-final','fullnight-scene1-720','fullnight-scene1-1080','fullnight-scene1-800','fullnight-scene23','fullnight-scene0','fullnight-cards')
+)
 
 $ErrorActionPreference='Stop'
 # npm writes UTF-8; PowerShell 5.1 decodes native stdout with the OEM codepage (GBK),
@@ -12,8 +15,7 @@ $source=(Resolve-Path -LiteralPath (Join-Path $project 'Builds\Scene0-Windows'))
 $runtime=Join-Path $project ('Builds\FullNight-Windows-'+$Label)
 if(Test-Path -LiteralPath $runtime){throw '目标已存在；不会覆盖旧运行目录，请换一个 Label。'}
 
-$cases=@('fullnight-native-final','fullnight-scene1-720','fullnight-scene1-1080','fullnight-scene1-800','fullnight-scene23','fullnight-scene0','fullnight-cards')
-foreach($case in $cases){
+foreach($case in $Cases){
     $result=Get-Content -LiteralPath (Join-Path $project ('Verification\'+$case+'\report.json')) -Raw | ConvertFrom-Json
     if(!$result.passed){throw "实机验收未通过：$case"}
 }
@@ -104,6 +106,7 @@ $result=[ordered]@{
     files=$files
     bytes=$bytes
     smokeReport=(Join-Path $smoke 'report.json')
+    verifiedCases=$Cases
     archiveCreated=$false
 }
 $result | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $project 'Verification\fullnight-exe-delivery.json') -Encoding utf8

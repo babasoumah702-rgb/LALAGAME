@@ -24,7 +24,7 @@ namespace LastCall
             Clear(root);expression=null;rightPanel=null;pausePanel=null;notesPanel=null;
             size=new Vector2(Width,Height);Camera.main.rect=new Rect(0,0,1,1);
             unifiedPrimary.Clear();unifiedOptions.Clear();unifiedContext=interaction.contextId;
-            if(interaction.groups.All(g=>g.id!=activeInteractionGroup))activeInteractionGroup=interaction.nextGroup??"observe";
+            if((interaction.groups??Array.Empty<InteractionGroupDto>()).All(g=>g.id!=activeInteractionGroup))activeInteractionGroup=interaction.nextGroup??"observe";
             Label(root,"LA LA LAND",24,16,310,38,27);
             Label(root,UnifiedChapterTitle(),26,54,420,24,15,muted);
             clockText=Label(root,"",Width-240,24,210,32,20);
@@ -90,6 +90,11 @@ namespace LastCall
         private void RefreshUnifiedInteraction()
         {
             var state=Client.State;var interaction=state?.interaction;if(interaction==null)return;
+            if(!clockText||!modeText||!unifiedNextTitle||!unifiedNextHint||!unifiedNextButton||!targetText||!unifiedStatus)
+            {
+                if(!Blocking)BuildUnifiedInteraction();
+                return;
+            }
             if(interaction.contextId!=unifiedContext){activeInteractionOption="";activeInteractionGroup=interaction.nextGroup??"observe";BuildUnifiedInteraction();return;}
             clockText.text=state.clock;
             modeText.text=(state.mode=="online"?"在线 AI":"离线规则")+" · 本章 "+(state.story?.budgetCalls??state.calls)+" / 80 次调用";
