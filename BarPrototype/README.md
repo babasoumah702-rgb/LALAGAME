@@ -1,8 +1,8 @@
-# BarPrototype｜Last Call 与琥珀酒馆
+# BarPrototype｜Lalaland 与琥珀酒馆
 
-当前主线是第一人称 AI 社交叙事 **LALAGAME / Last Call**，主场景为 `Assets/Scenes/LastCall.unity`。它已经串联 Scene 0–6，并加入三页新游戏入口、观察／移动／互动两层菜单、章节下一步、定向 AI 回复、A–D Humanoid 动作、头顶气泡、存档和屋顶收尾。
+当前主线是第一人称 AI 社交叙事 **Lalaland**，主场景为 `Assets/Scenes/LastCall.unity`。它已经串联 Scene 0–6，并加入三页新游戏入口、观察／移动／互动两层菜单、章节下一步、定向 AI 回复、A–D Humanoid 动作、头顶气泡、存档和屋顶收尾。
 
-当前 Windows 玩家包为 `Builds/LALAGAME-Windows-bgm-api-20260831.zip`。解压后双击 `启动游戏.cmd` 或 `LastCall.exe`，不需要安装团结引擎、Unity 或 Node.js。首页可以填写玩家自己的 OpenAI 兼容模型 API，配置不进入 ZIP。它已经通过白名单目录启动验收、逐文件归档校验和密钥／存档／日志排除审计；范围与限制见仓库根目录 README 及[未完成工作_前端交互改造.md](未完成工作_前端交互改造.md)。
+Windows 与 macOS 玩家包发布在 [192tt/Lalaland](https://github.com/192tt/Lalaland)。首页可以填写玩家自己的 OpenAI 兼容模型 API，配置不进入 ZIP。Windows 版已通过白名单目录启动验收；macOS 版已完成 Universal 交叉编译、双架构检查和逐文件归档校验，但尚未在实体 Mac 上做窗口验收。范围与限制见仓库根目录 README 及[未完成工作_前端交互改造.md](未完成工作_前端交互改造.md)。
 
 以下内容主要记录仍保留的原版“琥珀酒馆”漫游。
 
@@ -31,7 +31,7 @@
 
 启动编辑器前建议释放内存；不要同时用两个编辑器打开同一工程。编辑器需要有效许可证，独立运行程序不需要。
 
-依赖已锁定于 `Packages/packages-lock.json`：URP 14.2.0-t1、Input System 1.14.4-t1、Test Framework 1.1.33、Burst 1.8.30-t2、Mathematics 1.3.2。Windows x64 / Mono，无 Android、iOS 或 IL2CPP 要求。
+依赖已锁定于 `Packages/packages-lock.json`：URP 14.2.0-t1、Input System 1.14.4-t1、Test Framework 1.1.33、Burst 1.8.30-t2、Mathematics 1.3.2。Windows x64 与 macOS Universal 使用 Mono，无 Android、iOS 或 IL2CPP 要求。
 
 ## 重建与测试
 

@@ -1,8 +1,8 @@
-# LALAGAME · Last Call
+# Lalaland
 
 第一人称 AI 社交叙事原型。玩家从电梯进入深夜酒吧，与 A–D 及调酒师自由观察、移动和交流，经历第三杯、动态社交、塔罗、走廊、断电散场与屋顶收尾。
 
-> 当前仓库保存源码、场景、模型、剧情文档与验收材料。2026-08-31 已生成带 BGM 和前端模型 API 设置的 Windows ZIP；旧版 Release 不代表当前源码状态。
+> 当前仓库保存源码、场景、模型、剧情文档与验收材料。玩家运行包发布在 [192tt/Lalaland](https://github.com/192tt/Lalaland)。
 
 ## 当前版本
 
@@ -16,16 +16,21 @@
 - **第一人称表现**：NPC 对白在头顶气泡显示，玩家发言位于画面下方；交谈双方自然面对彼此。
 - **信息边界**：姓名、私聊、隔墙／跨层声音、回忆与回顾内容按玩家和角色实际感知过滤。
 - **循环 BGM**：酒吧音乐从 `Resources/Audio/bgm-jazz-rnb.mp3` 加载，以 20% 音量循环播放，给对白和环境音留出空间。
-- **玩家模型配置**：首页可填写 OpenAI 兼容接口地址、模型 ID 和 API Key；密钥只写入当前 Windows 用户的私有配置，不进入游戏目录、ZIP、存档或日志。
+- **玩家模型配置**：首页可填写 OpenAI 兼容接口地址、模型 ID 和 API Key；密钥只写入当前用户的私有配置，不进入游戏目录、ZIP、存档或日志。
 
-## Windows 玩家包
+## 玩家包
 
-- ZIP：`BarPrototype/Builds/LALAGAME-Windows-bgm-api-20260831.zip`，约 193 MB。
+- Windows：[Release 下载页](https://github.com/192tt/Lalaland/releases/tag/windows-bgm-api-20260831)，约 193 MB。
 - SHA-256：`bdf4ef72223a523afda031ad72c9b8e55814e585abfc7bc98f908a59d4ee9e59`。
-- 玩家解压整个 ZIP 后，双击 `启动游戏.cmd` 或 `LastCall.exe`；不需要安装团结引擎、Unity、Node.js 或开发工具。
+- 玩家解压整个 ZIP 后双击 `启动游戏.cmd`；不需要安装团结引擎、Unity、Node.js 或开发工具。
 - ZIP 内有一个完整运行文件夹，共 894 个文件；归档内容已逐文件对照白名单运行目录校验。
 - 最终目录 1280×720 启动验收通过 13 / 13；模型 API 首页表单在 1920×1080 通过 35 项可见检查。后端 151 / 151、编辑器 28 / 28 通过。
 - 独立 Scene 2→塔罗旧夹具仍未纳入本次门禁，相关主流程由整晚 57 项用例覆盖。BGM 对外发布前还需确认素材授权。
+
+- macOS：[Release 下载页](https://github.com/192tt/Lalaland/releases/tag/macos-bgm-api-20260831)，Intel 与 Apple Silicon 双架构。
+- SHA-256：`48deefe33294eac1edb95d354f12f1d0938f97dbecc72d822ac16f95cd226eb1`。
+- Mac ZIP 共 906 个文件，逐项内容校验通过；6 个启动文件保留 Unix 可执行权限。
+- macOS 包由 Windows 交叉编译，尚未进行 Apple 签名、公证或真实 Mac 窗口验收，首次打开需按发布说明处理 Gatekeeper 提示。
 
 ## 操作
 
@@ -41,7 +46,7 @@
 
 - 团结引擎 `2022.3.62t14`，revision `1f04f7aba499`。
 - Node.js `24.12.x`。
-- Windows x64 / Mono。
+- Windows x64 / Mono；macOS Universal / Mono。
 - 主场景：`BarPrototype/Assets/Scenes/LastCall.unity`。
 
 首次运行后端：
@@ -54,7 +59,7 @@ npm run build
 
 在团结 Hub 中添加 `BarPrototype`，使用对应版本打开主场景即可编辑或 Play。不要同时用两个编辑器打开同一工程。
 
-## 测试与 Windows 构建
+## 测试与构建
 
 ```powershell
 # 服务端
@@ -68,6 +73,8 @@ cd ..\..
 ```
 
 可见窗口整晚验收由 `Tools/Verify-FullNight-Windows.ps1` 执行。运行目录由 `Package-FullNight-Exe.ps1` 生成，玩家 ZIP 由 `Package-Player-Zip.ps1` 逐文件校验后生成。
+
+macOS Universal Player 由 `LastCall.Editor.LalalandReleaseBuilder.BuildMacOS` 构建，`Tools/package_lalaland_macos.py` 在 Windows 上生成带 Unix 权限元数据的 ZIP，并逐文件复核归档内容。
 
 当前模型配置改动完成服务端 151 项、编辑器 28 项、1080p 35 项和最终目录 13 项检查；既有整晚 57 项流程报告继续作为 Scene 0–6 主路线证据。剩余边界见[未完成工作文档](BarPrototype/未完成工作_前端交互改造.md)。
 
@@ -83,7 +90,7 @@ cd ..\..
 
 ## 隐私与模型配置
 
-在线模型配置可在游戏首页填写，也可从本机私有配置读取。远程接口必须使用 HTTPS，本机回环接口可使用 HTTP。仓库、Windows 运行目录和 ZIP 不得包含 API 密钥、玩家存档、数据库、日志或私人附件。配置文件不会回显密钥，但它不是加密保险库，建议玩家使用有限额、可撤销的独立密钥。没有模型配置时可以明确选择离线规则模式；程序不会把规则台词标成 AI 回复。
+在线模型配置可在游戏首页填写，也可从本机私有配置读取。远程接口必须使用 HTTPS，本机回环接口可使用 HTTP。仓库和玩家包不得包含 API 密钥、玩家存档、数据库、日志或私人附件。配置文件不会回显密钥，但它不是加密保险库，建议玩家使用有限额、可撤销的独立密钥。没有模型配置时可以明确选择离线规则模式；程序不会把规则台词标成 AI 回复。
 
 ## 保留的旧原型
 

@@ -53,7 +53,7 @@ namespace LastCall.Editor
             fixedCamera.halfHeight=6.4f;
             Physics.SyncTransforms();
             ExportNavigation();
-            PlayerSettings.productName="LALAGAME - Last Call";
+            PlayerSettings.productName="Lalaland";
             PlayerSettings.bundleVersion="0.2.0";
             PlayerSettings.defaultScreenWidth=1280;
             PlayerSettings.defaultScreenHeight=720;
