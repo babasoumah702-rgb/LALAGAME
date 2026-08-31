@@ -46,5 +46,15 @@ namespace BarPrototype.Tests
             var envelope=JsonUtility.FromJson<Envelope>("{\"type\":\"state\",\"version\":1,\"state\":null}");
             Assert.That(envelope.state==null||string.IsNullOrEmpty(envelope.state.sessionId),Is.True);
         }
+        [Test] public void ModelConfigUsesProviderFieldNamesWithoutReturningAStoredKey()
+        {
+            var json=JsonUtility.ToJson(new ModelConfigRequestDto{@base="https://gateway.example/v1",model="demo-model",key="synthetic-ui-key",keepKey=false});
+            StringAssert.Contains("\"base\":\"https://gateway.example/v1\"",json);
+            StringAssert.Contains("\"model\":\"demo-model\"",json);
+            StringAssert.DoesNotContain("@base",json);
+            var result=JsonUtility.FromJson<ModelConfigResultDto>("{\"configured\":true,\"base\":\"https://gateway.example/v1\",\"model\":\"demo-model\"}");
+            Assert.That(result.configured,Is.True);Assert.That(result.@base,Is.EqualTo("https://gateway.example/v1"));
+            Assert.That(typeof(ModelConfigResultDto).GetField("key"),Is.Null,"server response DTO must have no key field");
+        }
     }
 }

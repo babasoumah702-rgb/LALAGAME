@@ -12,7 +12,15 @@ NPC 对白显示在头顶；玩家发言显示在下方。气泡可能因角色�
 
 ## 在线模型
 
-沿用本机已有配置。优先读取 `%USERPROFILE%\.lalagame\private\model.env`，配置项为 `LASTCALL_API_BASE`、`LASTCALL_MODEL`、`LASTCALL_API_KEY`。配置文件不在发行包内。不要把密钥发给其他玩家，也不要把它放进运行文件夹。
+在游戏首页点击“填写模型 API”或“模型 API · 已配置”，填写：
+
+- 接口地址：OpenAI 兼容接口的根地址，程序会在末尾调用 `/chat/completions`。例如 DeepSeek 填 `https://api.deepseek.com`，OpenAI 填 `https://api.openai.com/v1`。
+- 模型名称：该接口实际支持的模型 ID。
+- API Key：玩家自己的密钥。已经保存过时，留空再次保存会保留原密钥；也可以在同一页清除。
+
+配置保存到当前 Windows 用户的 `%USERPROFILE%\.lalagame\private\model.env`，不放进游戏目录、ZIP、存档或日志，前端也不会回显已经保存的密钥。该本地文件不是加密保险库，建议使用有限额、可撤销的独立密钥，不要在公共电脑保存。
+
+远程接口必须使用 HTTPS；只有本机 `localhost`、`127.0.0.1` 或 `::1` 可以使用 HTTP。接口还需要兼容 `response_format: json_object`。不同供应商的余额、地区、限流和模型权限由玩家自己的账号承担。
 
 没有密钥、连接失败、超时、鉴权或校验失败时，会显示可重试提示，不用固定台词替角色发言。只有手动选择“离线规则”后才使用规则回复。
 

@@ -8,7 +8,7 @@ import {randomBytes} from 'node:crypto';
 import {loadScenario} from './config.js';
 import {Engine} from './engine.js';
 import {Store} from './store.js';
-import {dataRoot,ModelAdapter,modelConfigFile} from './model.js';
+import {dataRoot,ModelAdapter,saveModelConfig} from './model.js';
 import {Navigator,emptyNavigation} from './navigation.js';
 import type {Command} from './types.js';
 import {introActive} from './intro.js';
@@ -38,7 +38,14 @@ app.get('/health',async()=>({ready:true,version:1}));
 app.get('/api/bootstrap',async(request)=>{
   adapter.reload();
   const playerId=String((request.query as any).playerId||'');
-  return {version:1,title:scenario.title,roles:scenario.roles,intents:scenario.intents,styles:scenario.styles,choices:scenario.choices,sessions:database.list(playerId),modelConfigured:!!adapter.config.key,model:adapter.config.model,modelConfigFile:modelConfigFile()};
+  return {version:1,title:scenario.title,roles:scenario.roles,intents:scenario.intents,styles:scenario.styles,choices:scenario.choices,sessions:database.list(playerId),modelConfigured:!!adapter.config.key,model:adapter.config.model,modelBase:adapter.config.base};
+});
+app.post('/api/model-config',async(request,reply)=>{
+  try{
+    const saved=saveModelConfig((request.body||{}) as any);
+    adapter.reload();
+    return {configured:!!adapter.config.key,model:saved.model,base:saved.base};
+  }catch(error){return reply.code(400).send({error:message(error)});}
 });
 app.post('/api/session',async(request,reply)=>{
   const body=request.body as any;

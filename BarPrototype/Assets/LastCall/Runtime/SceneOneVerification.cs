@@ -68,6 +68,10 @@ namespace LastCall
             yield return Until(()=>FindObjectOfType<LastCallGame>()?.Client?.Ready==true,35);game=FindObjectOfType<LastCallGame>();var c=game.Client;
             CheckResult("service_ready",c.Ready);if(!c.Ready){Finish();yield break;}
             yield return Until(()=>Application.isFocused,12);CheckResult("visible_window_focus",Application.isFocused);yield return Shot("entry");
+            string modelButton=Visible("模型 API · 已配置")?"模型 API · 已配置":"填写模型 API";
+            CheckResult("entry_model_api_button",Visible(modelButton));Click(modelButton);yield return null;
+            CheckResult("model_api_form",Visible("保存并启用在线模型")&&FindObjectsOfType<InputField>().Any(f=>f.gameObject.activeInHierarchy&&f.contentType==InputField.ContentType.Password));
+            Click("返回更多设置");yield return null;Click("返回首页");yield return null;
             if(Click("在线模型 · 开"))yield return null;
             CheckResult("entry_landing_has_three_step_path",Visible("开始新的夜晚")&&Visible("更多设置"));
             Click("开始新的夜晚");yield return Until(()=>Visible("临时路过"),3);

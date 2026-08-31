@@ -19,9 +19,9 @@ foreach($case in $Cases){
     $result=Get-Content -LiteralPath (Join-Path $project ('Verification\'+$case+'\report.json')) -Raw | ConvertFrom-Json
     if(!$result.passed){throw "实机验收未通过：$case"}
 }
-$backend=Get-Content -LiteralPath (Join-Path $project 'Verification\interaction-backend-final.txt') -Raw
-if($backend -notmatch 'tests 153' -or $backend -notmatch 'pass 153' -or $backend -notmatch 'fail 0'){throw '服务端 153 项测试未通过'}
-foreach($name in @('interaction-editmode-final.xml','humanoid-all-editmode.xml')){
+$backend=Get-Content -LiteralPath (Join-Path $project 'Verification\model-api-backend-final.txt') -Raw
+if($backend -notmatch 'tests 151' -or $backend -notmatch 'pass 151' -or $backend -notmatch 'fail 0'){throw '服务端 151 项测试未通过'}
+foreach($name in @('scene0-editmode.xml','humanoid-all-editmode.xml')){
     [xml]$xml=Get-Content -LiteralPath (Join-Path $project ('Verification\'+$name)) -Raw
     if($xml.SelectNodes('//failure').Count -gt 0){throw "测试未通过：$name"}
 }
@@ -74,6 +74,11 @@ foreach($package in $production){
 
 Copy-Item -LiteralPath (Join-Path $project 'FULLNIGHT_启动说明.md') -Destination $runtime
 Copy-Item -LiteralPath (Join-Path $project 'Assets\LastCall\SceneZero\Audio\LICENSES.md') -Destination (Join-Path $runtime '音频许可.md')
+@'
+@echo off
+cd /d "%~dp0"
+start "" "LastCall.exe"
+'@ | Set-Content -LiteralPath (Join-Path $runtime '启动游戏.cmd') -Encoding ascii
 
 & (Join-Path $runtime 'Server\node.exe') (Join-Path $PSScriptRoot 'Audit-FullNight.mjs') $runtime
 if($LASTEXITCODE -ne 0){throw '密钥、存档与调试产物排除检查失败。'}

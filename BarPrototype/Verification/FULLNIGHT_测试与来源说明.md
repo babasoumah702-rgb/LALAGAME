@@ -12,6 +12,8 @@
 
 ## 自动化与可见窗口证据
 
+- 2026-08-31 模型 API 前端增量：`model-api-backend-final.txt` 为后端 151 / 151；`scene0-editmode.xml` 为编辑器 28 / 28，并验证 Unity JSON 使用 `base/model/key` 请求字段且响应 DTO 没有 key；`fullnight-scene1-1080/report.json` 为 35 项可见检查，覆盖首页入口与密码框；最终 ZIP 对应运行目录的 13 项启动报告位于 `fullnight-exe-smoke-bgm-api-20260831/report.json`。
+
 - 后端：`Verification/fullnight-backend.xml`，包含原有后端、Scene 0、卡牌、身份与模型测试，以及新增整晚、预算、迟到结果、存档、信息边界、塔罗验证顺序测试。
 - 编辑器：`Verification/fullnight-editor.xml`，25 项通过；新增的实际楼梯碰撞检查逐段验证入口、通道与地面高度，原有场景/材质/移动测试保留。
 - 整晚可见 exe：`Verification/fullnight-native-final/report.json`。新建隔离存档，通过正常命令从电梯运行至结尾，不注入章节。仅这个测试角色启用 3 倍剧情时钟；角色仍由实际碰撞和路径移动。这不是正常速度下的完整在线人工游玩记录。
@@ -50,4 +52,4 @@ A–D 现在使用四个新 FBX 自带的 Humanoid 动作，不再依赖旧版 `
 
 五份提供的 Scene 2–6 文档完整保留于源工程 `Design/FullNight`，与原件逐文件 SHA-256 一致。Scene 1 保留飞书权威链接，并按 8 个章节锚点保存浏览器可见文本快照；它明确标为快照，不冒充飞书结构化导出。来源状态与 SHA-256 见 `fullnight-story-originals.json`。
 
-发行目录采用运行文件白名单，不包含私人配置、密钥、存档、日志、测试脚本或调试符号目录。`fullnight-package-audit.json` 扫描最终运行目录并包含二进制密钥检查。本次按交付要求只生成可直接运行的 exe 完整目录，不生成 ZIP；`LastCall.exe` 的 SHA-256 和最终目录信息保存在源工程 `Verification/fullnight-exe-delivery.json`。旧版运行包与 ZIP 不修改。
+发行目录采用运行文件白名单，不包含私人配置、密钥、存档、日志、测试脚本或调试符号目录。`fullnight-package-audit.json` 扫描最终运行目录并包含二进制密钥检查。2026-08-31 起按最新交付要求同时生成可直接运行的完整目录与 ZIP；ZIP 逐文件对照运行目录校验，SHA-256 与文件数保存在 `Verification/player-zip-delivery.json`。旧版运行包与 ZIP 不修改。

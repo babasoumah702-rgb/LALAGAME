@@ -7,7 +7,9 @@ namespace LastCall
     [Serializable] public class ChoiceOptionDto { public string value, label; }
     [Serializable] public class ChoiceDto { public string id, label, prompt; public ChoiceOptionDto[] options; }
     [Serializable] public class ChoiceAnswersDto { public string domain, career_stage, preferred_topic_density; }
-    [Serializable] public class BootstrapDto { public int version; public string title, model; public bool modelConfigured; public EntryDto[] roles, intents, styles; public ChoiceDto[] choices; public SaveDto[] sessions; }
+    [Serializable] public class BootstrapDto { public int version; public string title, model, modelBase; public bool modelConfigured; public EntryDto[] roles, intents, styles; public ChoiceDto[] choices; public SaveDto[] sessions; }
+    [Serializable] public class ModelConfigRequestDto { public string @base, model, key; public bool keepKey, clearKey; }
+    [Serializable] public class ModelConfigResultDto { public string @base, model; public bool configured; }
     [Serializable] public class ActorDto { public string id, name, color, animation, destination, location,conversationTarget,area,posture,gesture; public float x,y,z,yaw,facingUntil,gestureAt; public int routeVersion; public int interactions; public bool interactable; public PointDto[] route; }
     [Serializable] public class EventDto { public string id, time, actor, name, text, source, level,type,target,objectTarget,generationSource,privacy,audio; public int seq; public bool hasParent; }
     [Serializable] public class CardDto { public string id, name, type, intent, text, effect, lockReason; public string[] expressions; public bool ready, unlocked; public float cooldown, cooldownRemaining; }

@@ -77,8 +77,9 @@ namespace LastCall
             if(Array.IndexOf(Environment.GetCommandLineArgs(),"-lastCallVerify")>=0||scene0Test||cardTest||sceneOneTest||sceneTwoThreeTest||nightTest)
             {
                 var local=Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-                startInfo.EnvironmentVariables["LASTCALL_DATA_DIR"]=Path.Combine(local,"LALAGAME",nightTest?"FullNightVerification":sceneOneTest?"SceneOneVerification":cardTest?"CardPlayVerification":scene0Test?"Scene0Verification":sceneTwoThreeTest?"SceneTwoThreeVerification":"Verification");
-                startInfo.EnvironmentVariables["LASTCALL_CONFIG_DIR"]=Path.Combine(local,"LALAGAME","private");
+                var verificationRoot=Path.Combine(local,"LALAGAME",nightTest?"FullNightVerification":sceneOneTest?"SceneOneVerification":cardTest?"CardPlayVerification":scene0Test?"Scene0Verification":sceneTwoThreeTest?"SceneTwoThreeVerification":"Verification");
+                startInfo.EnvironmentVariables["LASTCALL_DATA_DIR"]=verificationRoot;
+                startInfo.EnvironmentVariables["LASTCALL_CONFIG_DIR"]=Path.Combine(verificationRoot,"private");
             }
             if(nightTest||sceneTwoThreeTest){var args=Environment.GetCommandLineArgs();int scale=Array.IndexOf(args,"-fullNightClock");if(scale>=0)startInfo.EnvironmentVariables["LASTCALL_TEST_CLOCK"]=args[scale+1];}
             service=new Process{StartInfo=startInfo};
@@ -170,6 +171,17 @@ namespace LastCall
         }
         public void Save(){StartCoroutine(Post("/api/save","{}",false));}
         public void RefreshEntry(){StartCoroutine(FetchBootstrap());}
+        public void ConfigureModel(ModelConfigRequestDto options,Action<bool,string> complete){StartCoroutine(ConfigureModelRequest(options,complete));}
+        private IEnumerator ConfigureModelRequest(ModelConfigRequestDto options,Action<bool,string> complete)
+        {
+            var task=LocalRequest(HttpMethod.Post,"/api/model-config",JsonUtility.ToJson(options));
+            while(!task.IsCompleted)yield return null;
+            if(task.IsFaulted){complete?.Invoke(false,"保存失败。请检查接口地址、模型名和网络安全要求。");yield break;}
+            yield return FetchBootstrap();
+            bool configured=Bootstrap?.modelConfigured==true;
+            Status=configured?"模型配置已保存。":"模型密钥已清除；可以使用离线规则模式。";
+            Changed?.Invoke();complete?.Invoke(true,Status);
+        }
         private IEnumerator Post(string path,string json,bool readState)
         {
             var task=LocalRequest(HttpMethod.Post,path,json);

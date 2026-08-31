@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtempSync,writeFileSync} from 'node:fs';
+import {mkdtempSync,readFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {spawn} from 'node:child_process';
@@ -28,11 +28,19 @@ test('config refresh repairs a missing-key fallback save without overriding deli
     assert.equal((await request('/api/bootstrap')).modelConfigured,false);
     const resume={mode:'resume',sessionId:saved.world.id,playerId:'config-test'};
     assert.equal((await request('/api/session',resume)).state.mode,'offline');
-    writeFileSync(join(dir,'model.env'),'LASTCALL_API_KEY=synthetic-test-only\nLASTCALL_MODEL=deepseek-v4-flash');
-    assert.equal((await request('/api/bootstrap')).modelConfigured,true);
+    const configured=await request('/api/model-config',{base:'https://gateway.example/v1',model:'demo-model',key:'synthetic-test-only'});
+    assert.equal(configured.configured,true);assert.equal(configured.base,'https://gateway.example/v1');assert.equal(configured.model,'demo-model');
+    assert.equal(JSON.stringify(configured).includes('synthetic-test-only'),false,'secret is never returned');
+    assert.match(readFileSync(join(dir,'model.env'),'utf8'),/LASTCALL_API_KEY=synthetic-test-only/);
+    const kept=await request('/api/model-config',{base:'https://gateway.example/v2/',model:'demo-model-2',keepKey:true});
+    assert.equal(kept.configured,true);assert.equal(kept.base,'https://gateway.example/v2');
+    const bootstrap=await request('/api/bootstrap');
+    assert.equal(bootstrap.modelConfigured,true);assert.equal(bootstrap.model,'demo-model-2');assert.equal(bootstrap.modelBase,'https://gateway.example/v2');
     const restored=(await request('/api/session',resume)).state;
     assert.equal(restored.mode,'online');assert.equal(restored.paused,true);assert.equal(restored.calls,0);
     await request('/api/command',{id:'offline',type:'mode',online:false});
     assert.equal((await request('/api/session',resume)).state.mode,'offline');
+    const cleared=await request('/api/model-config',{base:'https://gateway.example/v2',model:'demo-model-2',clearKey:true});
+    assert.equal(cleared.configured,false);assert.equal(JSON.stringify(cleared).includes('synthetic-test-only'),false);
   }finally{const stopped=once(child,'exit');child.stdin.end();await stopped;}
 });

@@ -1,11 +1,11 @@
 {
   "passed": true,
-  "runtime": "D:\\工作\\项目\\黑客松\\LALAGAME\\LALAGAME\\BarPrototype\\Builds\\FullNight-Windows-bgm-20260830-v3",
-  "executable": "D:\\工作\\项目\\黑客松\\LALAGAME\\LALAGAME\\BarPrototype\\Builds\\FullNight-Windows-bgm-20260830-v3\\LastCall.exe",
+  "runtime": "D:\\工作\\项目\\黑客松\\LALAGAME\\LALAGAME\\BarPrototype\\Builds\\FullNight-Windows-bgm-api-20260831",
+  "executable": "D:\\工作\\项目\\黑客松\\LALAGAME\\LALAGAME\\BarPrototype\\Builds\\FullNight-Windows-bgm-api-20260831\\LastCall.exe",
   "exeSha256": "61263a2aad52e1be6961139f628d00eb2abaf6799134f69f4062bc5e33178f1b",
-  "files": 893,
-  "bytes": 401685540.0,
-  "smokeReport": "D:\\工作\\项目\\黑客松\\LALAGAME\\LALAGAME\\BarPrototype\\Verification\\fullnight-exe-smoke-bgm-20260830-v3\\report.json",
+  "files": 894,
+  "bytes": 401693084.0,
+  "smokeReport": "D:\\工作\\项目\\黑客松\\LALAGAME\\LALAGAME\\BarPrototype\\Verification\\fullnight-exe-smoke-bgm-api-20260831\\report.json",
   "verifiedCases": [
     "fullnight-native-final",
     "fullnight-scene1-720",

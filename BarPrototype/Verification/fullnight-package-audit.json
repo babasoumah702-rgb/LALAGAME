@@ -1,7 +1,7 @@
 {
   "passed": true,
-  "files": 893,
-  "bytes": 401685540,
+  "files": 894,
+  "bytes": 401693084,
   "keyConfigured": true,
   "issues": [],
   "note": "Checks all staged runtime and evidence files for configured credentials, private config, saves, logs and debug artifacts. Only file names and counts are recorded."

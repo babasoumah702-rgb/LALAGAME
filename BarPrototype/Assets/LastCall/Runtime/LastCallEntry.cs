@@ -9,6 +9,8 @@ namespace LastCall
     {
         private int entryPage,entryRole=-2,entryIntent=-2,entryStyle=-2;
         private string entrySettingsSection="",entryModeOverride="",entryBackground="";
+        private string entryApiBase="",entryApiModel="",entryApiKey="",entryApiStatus="";
+        private bool entryApiSaving;
         private string choiceDomain="skip",choiceCareer="skip",choiceDensity="skip";
         private readonly string[] entryModes={"solo","friend_invited","event_guest"};
         private readonly string[] entryModeNames={"独自来","朋友邀约","活动参与"};
@@ -35,7 +37,8 @@ namespace LastCall
             var save=config.sessions?.FirstOrDefault();if(save!=null)ActionButton(form,"继续上次的夜晚",34,280,520,52,()=>Client.OpenSession(new SessionRequest{mode="resume",sessionId=save.id}));
             ActionButton(form,"更多设置",34,349,250,46,()=>{entryPage=4;entrySettingsSection="";BuildEntry();});
             ActionButton(form,online?"在线模型 · 开":"离线规则模式",304,349,250,46,()=>{online=!online;BuildEntry();});
-            Label(form,"更多设置包含赴约方式、可选背景和三项话题偏好，不进入主路径。",34,418,650,44,14,muted);ActionButton(form,"退出",34,540,180,44,Quit);
+            ActionButton(form,config.modelConfigured?"模型 API · 已配置":"填写模型 API",574,349,250,46,OpenModelSettings);
+            Label(form,config.modelConfigured?"模型："+config.model+" · 密钥只保存在本机，不会显示。":"未配置密钥时可选择离线规则模式；也可以先填写自己的模型 API。",34,418,790,44,14,muted);ActionButton(form,"退出",34,540,180,44,Quit);
         }
 
         private void BuildEntryQuestion(Transform form,BootstrapDto config)
@@ -83,11 +86,12 @@ namespace LastCall
             if(string.IsNullOrEmpty(entrySettingsSection))
             {
                 Label(form,"这些内容全部可跳过，不影响三步主路径。",34,132,700,30,15,muted);
-                var entries=new[]{("arrival","赴约方式"),("background","补充今晚为什么来"),("domain","行业方向"),("career_stage","当前阶段"),("preferred_topic_density","今晚话题")};
-                for(int i=0;i<entries.Length;i++){string id=entries[i].Item1;ActionButton(form,entries[i].Item2,34+(i%2)*395,190+(i/2)*66,370,50,()=>{entrySettingsSection=id;BuildEntry();});}
+                var entries=new[]{("arrival","赴约方式"),("background","补充今晚为什么来"),("domain","行业方向"),("career_stage","当前阶段"),("preferred_topic_density","今晚话题"),("model_api","模型 API 设置")};
+                for(int i=0;i<entries.Length;i++){string id=entries[i].Item1;ActionButton(form,entries[i].Item2,34+(i%2)*395,190+(i/2)*66,370,50,()=>{if(id=="model_api")OpenModelSettings();else{entrySettingsSection=id;BuildEntry();}});}
                 ActionButton(form,online?"在线模型 · 开":"规则模式 · 离线",34,408,370,50,()=>{online=!online;BuildEntry();});ActionButton(form,"返回首页",34,550,220,44,()=>{entryPage=0;BuildEntry();},true);return;
             }
-            if(entrySettingsSection=="background")
+            if(entrySettingsSection=="model_api")BuildModelSettings(form);
+            else if(entrySettingsSection=="background")
             {
                 Label(form,"补充今晚为什么来 · 可跳过",34,140,760,34,20,gold);var background=InputBox(form,34,200,765,150);
                 ((Text)background.placeholder).text="不填写也可以直接开始。最多 200 字。";background.text=entryBackground;background.onValueChanged.AddListener(v=>entryBackground=v);
@@ -100,6 +104,39 @@ namespace LastCall
                 var skip=ActionButton(form,"跳过 · 根据身份自动匹配",34,380,765,48,()=>{entryModeOverride="";BuildEntry();});SetChoiceState(skip,string.IsNullOrEmpty(entryModeOverride),!string.IsNullOrEmpty(entryModeOverride));
             }else BuildOptionalChoice(form,config,entrySettingsSection);
             ActionButton(form,"返回更多设置",34,550,260,44,()=>{entrySettingsSection="";BuildEntry();},true);
+        }
+        private void OpenModelSettings()
+        {
+            var config=Client.Bootstrap;
+            entryApiBase=string.IsNullOrWhiteSpace(config?.modelBase)?"https://api.deepseek.com":config.modelBase;
+            entryApiModel=string.IsNullOrWhiteSpace(config?.model)?"deepseek-v4-flash":config.model;
+            entryApiKey="";
+            entryApiStatus=config?.modelConfigured==true?"已经配置密钥；留空保存会保留原密钥。":"请填写 OpenAI 兼容接口。密钥不会回显。";
+            entryPage=4;entrySettingsSection="model_api";BuildEntry();
+        }
+        private void BuildModelSettings(Transform form)
+        {
+            Label(form,"模型 API 设置",34,92,760,38,25);
+            Label(form,"接口地址",34,150,155,44,15,muted);var apiBase=InputBox(form,190,150,610,44);
+            apiBase.lineType=InputField.LineType.SingleLine;apiBase.characterLimit=500;apiBase.text=entryApiBase;((Text)apiBase.placeholder).text="https://api.deepseek.com";apiBase.onValueChanged.AddListener(v=>entryApiBase=v);
+            Label(form,"模型名称",34,212,155,44,15,muted);var model=InputBox(form,190,212,610,44);
+            model.lineType=InputField.LineType.SingleLine;model.characterLimit=120;model.text=entryApiModel;((Text)model.placeholder).text="例如 deepseek-v4-flash";model.onValueChanged.AddListener(v=>entryApiModel=v);
+            Label(form,"API Key",34,274,155,44,15,muted);var key=InputBox(form,190,274,610,44);
+            key.lineType=InputField.LineType.SingleLine;key.characterLimit=2000;key.contentType=InputField.ContentType.Password;key.asteriskChar='●';key.text=entryApiKey;
+            ((Text)key.placeholder).text=Client.Bootstrap?.modelConfigured==true?"已配置；留空表示保留":"只保存在当前 Windows 用户目录";key.onValueChanged.AddListener(v=>entryApiKey=v);key.ForceLabelUpdate();
+            Label(form,"仅允许 HTTPS；本机 localhost / 127.0.0.1 可使用 HTTP。配置写入用户私有目录，不进入游戏包、存档或日志。",34,330,766,54,14,muted);
+            var save=ActionButton(form,entryApiSaving?"正在保存…":"保存并启用在线模型",34,402,370,48,()=>SubmitModelSettings(false),true);save.interactable=!entryApiSaving;
+            var clear=ActionButton(form,"清除本机密钥",430,402,370,48,()=>SubmitModelSettings(true));clear.interactable=!entryApiSaving&&Client.Bootstrap?.modelConfigured==true;
+            Label(form,entryApiStatus,34,462,766,58,14,entryApiStatus.Contains("失败")?gold:cream);
+        }
+        private void SubmitModelSettings(bool clear)
+        {
+            if(entryApiSaving)return;
+            entryApiSaving=true;entryApiStatus=clear?"正在清除本机密钥…":"正在保存模型配置…";BuildEntry();
+            Client.ConfigureModel(new ModelConfigRequestDto{@base=entryApiBase,model=entryApiModel,key=clear?"":entryApiKey,
+                keepKey=!clear&&string.IsNullOrWhiteSpace(entryApiKey)&&Client.Bootstrap?.modelConfigured==true,clearKey=clear},(ok,message)=>{
+                entryApiSaving=false;entryApiStatus=message;if(ok){entryApiKey="";online=Client.Bootstrap?.modelConfigured==true;}BuildEntry();
+            });
         }
         private void BuildOptionalChoice(Transform form,BootstrapDto config,string id)
         {

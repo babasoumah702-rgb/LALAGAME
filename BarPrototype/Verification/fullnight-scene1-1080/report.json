@@ -16,6 +16,14 @@
             "passed": true
         },
         {
+            "name": "entry_model_api_button",
+            "passed": true
+        },
+        {
+            "name": "model_api_form",
+            "passed": true
+        },
+        {
             "name": "entry_landing_has_three_step_path",
             "passed": true
         },

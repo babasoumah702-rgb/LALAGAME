@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {mkdtempSync,mkdirSync,writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {modelConfig,modelConfigFile} from '../model.js';
+import {modelConfig,modelConfigFile,saveModelConfig,writableModelConfigFile} from '../model.js';
 function fixture(){
   const home=mkdtempSync(join(tmpdir(),'lastcall-config-path-'));
   const local=join(home,'redirected-appdata');
@@ -30,4 +30,15 @@ test('legacy config remains readable if no stable file exists; environment overr
 test('an intentionally empty stable key never falls back to a stale key from a different location',()=>{
   const f=fixture();config(f.stable,'LASTCALL_API_KEY=');config(f.legacy,'LASTCALL_API_KEY=synthetic-legacy-key');
   assert.equal(modelConfig({LOCALAPPDATA:f.local},f.home).key,'');
+});
+test('front-end model config writes only to the private profile and validates transport',()=>{
+  const f=fixture(),env={LOCALAPPDATA:f.local};
+  const saved=saveModelConfig({base:'https://gateway.example/v1/',model:'compatible-model',key:'synthetic-ui-key'},env,f.home);
+  assert.equal(saved.base,'https://gateway.example/v1');assert.equal(saved.model,'compatible-model');assert.equal(saved.key,'synthetic-ui-key');
+  assert.equal(writableModelConfigFile(env,f.home),join(f.home,'.lalagame/private/model.env'));
+  const kept=saveModelConfig({base:'http://127.0.0.1:8080/v1',model:'local-model',keepKey:true},env,f.home);
+  assert.equal(kept.key,'synthetic-ui-key');
+  assert.throws(()=>saveModelConfig({base:'http://remote.example/v1',model:'unsafe',key:'x'},env,f.home),/HTTPS/);
+  const cleared=saveModelConfig({base:'https://gateway.example/v1',model:'compatible-model',clearKey:true},env,f.home);
+  assert.equal(cleared.key,'');
 });

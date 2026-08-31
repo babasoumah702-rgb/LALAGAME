@@ -32,6 +32,7 @@ An action suggestion cannot add actors, change the timeline, create facts, or mu
 ## Protocol v1
 
 - GET /api/bootstrap?playerId=...: public scenario choices and that player's save summaries.
+- POST /api/model-config: loopback-authenticated write of compatible API base/model/key; returns configured status, base and model, never the key.
 - POST /api/session: new / resume / next, playerId, role, intent, style, seed and online.
 - GET /api/state and /api/reflection: filtered state / public reflection.
 - POST /api/command: command id, type, optional sessionId, version and cursor.
@@ -44,7 +45,7 @@ Position reports are coalesced into a latest-only batch and are not replayed. A 
 
 ## Persistence and reproduction
 
-Normal storage is outside the project in LOCALAPPDATA/LALAGAME. The managed verification launcher uses a separate Verification database. The API key stays in private/model.env; no log includes authorization headers, environment dumps or provider error bodies.
+Normal storage is outside the project in LOCALAPPDATA/LALAGAME. The managed verification launcher uses a separate Verification database and config directory. Normal player model settings are written to the current profile's `.lalagame/private/model.env`; the endpoint accepts HTTPS remotes and HTTP loopback only. The key is never returned to Unity, bundled, added to saves, or logged with authorization headers, environment dumps or provider error bodies.
 
 Snapshots include the PRNG state, actor memories, pending actions, route revisions, clock, commands and event cursor. Model decisions are journaled privately with source event and acceptance status. Reopening preserves already-observed outcomes without calling the model again for the past. A fresh model call is not promised to reproduce identical text.
 

@@ -1,6 +1,6 @@
 import {chapterOf,reserveBudget,settleBudget} from './story.js';
-import {readFileSync,existsSync} from 'node:fs';
-import {join} from 'node:path';
+import {readFileSync,existsSync,mkdirSync,writeFileSync,renameSync} from 'node:fs';
+import {join,dirname} from 'node:path';
 import {homedir} from 'node:os';
 import {Ajv} from 'ajv';
 import type {Engine} from './engine.js';
@@ -13,8 +13,10 @@ export function modelConfigFile(env:NodeJS.ProcessEnv=process.env,userHome=homed
   const legacy=join(env.LASTCALL_DATA_DIR||join(env.LOCALAPPDATA||userHome,'LALAGAME'),'private','model.env');
   return existsSync(stable)?stable:legacy;
 }
-export function modelConfig(env:NodeJS.ProcessEnv=process.env,userHome=homedir()){
-  const file=modelConfigFile(env,userHome);
+export function writableModelConfigFile(env:NodeJS.ProcessEnv=process.env,userHome=homedir()){
+  return env.LASTCALL_CONFIG_DIR?join(env.LASTCALL_CONFIG_DIR,'model.env'):join(userHome,'.lalagame','private','model.env');
+}
+function fileValues(file:string){
   const values:Record<string,string>={};
   if(existsSync(file)){
     for(const line of readFileSync(file,'utf8').split(/\r?\n/)){
@@ -22,11 +24,34 @@ export function modelConfig(env:NodeJS.ProcessEnv=process.env,userHome=homedir()
       if(index>0)values[line.slice(0,index).trim()]=line.slice(index+1).trim();
     }
   }
+  return values;
+}
+export function modelConfig(env:NodeJS.ProcessEnv=process.env,userHome=homedir()){
+  const file=modelConfigFile(env,userHome);
+  const values=fileValues(file);
   return {
     base:env.LASTCALL_API_BASE||values.LASTCALL_API_BASE||'https://api.deepseek.com',
     model:env.LASTCALL_MODEL||values.LASTCALL_MODEL||'deepseek-v4-flash',
     key:env.LASTCALL_API_KEY||values.LASTCALL_API_KEY||''
   };
+}
+export type ModelConfigInput={base?:unknown;model?:unknown;key?:unknown;keepKey?:unknown;clearKey?:unknown};
+export function saveModelConfig(input:ModelConfigInput,env:NodeJS.ProcessEnv=process.env,userHome=homedir()){
+  const base=String(input.base??'').trim().replace(/\/+$/,'');
+  const model=String(input.model??'').trim();
+  if(!base||base.length>500||/[\r\n]/.test(base))throw new Error('模型接口地址无效');
+  let url:URL;try{url=new URL(base);}catch{throw new Error('模型接口地址无效');}
+  const loopback=['localhost','127.0.0.1','[::1]'].includes(url.hostname);
+  if(url.protocol!=='https:'&&!(url.protocol==='http:'&&loopback))throw new Error('模型接口必须使用 HTTPS；本机 localhost 可使用 HTTP');
+  if(!model||model.length>120||/[\r\n=]/.test(model))throw new Error('模型名称无效');
+  const source=fileValues(modelConfigFile(env,userHome));
+  let key=input.clearKey===true?'':input.keepKey===true?(source.LASTCALL_API_KEY||''):String(input.key??'').trim();
+  if(key.length>2000||/[\r\n]/.test(key))throw new Error('API Key 无效');
+  const file=writableModelConfigFile(env,userHome),temporary=file+'.tmp';
+  mkdirSync(dirname(file),{recursive:true});
+  writeFileSync(temporary,`LASTCALL_API_BASE=${base}\nLASTCALL_MODEL=${model}\nLASTCALL_API_KEY=${key}\n`,{encoding:'utf8',mode:0o600});
+  renameSync(temporary,file);
+  return modelConfig(env,userHome);
 }
 export function providerOptions(config:{base:string}){
   try{if(new URL(config.base).hostname==='api.deepseek.com')return {thinking:{type:'disabled'}};}catch{}

@@ -2,7 +2,7 @@
 
 当前主线是第一人称 AI 社交叙事 **LALAGAME / Last Call**，主场景为 `Assets/Scenes/LastCall.unity`。它已经串联 Scene 0–6，并加入三页新游戏入口、观察／移动／互动两层菜单、章节下一步、定向 AI 回复、A–D Humanoid 动作、头顶气泡、存档和屋顶收尾。
 
-当前带循环 BGM 的 Windows 候选目录为 `Builds/FullNight-Windows-bgm-20260830-v3`，启动 `LastCall.exe`。它已经通过白名单目录启动验收和密钥／存档／日志排除审计；独立 Scene 2→塔罗夹具仍待修复，范围与限制见仓库根目录 README 及[未完成工作_前端交互改造.md](未完成工作_前端交互改造.md)。按要求只交付完整 exe 运行目录，不生成 ZIP。
+当前 Windows 玩家包为 `Builds/LALAGAME-Windows-bgm-api-20260831.zip`。解压后双击 `启动游戏.cmd` 或 `LastCall.exe`，不需要安装团结引擎、Unity 或 Node.js。首页可以填写玩家自己的 OpenAI 兼容模型 API，配置不进入 ZIP。它已经通过白名单目录启动验收、逐文件归档校验和密钥／存档／日志排除审计；范围与限制见仓库根目录 README 及[未完成工作_前端交互改造.md](未完成工作_前端交互改造.md)。
 
 以下内容主要记录仍保留的原版“琥珀酒馆”漫游。
 
