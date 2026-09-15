@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0810">
+  <meta name="description" content="LaLa-Land 是一款由多智能体驱动的开放式拉拉向关系叙事游戏。">
+  <title>LaLa-Land｜开放式多智能体关系叙事游戏</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0810'/%3E%3Cpath d='M13 15v34h20v-8H22V15zm20 0v34h18v-8h-9V15z' fill='%23d6adff'/%3E%3Ccircle cx='51' cy='13' r='5' fill='%23d8a25f'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #09070e;
+      --panel: #12101a;
+      --paper: #f8f5ff;
+      --muted: #bbb5c7;
+      --line: rgba(220, 207, 238, .18);
+      --violet: #c29cff;
+      --pink: #f5a9c9;
+      --amber: #d8a25f;
+      --max: 1180px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: var(--ink); }
+    body { margin: 0; font-family: "Microsoft YaHei UI", "PingFang SC", "Noto Sans CJK SC", system-ui, sans-serif; color: var(--paper); background: var(--ink); }
+    a { color: inherit; }
+    img { display: block; max-width: 100%; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .skip { position: fixed; z-index: 20; top: 8px; left: 8px; transform: translateY(-140%); padding: 10px 14px; background: white; color: black; border-radius: 8px; }
+    .skip:focus { transform: translateY(0); }
+    .nav { position: fixed; z-index: 10; inset: 0 0 auto; backdrop-filter: blur(18px); background: rgba(9, 7, 14, .68); border-bottom: 1px solid var(--line); }
+    .nav-inner { max-width: var(--max); margin: auto; min-height: 66px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-size: 18px; font-weight: 800; letter-spacing: .01em; }
+    .brand img { width: 34px; height: 34px; border-radius: 9px; object-fit: cover; }
+    .brand span { color: var(--violet); }
+    .nav-links { display: flex; align-items: center; gap: 22px; font-size: 14px; color: var(--muted); }
+    .nav-links a { text-decoration: none; }
+    .nav-links a:hover, .nav-links a:focus-visible { color: white; }
+    .hero { min-height: 100svh; position: relative; display: grid; align-items: end; overflow: hidden; }
+    .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(7,5,11,.96) 0%, rgba(7,5,11,.73) 38%, rgba(7,5,11,.18) 72%), linear-gradient(0deg, var(--ink) 0%, transparent 38%); z-index: 1; }
+    .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; filter: saturate(.82) contrast(1.06); }
+    .hero-content { position: relative; z-index: 2; width: min(var(--max), calc(100% - 48px)); margin: 0 auto; padding: 148px 0 82px; }
+    .eyebrow { color: var(--amber); font-size: 14px; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { margin: 14px 0 8px; font-size: clamp(58px, 9vw, 118px); line-height: .95; letter-spacing: -.055em; }
+    .hero-copy { max-width: 720px; margin: 36px 0 0; font-size: clamp(24px, 3vw, 40px); line-height: 1.32; font-weight: 700; }
+    .hero-copy em { color: var(--violet); font-style: normal; }
+    .hero-intro { max-width: 640px; margin: 24px 0 0; color: #d4cfdb; font-size: 18px; line-height: 1.75; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+    .btn { min-height: 48px; padding: 13px 20px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; border: 1px solid transparent; border-radius: 999px; text-decoration: none; font-weight: 760; font-size: 15px; transition: transform .2s ease, background .2s ease, border-color .2s ease; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: var(--paper); color: #130e1a; }
+    .btn-secondary { border-color: rgba(255,255,255,.28); background: rgba(10,8,16,.44); }
+    .btn-secondary:hover { border-color: var(--violet); }
+    .micro { margin-top: 15px; color: #9e98aa; font-size: 13px; }
+    main section { padding: 112px 24px; }
+    .wrap { max-width: var(--max); margin: auto; }
+    .section-head { display: grid; grid-template-columns: .55fr 1fr; gap: 60px; align-items: start; margin-bottom: 54px; }
+    .section-head h2 { margin: 0; font-size: clamp(34px, 5vw, 64px); line-height: 1.05; letter-spacing: -.035em; }
+    .section-head p { margin: 5px 0 0; color: var(--muted); font-size: 18px; line-height: 1.85; }
+    .trailer { background: linear-gradient(180deg, #09070e 0%, #0d0a12 100%); }
+    .trailer-grid { display: grid; grid-template-columns: .72fr 1.28fr; gap: 44px; align-items: center; }
+    .trailer-copy h2 { margin: 12px 0 22px; font-size: clamp(36px, 5vw, 62px); line-height: 1.08; }
+    .trailer-copy p { margin: 0 0 26px; color: var(--muted); font-size: 17px; line-height: 1.8; }
+    .video-frame { overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: #050408; box-shadow: 0 24px 70px rgba(0,0,0,.35); }
+    .video-frame video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #050408; }
+    .story { background: linear-gradient(180deg, #09070e 0%, #100b16 100%); }
+    .story-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 42px; align-items: stretch; }
+    .frame { overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: #0c0911; }
+    .frame img { width: 100%; height: 100%; object-fit: cover; }
+    .story-card { padding: 42px; display: flex; flex-direction: column; justify-content: space-between; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .story-card blockquote { margin: 0; font-size: clamp(28px, 4vw, 48px); line-height: 1.35; font-weight: 760; letter-spacing: -.025em; }
+    .story-card blockquote span { color: var(--pink); }
+    .story-card p { color: var(--muted); font-size: 17px; line-height: 1.75; }
+    .experience { background: #0d0a12; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .step { min-height: 230px; padding: 30px; background: #0d0a12; }
+    .step b { display: block; margin-bottom: 42px; color: var(--amber); font-size: 13px; letter-spacing: .14em; }
+    .step h3 { margin: 0 0 16px; font-size: 24px; }
+    .step p { margin: 0; color: var(--muted); line-height: 1.7; }
+    .gallery { display: grid; grid-template-columns: 1.15fr .85fr; grid-template-rows: 280px 280px; gap: 16px; margin-top: 54px; }
+    .gallery button { position: relative; overflow: hidden; padding: 0; border: 1px solid var(--line); border-radius: 18px; background: #12101a; cursor: zoom-in; }
+    .gallery button:first-child { grid-row: 1 / 3; }
+    .gallery img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+    .gallery button:hover img { transform: scale(1.025); }
+    .gallery span { position: absolute; inset: auto 18px 16px; color: white; font-size: 14px; font-weight: 700; text-align: left; text-shadow: 0 2px 12px black; }
+    .tech { background: linear-gradient(145deg, #151022, #09070e 60%); }
+    .tech-grid { display: grid; grid-template-columns: .95fr 1.05fr; gap: 64px; align-items: center; }
+    .tech-copy h2 { margin: 0 0 28px; font-size: clamp(36px, 5vw, 62px); line-height: 1.08; }
+    .tech-copy > p { color: var(--muted); font-size: 18px; line-height: 1.8; }
+    .agent-list { margin-top: 38px; display: grid; gap: 20px; }
+    .agent { display: grid; grid-template-columns: 52px 1fr; gap: 18px; padding-top: 20px; border-top: 1px solid var(--line); }
+    .agent i { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid rgba(194,156,255,.55); border-radius: 50%; color: var(--violet); font-style: normal; font-weight: 800; }
+    .agent h3 { margin: 0 0 7px; font-size: 19px; }
+    .agent p { margin: 0; color: var(--muted); line-height: 1.65; }
+    .memory { min-height: 650px; position: relative; display: grid; align-items: center; overflow: hidden; }
+    .memory::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(8,6,12,.97), rgba(8,6,12,.7) 48%, rgba(8,6,12,.08)); }
+    .memory img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+    .memory-content { position: relative; z-index: 2; max-width: 620px; }
+    .memory h2 { margin: 12px 0 24px; font-size: clamp(38px, 5vw, 68px); line-height: 1.08; }
+    .memory p { color: #d1cad8; font-size: 18px; line-height: 1.8; }
+    .planned { display: inline-flex; padding: 7px 10px; border: 1px solid rgba(216,162,95,.45); color: var(--amber); font-size: 12px; font-weight: 800; letter-spacing: .1em; }
+    .download { background: #f5f1fa; color: #17121d; }
+    .download .section-head p { color: #665f6f; }
+    .download-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 24px; }
+    .download-main, .download-side { padding: 38px; border: 1px solid rgba(26,18,34,.16); border-radius: 22px; }
+    .download-main { background: #17121d; color: white; }
+    .download h3 { margin: 0 0 12px; font-size: 26px; }
+    .download p { margin: 0 0 24px; color: #aba3b4; line-height: 1.7; }
+    .download-side p { color: #665f6f; }
+    .download .btn-primary { background: var(--violet); }
+    .download .btn-secondary { border-color: rgba(26,18,34,.22); background: transparent; color: #17121d; }
+    .download-links { display: flex; flex-wrap: wrap; gap: 10px; }
+    .notice { margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(26,18,34,.15); color: #6d6575; font-size: 14px; line-height: 1.7; }
+    footer { padding: 34px 24px 48px; background: #08060c; color: #8c8595; font-size: 13px; }
+    .footer-inner { max-width: var(--max); margin: auto; display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    dialog { width: min(1100px, calc(100% - 32px)); padding: 0; border: 1px solid var(--line); border-radius: 20px; background: #0a0810; color: white; }
+    dialog::backdrop { background: rgba(5,3,8,.88); backdrop-filter: blur(9px); }
+    dialog img { width: 100%; max-height: 78vh; object-fit: contain; }
+    .dialog-bar { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 14px 18px; }
+    .dialog-bar button { border: 1px solid var(--line); border-radius: 999px; padding: 8px 13px; color: white; background: transparent; cursor: pointer; }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .65s ease, transform .65s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    @media (max-width: 820px) {
+      .nav-links a:not(.nav-cta) { display: none; }
+      .hero::before { background: linear-gradient(0deg, rgba(7,5,11,.98) 0%, rgba(7,5,11,.64) 65%, rgba(7,5,11,.2)); }
+      .hero-content { padding-bottom: 54px; }
+      .section-head, .story-grid, .tech-grid, .download-grid, .trailer-grid { grid-template-columns: 1fr; gap: 28px; }
+      .steps { grid-template-columns: 1fr; }
+      .step { min-height: 0; }
+      .gallery { grid-template-columns: 1fr; grid-template-rows: repeat(3, 240px); }
+      .gallery button:first-child { grid-row: auto; }
+      main section { padding: 82px 20px; }
+      .story-card { padding: 30px 4px; }
+      .memory::before { background: linear-gradient(0deg, rgba(8,6,12,.98), rgba(8,6,12,.52)); }
+      .memory-content { padding-top: 220px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#content">跳到主要内容</a>
+  <header class="nav" aria-label="主导航">
+    <div class="nav-inner">
+      <a class="brand" href="#top"><img src="assets/project-icon.png" alt=""><span>LaLa</span>-Land</a>
+      <nav class="nav-links" aria-label="页面章节">
+        <a href="#trailer">宣传视频</a>
+        <a href="#experience">怎么玩</a>
+        <a href="#agents">AI 角色</a>
+        <a href="#future">角色记忆</a>
+        <a class="nav-cta" href="#download">试玩下载</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="content">
+    <section class="hero" id="top">
+      <img class="hero-bg" src="assets/hero.jpg" alt="LaLa-Land 酒吧内的四位主要角色">
+      <div class="hero-content">
+        <div class="eyebrow">开放式多智能体关系叙事游戏</div>
+        <h1>LaLa-Land</h1>
+        <p class="hero-copy">你不知道谁会打动你，<br><em>也不知道你会打动谁。</em></p>
+        <p class="hero-intro">周五深夜，一家 queer-friendly 酒吧即将打烊。四个她围坐一桌，在你推门进来之前就已经聊了很久。</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#trailer">观看宣传片</a>
+          <a class="btn btn-secondary" href="#download">下载试玩版</a>
+          <a class="btn btn-secondary" href="https://github.com/babasoumah702-rgb/LALAGAME/releases/tag/lastcall-v0.3.0-alpha" target="_blank" rel="noreferrer">查看 GitHub Release</a>
+        </div>
+        <div class="micro">当前版本 v0.3.0-alpha　Windows 与 macOS</div>
+      </div>
+    </section>
+
+    <section class="trailer" id="trailer" aria-labelledby="trailer-title">
+      <div class="wrap trailer-grid">
+        <div class="trailer-copy reveal">
+          <div class="eyebrow">游戏宣传视频</div>
+          <h2 id="trailer-title">先看两分钟，进入 LaLa-Land</h2>
+          <p>从四位角色、酒吧场景与自由互动开始，快速了解这款开放式多智能体关系叙事游戏。</p>
+          <a class="btn btn-secondary" href="https://github.com/babasoumah702-rgb/LALAGAME/releases/download/lastcall-v0.3.0-alpha/LaLa-Land-Promo.mp4" target="_blank" rel="noreferrer">无法播放？打开视频</a>
+        </div>
+        <div class="video-frame reveal">
+          <video controls preload="metadata" poster="assets/hero.jpg">
+            <source src="https://github.com/babasoumah702-rgb/LALAGAME/releases/download/lastcall-v0.3.0-alpha/LaLa-Land-Promo.mp4" type="video/mp4">
+            您的浏览器暂不支持在线播放，请使用页面中的视频链接。
+          </video>
+        </div>
+      </div>
+    </section>
+
+    <section class="story" aria-labelledby="story-title">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <h2 id="story-title">进入一场已经开始的关系局</h2>
+          <p>玩家没有固定攻略对象，也没有预设正确答案。你可以自由表达、移动和选择行动。四名角色依据各自的记忆、立场与边界继续行动，她们也会彼此影响。</p>
+        </div>
+        <div class="story-grid reveal">
+          <figure class="frame"><img src="assets/gameplay-main.png" loading="lazy" alt="LaLa-Land 多角色同场的游戏画面"></figure>
+          <div class="story-card">
+            <blockquote>有事件锚点，<br><span>没有固定攻略路线。</span></blockquote>
+            <p>位置决定谁能听见你的话。在场者形成各自的理解，角色带着这些记忆进入下一次选择。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="experience" id="experience" aria-labelledby="experience-title">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <h2 id="experience-title">玩家如何介入</h2>
+          <p>当前 Demo 已呈现玩家身份设定、自然语言输入、社交动作卡、3D 空间移动，以及多角色同场互动。</p>
+        </div>
+        <div class="steps reveal">
+          <article class="step"><b>01</b><h3>带着自己进入</h3><p>玩家先设定今晚的身份、状态与边界，它们会成为角色理解你的第一层背景。</p></article>
+          <article class="step"><b>02</b><h3>说话，也做选择</h3><p>自由输入承载细腻表达，动作卡让靠近、观察、回避与试探成为可见行动。</p></article>
+          <article class="step"><b>03</b><h3>承担关系后果</h3><p>同一句话会在不同角色心中留下不同印象，后续行为由这些理解共同推动。</p></article>
+        </div>
+        <div class="gallery reveal" aria-label="游戏截图">
+          <button type="button" data-image="assets/player-setup.png" data-title="玩家身份设定"><img src="assets/player-setup.png" loading="lazy" alt="游戏中的玩家身份设定界面"><span>玩家身份设定</span></button>
+          <button type="button" data-image="assets/cards.png" data-title="社交动作卡"><img src="assets/cards.png" loading="lazy" alt="游戏中的社交动作卡界面"><span>社交动作卡</span></button>
+          <button type="button" data-image="assets/terrace.png" data-title="空间行动"><img src="assets/terrace.png" loading="lazy" alt="玩家进入酒吧露台的游戏画面"><span>空间行动</span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="tech" id="agents" aria-labelledby="agents-title">
+      <div class="wrap tech-grid">
+        <div class="tech-copy reveal">
+          <div class="eyebrow">多智能体叙事架构</div>
+          <h2 id="agents-title">角色拥有自己的理解与选择</h2>
+          <p>每个角色作为独立 Agent 维护自己的记忆、关系判断和行动边界。共享世界负责时间、位置、公共事件和可见性，让角色的反应来自她真正经历过的事情。</p>
+        </div>
+        <div class="agent-list reveal">
+          <article class="agent"><i>A</i><div><h3>各自记得什么</h3><p>角色只记录自己听见、看见或被告知的事件。</p></div></article>
+          <article class="agent"><i>B</i><div><h3>各自如何理解</h3><p>同一件事可以形成不同判断，不共享全知视角。</p></div></article>
+          <article class="agent"><i>C</i><div><h3>各自决定下一步</h3><p>回应受到人物目标、关系历史与当前边界共同约束。</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="memory" id="future" aria-labelledby="future-title">
+      <img src="assets/memory-ai.jpg" loading="lazy" alt="角色记忆体与角色 AI 前端的概念图">
+      <div class="wrap" style="position:relative;z-index:2;width:100%">
+        <div class="memory-content reveal">
+          <span class="planned">规划方向</span>
+          <h2 id="future-title">一局结束后，关系可以继续</h2>
+          <p>玩家未来可以授权导出本局的关键记忆，再导入角色 AI。角色延续共同经历、称呼变化与未完成的话题。玩家能够选择导出的内容，也可以随时删除或重置。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="download" id="download" aria-labelledby="download-title">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <h2 id="download-title">试玩 LaLa-Land</h2>
+          <p>当前 v0.3.0-alpha 提供 Windows 与 macOS 试玩包。下载完整压缩包，完整解压后再运行。</p>
+        </div>
+        <div class="download-grid reveal">
+          <article class="download-main">
+            <h3>Windows 与 macOS 下载</h3>
+            <p>在 Release 页面选择对应平台的游戏包，并查看完整版本说明。</p>
+            <div class="download-links">
+              <a class="btn btn-primary" href="https://github.com/babasoumah702-rgb/LALAGAME/releases/tag/lastcall-v0.3.0-alpha" target="_blank" rel="noreferrer">打开下载页面</a>
+              <a class="btn btn-secondary" href="https://github.com/babasoumah702-rgb/LALAGAME/releases/download/lastcall-v0.3.0-alpha/LaLa-Land-Promo.mp4" target="_blank" rel="noreferrer">打开宣传视频</a>
+            </div>
+          </article>
+          <article class="download-side">
+            <h3>项目资料</h3>
+            <p>如果想了解项目结构、更新记录与开发说明，可以查看 GitHub 仓库。</p>
+            <div class="download-links">
+              <a class="btn btn-secondary" href="https://github.com/babasoumah702-rgb/LALAGAME" target="_blank" rel="noreferrer">查看 GitHub 仓库</a>
+            </div>
+          </article>
+        </div>
+        <div class="notice">Windows 可运行“启动游戏.cmd”或 LastCall.exe。macOS 版本尚未签名、公证或完成真机验收；如系统拦截，请优先使用 Windows 版本体验。当前版本为 Alpha，角色关系、多智能体逻辑、任务系统和场景表现仍会继续迭代。</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner"><span>LaLa-Land · 游戏作品介绍</span><span>当前试玩版本 v0.3.0-alpha</span></div>
+  </footer>
+
+  <dialog id="viewer" aria-labelledby="viewer-title">
+    <div class="dialog-bar"><strong id="viewer-title">游戏截图</strong><button type="button" id="viewer-close">关闭</button></div>
+    <img id="viewer-image" alt="">
+  </dialog>
+  <script>
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const observer = reduceMotion ? null : new IntersectionObserver((entries) => {
+      for (const entry of entries) if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+    }, { threshold: .12 });
+    document.querySelectorAll('.reveal').forEach((element) => observer ? observer.observe(element) : element.classList.add('visible'));
+
+    const viewer = document.querySelector('#viewer');
+    const viewerImage = document.querySelector('#viewer-image');
+    const viewerTitle = document.querySelector('#viewer-title');
+    document.querySelectorAll('[data-image]').forEach((button) => button.addEventListener('click', () => {
+      viewerImage.src = button.dataset.image;
+      viewerImage.alt = button.dataset.title;
+      viewerTitle.textContent = button.dataset.title;
+      viewer.showModal();
+    }));
+    document.querySelector('#viewer-close').addEventListener('click', () => viewer.close());
+    viewer.addEventListener('click', (event) => { if (event.target === viewer) viewer.close(); });
+  </script>
+</body>
+</html>
