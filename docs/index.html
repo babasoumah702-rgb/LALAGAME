@@ -60,6 +60,7 @@
     .trailer { background: linear-gradient(180deg, #09070e 0%, #0d0a12 100%); }
     .trailer-grid { display: grid; grid-template-columns: .72fr 1.28fr; gap: 44px; align-items: center; }
     .trailer-copy h2 { margin: 12px 0 22px; font-size: clamp(36px, 5vw, 62px); line-height: 1.08; }
+    .nowrap { white-space: nowrap; }
     .trailer-copy p { margin: 0 0 26px; color: var(--muted); font-size: 17px; line-height: 1.8; }
     .video-frame { overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: #050408; box-shadow: 0 24px 70px rgba(0,0,0,.35); }
     .video-frame iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; background: #050408; }
@@ -177,7 +178,7 @@
       <div class="wrap trailer-grid">
         <div class="trailer-copy reveal">
           <div class="eyebrow">游戏宣传视频</div>
-          <h2 id="trailer-title">先看两分钟，进入 LaLa-Land</h2>
+          <h2 id="trailer-title">先看两分钟，进入 <span class="nowrap">LaLa-Land</span></h2>
           <p>从四位角色、酒吧场景与自由互动开始，快速了解这款开放式多智能体关系叙事游戏。</p>
           <a class="btn btn-secondary" href="https://www.bilibili.com/video/BV1a54S6cECq/" target="_blank" rel="noreferrer">在哔哩哔哩观看</a>
         </div>
