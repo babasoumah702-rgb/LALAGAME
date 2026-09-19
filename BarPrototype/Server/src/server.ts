@@ -31,8 +31,12 @@ const sockets=new Set<WebSocket>();
 let closing=false;
 app.addHook('onRequest',async(request,reply)=>{
   if(request.url==='/health')return;
-  const supplied=request.headers.authorization?.replace(/^Bearer /,'');
-  if(supplied!==token)return reply.code(401).send({error:'Unauthorized'});
+  const dedicated=request.headers['x-lalaland-token'];
+  const supplied=request.headers.authorization?.replace(/^Bearer /,'')||(Array.isArray(dedicated)?dedicated[0]:dedicated);
+  if(supplied!==token){
+    if(request.url.startsWith('/api/events'))process.stdout.write(JSON.stringify({type:'diagnostic',message:`websocket authentication rejected (authorization=${!!request.headers.authorization}, dedicated=${!!dedicated})`})+'\n');
+    return reply.code(401).send({error:'Unauthorized'});
+  }
 });
 app.get('/health',async()=>({ready:true,version:1}));
 app.get('/api/bootstrap',async(request)=>{

@@ -2,6 +2,12 @@
 
 第一人称 AI 社交叙事原型。玩家从电梯进入深夜酒吧，与 A–D 及调酒师自由观察、移动和交流，经历第三杯、动态社交、塔罗、走廊、断电散场与屋顶收尾。
 
+## Unreal Engine 迁移
+
+新客户端位于 `LalalandUnreal`，目标版本为 Unreal Engine 5.8，采用 C++ 与蓝图混合架构。首个迁移里程碑覆盖三页入口、模型 API 配置、电梯至 Scene 1 第三杯、定向 AI 对话和 D 入场；原团结引擎工程继续保留，两个版本使用互不兼容的存档目录。
+
+虚幻客户端复用 `BarPrototype/Server` 的 Protocol v1 和 Node 权威状态，不把 API Key 写入项目、存档或日志。开发机需要 UE 5.8、Visual Studio 2022 17.14+ 的“使用 C++ 的游戏开发”工作负载，以及 Windows SDK 10.0.26100。详细步骤见 [虚幻迁移说明](LalalandUnreal/README.md)。
+
 > 当前仓库保存源码、场景、模型、剧情文档与验收材料。玩家运行包发布在 [192tt/Lalaland](https://github.com/192tt/Lalaland)。
 
 ## 当前版本
@@ -19,6 +25,16 @@
 - **玩家模型配置**：首页可填写 OpenAI 兼容接口地址、模型 ID 和 API Key；密钥只写入当前用户的私有配置，不进入游戏目录、ZIP、存档或日志。
 
 ## 玩家包
+
+### Unreal Engine 5.8 Scene 0–1 竖切片
+
+- Win64 Shipping 目录：`D:\LalalandBuilds\Windows-UE-Scene01-20260919`。
+- 双击 `Lalaland.exe`，不需要 Unreal Editor、Unity 或 Node.js。
+- 已验证三页入口、模型 API 表单、电梯材质、随包 Node 服务启动及 1280×720 Shipping 可见画面。
+- Node 后端 151 / 151、Unreal 协议测试 2 / 2 通过；包内不含密钥、存档、数据库、日志或 PDB。
+- 该版到 `scene2_ready` 为止；Scene 2–6 尚未迁移到 Unreal。
+
+### 团结引擎整晚版
 
 - Windows：[Release 下载页](https://github.com/192tt/Lalaland/releases/tag/windows-bgm-api-20260831)，约 193 MB。
 - SHA-256：`bdf4ef72223a523afda031ad72c9b8e55814e585abfc7bc98f908a59d4ee9e59`。

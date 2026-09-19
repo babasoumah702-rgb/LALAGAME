@@ -1,3 +1,17 @@
 .DS_Store
 __pycache__/
 *.pyc
+
+# Unreal Engine generated state
+LalalandUnreal/.vs/
+LalalandUnreal/Binaries/
+LalalandUnreal/DerivedDataCache/
+LalalandUnreal/Intermediate/
+LalalandUnreal/Saved/
+LalalandUnreal/Builds/
+LalalandUnreal/*.sln
+LalalandUnreal/*.slnx
+LalalandUnreal/Automation_*.slnx
+LalalandUnreal/SourceAssets/Extracted/
+LalalandUnreal/Content/Server/
+LalalandUnreal/Build/Windows/FileOpenOrder/
