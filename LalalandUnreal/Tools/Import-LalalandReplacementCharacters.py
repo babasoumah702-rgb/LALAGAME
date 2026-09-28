@@ -16,9 +16,9 @@ LIBRARY_DIR = os.path.join(REPO_DIR, "新置换模型素材库")
 EXTRACT_DIR = os.path.join(PROJECT_DIR, "Intermediate", "ReplacementCharacterImport")
 
 ARCHIVES = {
-    "B": "X-new-model-2026-09.zip",
-    "C": "WanSai-new-model-2026-09.zip",
-    "D": "Yitong-new-model-2026-09.zip",
+    "B": "female+character+3d+model（X）.zip",
+    "C": "human+character+3d+model(万塞）.zip",
+    "D": "anime+schoolgirl+3d+model （一桐）.zip",
 }
 
 SOURCE_CHAINS = [
