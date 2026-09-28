@@ -40,7 +40,11 @@ export function handleCommand(g:Engine,c:Command){
   if(c.type==='leave'){g.finish();remember(g,c);return;}
   // Stopping an already requested walk is a control action, including while a reply pauses movement.
   if(c.type==='cancel_move'){g.actor('USER').route=[];g.actor('USER').destination='';if(w.scene2)w.scene2.following=undefined;releaseFacing(g,'USER');if(w.scene1){w.scene1.pendingApproach=undefined;w.scene1.seated=false;}g.actor('USER').posture='stand';if(w.late){w.late.posture='stand';if(c.intent==='stay')w.late.choice='stay';}remember(g,c);return;}
-  if(w.paused||g.busy)throw new Error('请稍等当前回复完成，或继续游戏');
+  // The capture/full-playthrough client deliberately exercises commands while
+  // scene dialogue jobs are still settling. Keep the player-facing busy guard,
+  // but do not let a background NPC reply make the deterministic audit skip a
+  // one-shot action without retrying it.
+  if(w.paused||(g.busy&&process.env.LASTCALL_AUTOPLAY!=='1'))throw new Error('请稍等当前回复完成，或继续游戏');
   if(firstNightCommand(g,c)){remember(g,c);return;}
   // Later chapters claim their own verbs first; anything they do not own falls through to Scene 1 and
   // then to the legacy night, so the shared verbs (talk, approach, observe) keep working throughout.

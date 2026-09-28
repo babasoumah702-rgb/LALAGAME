@@ -2,6 +2,7 @@
 #include "JsonObjectConverter.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
 
 namespace
 {
@@ -57,5 +58,18 @@ FString FLalalandJson::WriteCommand(const FLalalandCommandDto& Command)
 {
     FString Json;
     FJsonObjectConverter::UStructToJsonObjectString(Command, Json, 0, 0);
+    // IgnoreForMemberInitializationTest is useful to Unreal's deterministic
+    // struct test, but some engine versions also omit that property from the
+    // generic JSON conversion path. Command idempotency is a protocol rule, so
+    // always write the actual id explicitly after the struct conversion.
+    TSharedPtr<FJsonObject> Root;
+    FString Error;
+    if (ReadObject(Json, Root, Error))
+    {
+        Root->SetStringField(TEXT("id"), Command.id);
+        Json.Reset();
+        const TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&Json);
+        FJsonSerializer::Serialize(Root.ToSharedRef(), Writer);
+    }
     return Json;
 }

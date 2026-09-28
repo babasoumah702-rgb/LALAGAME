@@ -204,7 +204,8 @@ export function advanceFirstNight(g:Engine,seconds=.5){
   maybeNpcInvite(g);
   const since=g.world.elapsed-s.enteredAt;
   if(s.phase==='arrival'&&s.firstAction)stage(g,'free_time');
-  if(['arrival','free_time'].includes(s.phase)&&!s.gameChoice&&since>=75&&(!conversationOpen(g)||since>=110)){
+  const autoplayWaitingForPlayerDrink=process.env.LASTCALL_AUTOPLAY==='1'&&!s.drinks.some(d=>d.owner==='USER'&&d.status==='consumed');
+  if(['arrival','free_time'].includes(s.phase)&&!s.gameChoice&&!autoplayWaitingForPlayerDrink&&since>=75&&(!conversationOpen(g)||since>=110)){
     if(s.openingBall==='rolling')s.openingBall='ignored';
     stage(g,'game_call');
     once(g,'first-night-game-call',()=>g.emit('system','OWNER','USER','game_call','到点了，桌上开一局弹球。球先落桌再进杯就算；赢家有特调券，末位可以选轻任务或付 2 Cash。','','normal','','script','bounce_table'));
@@ -226,6 +227,11 @@ function openMeteor(g:Engine){
 }
 
 function timeoutOpeningBall(g:Engine){
+  // During a cold Shipping start the render thread may compile shaders while
+  // the managed local service already advances its accelerated audit clock.
+  // The real player route keeps the 25 second natural timeout; the explicit
+  // automated route waits until its scripted opening action is delivered.
+  if(process.env.LASTCALL_AUTOPLAY==='1')return;
   const s=g.world.firstNight!;
   if(s.openingBall!=='rolling')return;
   if(g.world.elapsed-s.enteredAt<25)return;

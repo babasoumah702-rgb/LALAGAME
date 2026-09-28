@@ -2,6 +2,8 @@
 
 #include "Misc/AutomationTest.h"
 #include "LalalandDtos.h"
+#include "Serialization/JsonReader.h"
+#include "Serialization/JsonSerializer.h"
 #include "Sound/SoundBase.h"
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FLalalandBootstrapJsonTest, "Lalaland.Protocol.Bootstrap", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
@@ -46,6 +48,24 @@ bool FLalalandAudioContentTest::RunTest(const FString& Parameters)
     for (const TCHAR* Asset : Assets)
     {
         TestNotNull(FString::Printf(TEXT("audio asset loads: %s"), Asset), LoadObject<USoundBase>(nullptr, Asset));
+    }
+    return true;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FLalalandCommandIdJsonTest, "Lalaland.Protocol.CommandId", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FLalalandCommandIdJsonTest::RunTest(const FString& Parameters)
+{
+    FLalalandCommandDto Command;
+    Command.id = TEXT("deterministic-command-id");
+    Command.type = TEXT("opening_ball");
+    Command.intent = TEXT("return");
+    const FString Json = FLalalandJson::WriteCommand(Command);
+    TSharedPtr<FJsonObject> Object;
+    const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Json);
+    TestTrue(TEXT("Command JSON parses"), FJsonSerializer::Deserialize(Reader, Object) && Object.IsValid());
+    if (Object.IsValid())
+    {
+        TestEqual(TEXT("Command JSON carries its idempotency id"), Object->GetStringField(TEXT("id")), Command.id);
     }
     return true;
 }

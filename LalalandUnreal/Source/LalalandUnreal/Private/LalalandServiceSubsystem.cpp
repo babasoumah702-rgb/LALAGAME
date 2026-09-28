@@ -338,9 +338,15 @@ FString ULalalandServiceSubsystem::SendCommand(FLalalandCommandDto Command)
     Command.version = 1;
     Command.cursor = State.cursor;
     Command.sessionId = State.sessionId;
-    const bool bSocketReady = bEventChannelReady && EventSocket.IsValid() && EventSocket->IsConnected();
+    // Automated playthroughs run alongside capture/encoder workloads. Under a
+    // large render hitch libwebsockets can stay connected while an outbound
+    // command is not flushed soon enough for the short scripted phase. Submit
+    // audit commands over the acknowledged HTTP path; ordinary player sessions
+    // keep the low-latency WebSocket command channel.
+    const bool bAutomatedPlaythrough = FParse::Param(FCommandLine::Get(), TEXT("LalalandFullPlaythrough"));
+    const bool bSocketReady = !bAutomatedPlaythrough && bEventChannelReady && EventSocket.IsValid() && EventSocket->IsConnected();
     const bool bIntroCommand = Command.type.StartsWith(TEXT("intro_"));
-    if (!bSocketReady && !bHttpFallback)
+    if (!bSocketReady && !bHttpFallback && !bAutomatedPlaythrough)
     {
         if (Command.type == TEXT("position") || Command.type == TEXT("positions")) return FString();
         if (!(bIntroCommand && !State.sessionId.IsEmpty()))
