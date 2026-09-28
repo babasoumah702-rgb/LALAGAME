@@ -15,3 +15,11 @@ LalalandUnreal/Automation_*.slnx
 LalalandUnreal/SourceAssets/Extracted/
 LalalandUnreal/Content/Server/
 LalalandUnreal/Build/Windows/FileOpenOrder/
+
+# Standalone Unreal Engine demos
+UE5/**/Binaries/
+UE5/**/DerivedDataCache/
+UE5/**/Intermediate/
+UE5/**/Saved/
+UE5/**/*.sln
+UE5/**/*.VC.db
