@@ -5,6 +5,7 @@ import {clock} from './world.js';
 import {distance} from './navigation.js';
 import {introActive,displayName} from './intro.js';
 import {interactionView} from './interaction.js';
+import {firstNightView} from './first-night.js';
 // One continuous night across the chapters, but not at one rate. Scene 1 runs close to real time;
 // Scene 2's montage compresses roughly an hour and a half of drinking into a few minutes of play;
 // Scene 3 slows down again for the closing round. Classified by the fixed chapter entry stamps, so a
@@ -45,7 +46,7 @@ export function reflection(game:Engine){
   const names:Record<string,string>={approach:'靠近',probe:'试探',reveal:'表达',boundary:'边界',connect:'连接',observe:'观察'};
   const counts=Object.entries(world.moves).map(([key,value])=>(names[key]||key)+' '+value+' 次').join('，');
   return {
-    interaction:interactionView(game),
+    interaction:interactionView(game),firstNight:firstNightView(game),
     title:'这一晚，如何走到这里',
     trends,
     events:important.map(e=>timeLabel(game,e.time)+' '+displayName(game,e.actor)+'：'+e.perceptions.find(p=>p.actor==='USER')!.text),
@@ -65,6 +66,7 @@ export function viewState(game:Engine,fullHistory=false){
   }
   return {
     interaction:interactionView(game),
+    firstNight:firstNightView(game),
     story:w.story?{chapter:w.story.chapter,phase:w.story.phase,stageAt:w.story.stageAt,budgetCalls:w.story.budgets[w.story.chapter].calls,budgetTokens:w.story.budgets[w.story.chapter].tokens}:null,late:lateNightView(game),version:1,sessionId:w.id,cursor:w.sequence,scene1:w.scene1?{phase:w.scene1.phase,drinkPlaced:!!w.scene1.drinkEventId,drinkPlacedAt:w.scene1.drinkPlacedAt,arrivalAt:w.scene1.arrivalAt,phoneAt:w.scene1.phoneAt,seated:w.scene1.seated}:null,
     // Scene 2 exposes only what the room looks and sounds like plus the deck cue. The relationship
     // impressions it collected stay server-side; the design forbids a relationship panel.
@@ -82,7 +84,7 @@ export function viewState(game:Engine,fullHistory=false){
       askedAt:w.scene3.askedAt,rounds:w.scene3.history.length,jokerUsed:w.scene3.jokerUsed,
       lastGaze:null,leaver:w.events.some(e=>e.actor===w.scene3!.leaver&&e.intent==='step_out'&&e.perceptions.some(p=>p.actor==='USER'))?w.scene3.leaver:'',follower:''}:null,replies:(w.replies||[]).filter(r=>w.events.find(e=>e.id===r.eventId)?.perceptions.some(p=>p.actor==='USER')).filter((r,index,all)=>r.status!=='complete'||index>=all.length-12).map(({decision,...r})=>r),clock:introActive(w)?'22:30':timeLabel(game,w.elapsed),
     intro:w.intro?{
-      version:w.intro.version,phase:w.intro.phase,progress:w.intro.progress,checkpoint:w.intro.checkpoint,
+      version:w.intro.version,phase:w.intro.phase,progress:w.intro.progress,checkpoint:w.intro.checkpoint,ready:w.intro.ready,
       entryMode:w.intro.entryMode,checkedMessage:w.intro.checkedMessage,phoneVisible:w.intro.phoneVisible,
       message:w.intro.message,hint:w.intro.hint,messageSource:w.intro.messageSource,generationStatus:w.intro.generationStatus,
       attitude:w.intro.attitude,intent:w.intro.intent,playerText:w.intro.playerText

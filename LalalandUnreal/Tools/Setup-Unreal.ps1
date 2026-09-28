@@ -43,5 +43,9 @@ if ($ImportCharacters) {
     $scriptArgument = "-script=$script"
     & $editorCmd $project -unattended -nop4 -nosplash -run=pythonscript $scriptArgument
     if ($LASTEXITCODE -ne 0) { throw "Character import failed: $LASTEXITCODE" }
+    $replacementScript = Join-Path $runtimeProjectRoot 'Tools\Import-LalalandReplacementCharacters.py'
+    $replacementArgument = "-script=$replacementScript"
+    & $editorCmd $project -unattended -nop4 -nosplash -run=pythonscript $replacementArgument
+    if ($LASTEXITCODE -ne 0) { throw "Replacement character import failed: $LASTEXITCODE" }
 }
 Write-Host "Lalaland Unreal setup complete: $project"

@@ -75,9 +75,10 @@ private:
     bool bReady = false;
     bool bStopping = false;
     bool bIntroReadySent = false;
-    bool bIntroCompleteSent = false;
+    bool bIntroCompleteInFlight = false;
     bool bHttpFallback = false;
     bool bPollInFlight = false;
     bool bEventChannelReady = false;
     double NextPollAt = 0;
+    double HttpFallbackAt = 0;
 };

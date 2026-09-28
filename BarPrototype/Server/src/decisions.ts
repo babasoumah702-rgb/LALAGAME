@@ -8,6 +8,8 @@ import {identityBrief} from './identity.js';
 import {sceneOneContext,facePair,sceneOneDisplayName} from './scene-one.js';
 import {sceneTwoContext} from './scene-two.js';
 import {sceneThreeContext} from './scene-three.js';
+import {agentCard} from './first-night-content.js';
+import {applyFirstNightDecision,firstNightContext,firstNightRuleDecision} from './first-night.js';
 export function agentContext(game:Engine,id:string,eventId:string){
   const character=game.actor(id);
   const event=game.world.events.find(item=>item.id===eventId);
@@ -16,6 +18,7 @@ export function agentContext(game:Engine,id:string,eventId:string){
   const full=perceived.level==='full';
   const conversation=game.world.events.filter(e=>e.type==='speech'&&e.seq<=event.seq&&e.perceptions.some(p=>p.actor===id&&p.level==='full')&&(e.actor===id||e.target===id)).slice(-10);
   const answeredQuestions=conversation.filter(e=>e.actor===id&&e.target===event.actor&&/[？?]/.test(e.text)).flatMap(question=>{const answer=conversation.find(e=>e.seq>question.seq&&e.actor===event.actor&&e.target===id);return answer?[{questionId:question.id,question:question.text,answerId:answer.id,answer:answer.text}]:[];});
+  const identity:any=game.world.firstNight?{contentVersion:game.world.firstNight.contentVersion,fixedCard:agentCard(id)}:identityBrief(game.scenario,game.world.identityPack,id,game.world.contextProfile?.preferred_topic_density);
   return {
     actor:{
       id:character.id,
@@ -27,8 +30,8 @@ export function agentContext(game:Engine,id:string,eventId:string){
       facts:character.knownFacts.map(key=>game.scenario.facts[key]),
       relations:Object.fromEntries(Object.entries(character.relations).filter(([key])=>character.knownActors.includes(key)))
     },
-    identity:identityBrief(game.scenario,game.world.identityPack,id,game.world.contextProfile?.preferred_topic_density),
-    scene:currentRequest(game.world,eventId)?lateNightContext(game,id,event)||sceneThreeContext(game,id,event)||sceneTwoContext(game,id,event)||sceneOneContext(game,id,event):{chapter:event.chapter,expired:true,reminder:'这是上一章的补回回复，只针对这条旧事件；不安排当前章节的动作。'},
+    identity,
+    scene:currentRequest(game.world,eventId)?firstNightContext(game,id,event)||lateNightContext(game,id,event)||sceneThreeContext(game,id,event)||sceneTwoContext(game,id,event)||sceneOneContext(game,id,event):{chapter:event.chapter,expired:true,reminder:'这是上一章的补回回复，只针对这条旧事件；不安排当前章节的动作。'},
     event:{id:event.id,actor:event.actor,target:full?event.target:'unknown',intent:full?event.intent:'unknown',content:perceived.text,source:perceived.source,objectTarget:full?event.objectTarget:undefined},
     memory:character.memory.slice(-12).map(item=>{const e=game.world.events.find(e=>e.id===item.eventId);const p=e?.perceptions.find(p=>p.actor===id);return {id:item.eventId,text:item.summary,source:item.source,speaker:e?.actor||'unknown',target:p?.level==='full'?e?.target:'unknown',sequence:e?.seq,time:item.time};}),
     answeredQuestions,
@@ -38,6 +41,7 @@ export function agentContext(game:Engine,id:string,eventId:string){
   };
 }
 export function ruleDecision(game:Engine,id:string,eventId:string):Decision{
+  if(game.world.firstNight)return firstNightRuleDecision(game,id,eventId);
   const character=game.actor(id);
   const event=game.world.events.find(item=>item.id===eventId)!;
   const perceived=event.perceptions.find(item=>item.actor===id)!;
@@ -129,14 +133,18 @@ export function applyDecision(game:Engine,id:string,decision:Decision,parentId:s
     }
     return true;
   }
+  applyFirstNightDecision(game,id,decision,parentId);
   const signal=perceived.level==='full'?decision.signal:'probe';
-  const relationship=character.relations[parent.actor]||relation();
-  const changes:Partial<Relation>=signal==='warm'?{trust:.02,closeness:.055,attraction:['A','B','C'].includes(id)?.015:0,uncertainty:-.025}:signal==='boundary'?{trust:.015,safety:.045,closeness:-.045,tension:.025}:{uncertainty:.025,tension:.025};
-  for(const [key,value] of Object.entries(changes)){
-    const field=key as keyof Relation;
-    relationship[field]=clamp(relationship[field]+clamp(value,-game.scenario.rules.clamp,game.scenario.rules.clamp));
+  if(!(world.firstNight&&parent.intent==='drink_offer')){
+    const relationshipActor=parent.actor===id?target.id:parent.actor;
+    const relationship=character.relations[relationshipActor]||relation();
+    const changes:Partial<Relation>=signal==='warm'?{trust:.02,closeness:.055,attraction:['A','B','C','D'].includes(id)?.015:0,uncertainty:-.025}:signal==='boundary'?{trust:.015,safety:.045,closeness:-.045,tension:.025}:{uncertainty:.025,tension:.025};
+    for(const [key,value] of Object.entries(changes)){
+      const field=key as keyof Relation;
+      relationship[field]=clamp(relationship[field]+clamp(value,-game.scenario.rules.clamp,game.scenario.rules.clamp));
+    }
+    character.relations[relationshipActor]=relationship;
   }
-  character.relations[parent.actor]=relationship;
   character.beliefs.push({subject:signal==='boundary'?'distance':signal==='warm'?'possible_closeness':'uncertain',confidence:clamp(decision.confidence||.5),sourceEventId:parent.id,interpretation:decision.interpretation.slice(0,180)});
   character.beliefs=character.beliefs.slice(-24);
   character.lastSpoke=world.elapsed;

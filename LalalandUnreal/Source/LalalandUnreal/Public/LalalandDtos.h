@@ -95,6 +95,7 @@ struct FLalalandEventDto
     UPROPERTY(BlueprintReadOnly) FString level;
     UPROPERTY(BlueprintReadOnly) FString type;
     UPROPERTY(BlueprintReadOnly) FString target;
+    UPROPERTY(BlueprintReadOnly) FString intent;
     UPROPERTY(BlueprintReadOnly) FString objectTarget;
     UPROPERTY(BlueprintReadOnly) FString generationSource;
     UPROPERTY(BlueprintReadOnly) FString privacy;
@@ -133,7 +134,95 @@ struct FLalalandInteractionDto
     UPROPERTY(BlueprintReadOnly) FString nextHint;
     UPROPERTY(BlueprintReadOnly) FString nextGroup;
     UPROPERTY(BlueprintReadOnly) FString nextActionId;
+    UPROPERTY(BlueprintReadOnly) FString primaryActionId;
+    UPROPERTY(BlueprintReadOnly) FString primaryLabel;
+    UPROPERTY(BlueprintReadOnly) bool primaryTargetRequired = false;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandInteractionOptionDto> suggestions;
     UPROPERTY(BlueprintReadOnly) TArray<FLalalandInteractionGroupDto> groups;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandPendingThrowDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString id;
+    UPROPERTY(BlueprintReadOnly) FString actor;
+    UPROPERTY(BlueprintReadOnly) int32 round = 0;
+    UPROPERTY(BlueprintReadOnly) double aim = 0;
+    UPROPERTY(BlueprintReadOnly) double power = 0;
+    UPROPERTY(BlueprintReadOnly) double startedAt = 0;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandAttitudeDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString id;
+    UPROPERTY(BlueprintReadOnly) FString name;
+    UPROPERTY(BlueprintReadOnly) FString stage;
+    UPROPERTY(BlueprintReadOnly) FString reason;
+    UPROPERTY(BlueprintReadOnly) FString drinkStage;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandEvaluationDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString id;
+    UPROPERTY(BlueprintReadOnly) FString name;
+    UPROPERTY(BlueprintReadOnly) FString text;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandDrinkPropDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString id;
+    UPROPERTY(BlueprintReadOnly) FString owner;
+    UPROPERTY(BlueprintReadOnly) FString status;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandStationDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString id;
+    UPROPERTY(BlueprintReadOnly) FString label;
+    UPROPERTY(BlueprintReadOnly) bool open = false;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandFirstNightDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) int32 version = 0;
+    UPROPERTY(BlueprintReadOnly) FString contentVersion;
+    UPROPERTY(BlueprintReadOnly) FString phase;
+    UPROPERTY(BlueprintReadOnly) FString openingBall;
+    UPROPERTY(BlueprintReadOnly) FString gameChoice;
+    UPROPERTY(BlueprintReadOnly) FString winner;
+    UPROPERTY(BlueprintReadOnly) FString lastPlace;
+    UPROPERTY(BlueprintReadOnly) FString invited;
+    UPROPERTY(BlueprintReadOnly) FString invitationResult;
+    UPROPERTY(BlueprintReadOnly) FString ending;
+    UPROPERTY(BlueprintReadOnly) FString playerDrinkStage;
+    UPROPERTY(BlueprintReadOnly) FString settlementSummary;
+    UPROPERTY(BlueprintReadOnly) FString inviteFrom;
+    UPROPERTY(BlueprintReadOnly) FString intoxFx;
+    UPROPERTY(BlueprintReadOnly) FString songChoice;
+    UPROPERTY(BlueprintReadOnly) int32 availableCash = 0;
+    UPROPERTY(BlueprintReadOnly) int32 voucherCount = 0;
+    UPROPERTY(BlueprintReadOnly) int32 round = 0;
+    UPROPERTY(BlueprintReadOnly) int32 turn = 0;
+    UPROPERTY(BlueprintReadOnly) bool cupAssist = false;
+    UPROPERTY(BlueprintReadOnly) bool feigningDrunk = false;
+    UPROPERTY(BlueprintReadOnly) TArray<FString> participants;
+    UPROPERTY(BlueprintReadOnly) TArray<FString> keyActions;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandAttitudeDto> attitudes;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandEvaluationDto> evaluations;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandDrinkPropDto> drinks;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandStationDto> nextStations;
+    UPROPERTY(BlueprintReadOnly) FLalalandPendingThrowDto pendingThrow;
 };
 
 USTRUCT(BlueprintType)
@@ -207,6 +296,7 @@ struct FLalalandStateDto
     UPROPERTY(BlueprintReadOnly) TArray<FLalalandEventDto> events;
     UPROPERTY(BlueprintReadOnly) FLalalandIntroDto intro;
     UPROPERTY(BlueprintReadOnly) FLalalandSceneOneDto scene1;
+    UPROPERTY(BlueprintReadOnly) FLalalandFirstNightDto firstNight;
     UPROPERTY(BlueprintReadOnly) FLalalandInteractionDto interaction;
     UPROPERTY(BlueprintReadOnly) TArray<FLalalandReplyDto> replies;
 };
@@ -258,8 +348,8 @@ struct FLalalandSessionRequest
     UPROPERTY(EditAnywhere, BlueprintReadWrite) FString sessionId;
     UPROPERTY(EditAnywhere, BlueprintReadWrite) bool online = true;
     UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 seed = 821;
-    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString opening = TEXT("scene0_v1");
-    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString story = TEXT("scene1_v1");
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString opening = TEXT("first_night_v2");
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString story = TEXT("first_night_v2");
     UPROPERTY(EditAnywhere, BlueprintReadWrite) FString entryMode;
     UPROPERTY(EditAnywhere, BlueprintReadWrite) FString entryContext;
 };

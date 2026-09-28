@@ -14,20 +14,23 @@ export type IntroState={
 };
 export const introActive=(w:World)=>w.intro?.phase==='elevator';
 export function initializeIntro(g:Engine,options:IntroOptions){
-  if(options.opening!=='scene0_v1')return;
+  if(!['scene0_v1','first_night_v2'].includes(options.opening??''))return;
+  const isFirstNight=options.opening==='first_night_v2'||options.story==='first_night_v2';
   const modes=['solo','friend_invited','event_guest'];
   if(options.entryContext!==undefined&&(typeof options.entryContext!=='string'||[...options.entryContext].length>200))throw new Error('背景最多200字');
   const entryMode=modes.includes(options.entryMode??'')?options.entryMode!:'friend_invited';
   g.world.intro={
-    version:1,phase:'elevator',progress:0,checkpoint:0,ready:false,entryMode,
-    declaredContext:options.entryContext?.trim()??'',playerText:'',attitude:'observing',intent:'observe',
+    version:1,phase:isFirstNight?'bar':'elevator',progress:isFirstNight?7:0,checkpoint:isFirstNight?5:0,ready:isFirstNight,
+    entryMode,declaredContext:options.entryContext?.trim()??'',playerText:'',attitude:'observing',intent:'observe',
     choiceAnswers:options.choices??{},
-    checkedMessage:false,phoneVisible:true,messageLocked:false,message:'今晚见。',
-    hint:entryMode==='solo'?'到了就进来。':entryMode==='event_guest'?'就差你了。':'给你留了位置。',
-    messageSource:'preset',generationStatus:g.world.modelMode==='online'?'pending':'规则模式 · 预设文案',
+    checkedMessage:false,phoneVisible:!isFirstNight,messageLocked:isFirstNight,
+    message:isFirstNight?'':'今晚见。',
+    hint:isFirstNight?'门外是今晚的屋顶酒吧。':entryMode==='solo'?'到了就进来。':entryMode==='event_guest'?'就差你了。':'给你留了位置。',
+    messageSource:'preset',generationStatus:isFirstNight?'场景内容':g.world.modelMode==='online'?'pending':'规则模式 · 预设文案',
     backgroundEventId:'',revealed:[]
   };
   g.world.flags.scene0Route=true;
+  if(isFirstNight)g.world.flags.firstNightV2=true;
   const marks:Record<string,[number,number,number]>={
     USER:[-1,-8.65,0],B:[-2.2,0,0],BARTENDER:[-2.2,1.1,180],
     A:[-.2,-2.6,324],C:[3.4,1.2,260]
@@ -36,11 +39,11 @@ export function initializeIntro(g:Engine,options:IntroOptions){
     const a=g.actor(id),p=id==='USER'?{x,z}:g.navigation.nearest({x,z});
     Object.assign(a,p,{active:true,yaw,route:[],animation:'idle'});
   }
-  g.actor('D').active=false;
-  g.world.beatIds.push('a_arrival','c_window');
+  if(!isFirstNight){g.actor('D').active=false;g.world.beatIds.push('a_arrival','c_window');}
 }
 export function backgroundIntro(g:Engine){
   const i=g.world.intro;if(!i||i.backgroundEventId)return;
+  if(g.world.flags.firstNightV2)return;
   // This is only an expectation, not a claim that the newcomer or an already-present actor is the missing guest.
   const event=g.emit('preentry','B','BARTENDER','expectation','我等的那位，今晚会来吗？','','normal','','script');
   i.backgroundEventId=event.id;
@@ -74,7 +77,17 @@ export function advanceIntro(g:Engine,dt:number){
     if(i.phoneVisible)i.checkedMessage=true;
     if(i.generationStatus==='pending')i.generationStatus='本条使用预设文案';
   }
-  if(i.progress>=.6)backgroundIntro(g);
+  if(i.progress>=.6&&!g.world.flags.firstNightV2)backgroundIntro(g);
+}
+function finishIntro(g:Engine){
+  const i=g.world.intro!;
+  if(i.phase==='bar')return;
+  if(!g.world.flags.firstNightV2)backgroundIntro(g);
+  i.progress=7;i.checkpoint=5;i.phase='bar';i.messageLocked=true;i.ready=true;
+  // First night keeps the player in the elevator car so they walk the doors themselves.
+  if(!g.world.flags.firstNightV2)Object.assign(g.actor('USER'),g.navigation.nearest(g.location('entrance')),{yaw:8});
+  if(i.attitude==='direct')g.world.flags.entryWarm=true;
+  g.world.elapsed=0;if(!g.world.firstNight)runBeats(g);
 }
 export function introCommand(g:Engine,c:Command):boolean{
   const i=g.world.intro;
@@ -82,7 +95,10 @@ export function introCommand(g:Engine,c:Command):boolean{
   if(!i)throw new Error('当前存档没有电梯开场');
   if(i.phase==='bar')return true;
   switch(c.type){
-    case 'intro_ready':i.ready=true;break;
+    case 'intro_ready':
+      i.ready=true;
+      if(g.world.flags.firstNightV2)finishIntro(g);
+      break;
     case 'intro_phone':
       if(g.world.paused)throw new Error('请先继续');
       i.phoneVisible=!!c.open;
@@ -96,16 +112,14 @@ export function introCommand(g:Engine,c:Command):boolean{
       break;
     }
     case 'intro_complete':
-      if(g.world.paused||i.progress<6.9)throw new Error('电梯尚未到达');
-      backgroundIntro(g);i.progress=7;i.checkpoint=5;i.phase='bar';i.messageLocked=true;
-      Object.assign(g.actor('USER'),g.navigation.nearest(g.location('entrance')),{yaw:8});
-      if(i.attitude==='direct')g.world.flags.entryWarm=true;
-      g.world.elapsed=0;runBeats(g);break;
+      if(!g.world.flags.firstNightV2&&(g.world.paused||i.progress<6.9))throw new Error('电梯尚未到达');
+      finishIntro(g);break;
     default:throw new Error('不支持的开场命令');
   }
   return true;
 }
 export function displayName(g:Engine,id:string){
+  if(g.world.firstNight)return g.actor(id).name;
   if(g.world.scene1)return sceneOneDisplayName(g,id);
   const i=g.world.intro;
   if(!i||i.revealed.includes(id)||!['A','B','C'].includes(id))return g.actor(id).name;

@@ -13,7 +13,10 @@
 #include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
 #include "Components/VerticalBoxSlot.h"
+#include "LalalandDtos.h"
 #include "LalalandServiceSubsystem.h"
+#include "LalalandNpcCharacter.h"
+#include "GameFramework/PlayerController.h"
 #include "Styling/CoreStyle.h"
 #include "Misc/Paths.h"
 #include "TimerManager.h"
@@ -70,8 +73,8 @@ void ULalalandRootWidget::BuildWidgetTree()
     IntroPanel = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass(), TEXT("IntroPanel"));
     IntroBackdrop->SetContent(IntroPanel);
     AddText(IntroPanel, TEXT("LALALAND"), 46, FLinearColor(.92f, .78f, .58f));
-    IntroProgress = AddText(IntroPanel, TEXT("1 / 3"), 15, FLinearColor(.55f, .58f, .62f));
-    IntroPrompt = AddText(IntroPanel, TEXT("今晚以什么身份来？"), 28, FLinearColor::White);
+    IntroProgress = AddText(IntroPanel, TEXT("酒吧首夜 · 新版"), 15, FLinearColor(.55f, .58f, .62f));
+    IntroPrompt = AddText(IntroPanel, TEXT("今晚，先从一件小事开始。"), 28, FLinearColor::White);
     IntroChoices = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass(), TEXT("IntroChoices"));
     IntroPanel->AddChildToVerticalBox(IntroChoices);
 
@@ -95,7 +98,7 @@ void ULalalandRootWidget::BuildWidgetTree()
     StatusText = AddText(IntroPanel, TEXT("正在准备本地关系世界…"), 15, FLinearColor(.72f, .75f, .78f));
 
     USizeBox* GameSize = WidgetTree->ConstructWidget<USizeBox>(USizeBox::StaticClass(), TEXT("GameSize"));
-    GameSize->SetWidthOverride(460.f);
+    GameSize->SetWidthOverride(430.f);
     GameBackdrop = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("GameBackdrop"));
     GameBackdrop->SetBrushColor(FLinearColor(.012f, .016f, .022f, .86f));
     GameBackdrop->SetPadding(FMargin(8.f));
@@ -108,34 +111,56 @@ void ULalalandRootWidget::BuildWidgetTree()
     GameBackdrop->SetContent(GamePanel);
     ObjectiveTitle = AddText(GamePanel, TEXT("当前目标"), 24, FLinearColor(.95f, .78f, .45f));
     ObjectiveHint = AddText(GamePanel, TEXT("等待场景状态…"), 16, FLinearColor(.88f, .88f, .9f));
+    StatusHud = AddText(GamePanel, TEXT("Cash 18 · 清醒"), 14, FLinearColor(.82f, .72f, .48f));
+    AttitudeHud = AddText(GamePanel, TEXT("靠近并看向一个人，即可开始交谈"), 13, FLinearColor(.7f, .72f, .75f));
     UHorizontalBox* SystemRow = WidgetTree->ConstructWidget<UHorizontalBox>();
     GamePanel->AddChildToVerticalBox(SystemRow);
-    AddButton(SystemRow, TEXT("线索册"), TEXT("system:clues"));
-    AddButton(SystemRow, TEXT("保存"), TEXT("system:save"));
     AddButton(SystemRow, TEXT("暂停"), TEXT("system:pause"));
+    AddButton(SystemRow, TEXT("微醺视效"), TEXT("system:intox"));
 
+    SettlementBackdrop = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("SettlementBackdrop"));
+    SettlementBackdrop->SetBrushColor(FLinearColor(.012f, .014f, .02f, .94f));
+    SettlementBackdrop->SetPadding(FMargin(28.f));
+    SettlementBackdrop->SetVisibility(ESlateVisibility::Collapsed);
+    UOverlaySlot* SettlementSlot = Root->AddChildToOverlay(SettlementBackdrop);
+    SettlementSlot->SetHorizontalAlignment(HAlign_Center);
+    SettlementSlot->SetVerticalAlignment(VAlign_Center);
+    SettlementPanel = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass(), TEXT("SettlementPanel"));
+    SettlementBackdrop->SetContent(SettlementPanel);
+
+    USizeBox* BottomSize = WidgetTree->ConstructWidget<USizeBox>(USizeBox::StaticClass(), TEXT("BottomSize"));
+    BottomSize->SetWidthOverride(780.f);
+    UBorder* BottomBackdrop = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("BottomBackdrop"));
+    BottomBackdrop->SetBrushColor(FLinearColor(.018f, .02f, .025f, .76f));
+    BottomBackdrop->SetPadding(FMargin(10.f));
+    BottomSize->SetContent(BottomBackdrop);
+    UOverlaySlot* BottomSlot = Root->AddChildToOverlay(BottomSize);
+    BottomSlot->SetHorizontalAlignment(HAlign_Center);
+    BottomSlot->SetVerticalAlignment(VAlign_Bottom);
+    BottomSlot->SetPadding(FMargin(18.f, 18.f, 18.f, 26.f));
     InteractionPanel = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass(), TEXT("InteractionPanel"));
-    GamePanel->AddChildToVerticalBox(InteractionPanel);
+    BottomBackdrop->SetContent(InteractionPanel);
 
     PrimaryRow = WidgetTree->ConstructWidget<UHorizontalBox>(UHorizontalBox::StaticClass(), TEXT("PrimaryRow"));
     InteractionPanel->AddChildToVerticalBox(PrimaryRow);
     BuildPrimaryRow();
 
-    TargetPrompt = AddText(InteractionPanel, TEXT("选择对象"), 14, FLinearColor(.65f, .67f, .7f));
+    TargetPrompt = AddText(InteractionPanel, TEXT("靠近并看向一个人，即可开始交谈"), 14, FLinearColor(.72f, .70f, .66f));
     TargetRow = WidgetTree->ConstructWidget<UHorizontalBox>();
     InteractionPanel->AddChildToVerticalBox(TargetRow);
-    SecondaryOptions = WidgetTree->ConstructWidget<UVerticalBox>();
+    SecondaryOptions = WidgetTree->ConstructWidget<UHorizontalBox>();
     InteractionPanel->AddChildToVerticalBox(SecondaryOptions);
 
     DialogueRow = WidgetTree->ConstructWidget<UHorizontalBox>();
     InteractionPanel->AddChildToVerticalBox(DialogueRow);
     DialogueInput = WidgetTree->ConstructWidget<UEditableTextBox>();
-    DialogueInput->SetHintText(FText::FromString(TEXT("对所选人物说……")));
+    DialogueInput->SetHintText(FText::FromString(TEXT("自由输入你想说的话…")));
+    DialogueInput->OnTextCommitted.AddDynamic(this, &ULalalandRootWidget::HandleDialogueCommitted);
     UHorizontalBoxSlot* InputSlot = DialogueRow->AddChildToHorizontalBox(DialogueInput);
     InputSlot->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
     ULalalandActionButton* Send = AddButton(DialogueRow, TEXT("发送"), TEXT("system:send"));
     Send->SetToolTipText(FText::FromString(TEXT("只让当前选择的人回应")));
-    PlayerDialogue = AddText(GamePanel, FString(), 17, FLinearColor(.95f, .95f, .96f));
+    PlayerDialogue = AddText(InteractionPanel, FString(), 15, FLinearColor(.82f, .82f, .84f));
     UpdateInteractionVisibility();
 }
 
@@ -156,14 +181,14 @@ ULalalandActionButton* ULalalandRootWidget::AddButton(UVerticalBox* Parent, cons
     ULalalandActionButton* Button = WidgetTree->ConstructWidget<ULalalandActionButton>();
     Button->InitializeAction(this, Payload);
     Button->SetIsEnabled(bEnabled && !bSelected);
-    Button->SetBackgroundColor(bSelected ? FLinearColor(.24f, .24f, .26f) : FLinearColor(.15f, .18f, .22f));
+    Button->SetBackgroundColor(bSelected ? FLinearColor(.18f, .18f, .19f, .8f) : FLinearColor(.08f, .09f, .11f, .86f));
     UTextBlock* Text = WidgetTree->ConstructWidget<UTextBlock>();
-    Text->SetText(FText::FromString(bSelected ? TEXT("✓ ") + Label : Label));
+    Text->SetText(FText::FromString(Label));
     Text->SetFont(LalalandFont(17));
     Text->SetColorAndOpacity(FSlateColor(bEnabled ? FLinearColor::White : FLinearColor(.45f, .45f, .47f)));
     Button->SetContent(Text);
     UVerticalBoxSlot* ButtonSlot = Parent->AddChildToVerticalBox(Button);
-    ButtonSlot->SetPadding(FMargin(18, 4));
+    ButtonSlot->SetPadding(FMargin(6, 4));
     return Button;
 }
 
@@ -172,9 +197,9 @@ ULalalandActionButton* ULalalandRootWidget::AddButton(UHorizontalBox* Parent, co
     ULalalandActionButton* Button = WidgetTree->ConstructWidget<ULalalandActionButton>();
     Button->InitializeAction(this, Payload);
     Button->SetIsEnabled(bEnabled && !bSelected);
-    Button->SetBackgroundColor(bSelected ? FLinearColor(.24f, .24f, .26f) : FLinearColor(.15f, .18f, .22f));
+    Button->SetBackgroundColor(bSelected ? FLinearColor(.18f, .18f, .19f, .8f) : FLinearColor(.08f, .09f, .11f, .86f));
     UTextBlock* Text = WidgetTree->ConstructWidget<UTextBlock>();
-    Text->SetText(FText::FromString(bSelected ? TEXT("✓ ") + Label : Label));
+    Text->SetText(FText::FromString(Label));
     Text->SetFont(LalalandFont(16));
     Text->SetColorAndOpacity(FSlateColor(bEnabled ? FLinearColor::White : FLinearColor(.45f, .45f, .47f)));
     Button->SetContent(Text);
@@ -210,35 +235,113 @@ void ULalalandRootWidget::Refresh()
         ObjectiveHint->SetText(FText::FromString(Service->GetState().interaction.nextHint));
     }
     InteractionPanel->SetVisibility(bInElevator ? ESlateVisibility::Collapsed : ESlateVisibility::Visible);
+    const FLalalandFirstNightDto& Night = Service->GetState().firstNight;
+    if (StatusHud)
+    {
+        const FString Voucher = Night.voucherCount > 0 ? FString::Printf(TEXT(" · 特调券 %d"), Night.voucherCount) : FString();
+        const FString Feign = Night.feigningDrunk ? TEXT(" · 装醉") : FString();
+        const FString Assist = Night.cupAssist ? TEXT(" · 杯口已放大") : FString();
+        StatusHud->SetText(FText::FromString(FString::Printf(TEXT("Cash %d · %s%s%s%s"), Night.availableCash, *DrinkStageLabel(Night.playerDrinkStage), *Voucher, *Feign, *Assist)));
+    }
+    bool bReplyWaiting = false;
+    FString ReplyError;
+    FString RetryId;
+    const bool bHasReplyState = GetSelectedReplyState(bReplyWaiting, ReplyError, RetryId);
+    if (!DialogueInput->HasKeyboardFocus() && PendingCommand.IsEmpty() && !bHasReplyState) RefreshFocusedTarget();
     RebuildTargetRow();
     BuildPrimaryRow();
-    BuildSecondaryOptions(OpenGroup);
+    BuildSecondaryOptions(TEXT("interact"));
+    RefreshSettlement();
     if (Service->GetState().events.Num())
     {
         const FLalalandEventDto& Last = Service->GetState().events.Last();
         if (Last.actor == TEXT("USER")) PlayerDialogue->SetText(FText::FromString(Last.text));
+    }
+    if (bReplyWaiting)
+    {
+        PlayerDialogue->SetText(FText::FromString(TEXT("等待 ") + GetSelectedTargetName() + TEXT(" 回应…")));
+    }
+    else if (!ReplyError.IsEmpty())
+    {
+        PlayerDialogue->SetText(FText::FromString(ReplyError + TEXT("。你刚才的话已保留，可以重试。")));
+    }
+    UpdateInteractionVisibility();
+}
+
+FString ULalalandRootWidget::DrinkStageLabel(const FString& Stage) const
+{
+    if (Stage == TEXT("light")) return TEXT("微醺");
+    if (Stage == TEXT("impaired")) return TEXT("明显醉意");
+    return TEXT("清醒");
+}
+
+void ULalalandRootWidget::RefreshSettlement()
+{
+    if (!SettlementBackdrop || !SettlementPanel || !Service) return;
+    const FLalalandFirstNightDto& Night = Service->GetState().firstNight;
+    const bool bSettled = Night.phase == TEXT("settled") || !Night.ending.IsEmpty();
+    SettlementBackdrop->SetVisibility(bSettled ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+    if (!bSettled) return;
+    SettlementPanel->ClearChildren();
+    AddText(SettlementPanel, TEXT("这一晚的结算"), 28, FLinearColor(.95f, .78f, .45f));
+    AddText(SettlementPanel, Night.settlementSummary.IsEmpty() ? Night.ending : Night.settlementSummary, 16, FLinearColor(.9f, .9f, .92f));
+    if (Night.keyActions.Num())
+    {
+        AddText(SettlementPanel, TEXT("今晚做过的事"), 18, FLinearColor(.82f, .72f, .48f));
+        for (const FString& Action : Night.keyActions) AddText(SettlementPanel, TEXT("· ") + Action, 14, FLinearColor(.8f, .82f, .85f));
+    }
+    if (Night.evaluations.Num())
+    {
+        AddText(SettlementPanel, TEXT("她们基于亲见事件的评价"), 18, FLinearColor(.82f, .72f, .48f));
+        for (const FLalalandEvaluationDto& Line : Night.evaluations) AddText(SettlementPanel, Line.text, 14, FLinearColor(.86f, .86f, .88f));
+    }
+    AddText(SettlementPanel, TEXT("下一站"), 18, FLinearColor(.82f, .72f, .48f));
+    if (Night.nextStations.Num())
+    {
+        for (const FLalalandStationDto& Station : Night.nextStations)
+        {
+            const FString Label = Station.open ? Station.label : Station.label + TEXT("（未开放）");
+            AddButton(SettlementPanel, Label, TEXT("option:station_") + Station.id, Station.open);
+        }
+    }
+    else
+    {
+        AddText(SettlementPanel, TEXT("室内攀岩馆与温泉尚未开放。关系可以留到下次。"), 14, FLinearColor(.8f, .82f, .85f));
     }
 }
 
 void ULalalandRootWidget::BuildIntroPage()
 {
     IntroChoices->ClearChildren();
-    const FLalalandBootstrapDto& Bootstrap = Service->GetBootstrap();
     if (!Service->IsReady()) return;
-    IntroProgress->SetText(FText::FromString(FString::Printf(TEXT("%d / 3"), IntroPage + 1)));
-    const TArray<FLalalandEntryDto>* Entries = nullptr;
-    FString Prompt;
-    if (IntroPage == 0) { Entries = &Bootstrap.roles; Prompt = TEXT("今晚以什么身份来？"); }
-    else if (IntroPage == 1) { Entries = &Bootstrap.intents; Prompt = TEXT("今晚想做什么？"); }
-    else { Entries = &Bootstrap.styles; Prompt = TEXT("希望怎样聊天？"); }
-    IntroPrompt->SetText(FText::FromString(Prompt));
-    for (const FLalalandEntryDto& Entry : *Entries)
+    IntroProgress->SetText(FText::FromString(TEXT("酒吧首夜 · 流星雨")));
+    IntroPrompt->SetText(FText::FromString(TEXT("不填写身份问卷。进入酒吧后，用行动决定今晚怎样开始。")));
+    if (Service->GetBootstrap().modelConfigured)
     {
-        const FString Current = IntroPage == 0 ? SelectedRole : IntroPage == 1 ? SelectedIntent : SelectedStyle;
-        AddButton(IntroChoices, Entry.name, TEXT("intro:") + Entry.id, true, Entry.id == Current);
+        AddButton(IntroChoices, TEXT("使用在线 AI 开始新夜晚"), TEXT("intro:start"));
     }
-    AddButton(IntroChoices, TEXT("跳过"), TEXT("intro:skip"));
-    if (IntroPage > 0) AddButton(IntroChoices, TEXT("返回"), TEXT("intro:back"));
+    else
+    {
+        AddButton(IntroChoices, TEXT("保存模型配置后使用在线 AI"), TEXT("intro:online_unavailable"), false);
+        AddButton(IntroChoices, TEXT("明确使用离线规则开始"), TEXT("intro:offline"));
+    }
+}
+
+void ULalalandRootWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+    Super::NativeTick(MyGeometry, InDeltaTime);
+    if (!Service || Service->GetState().sessionId.IsEmpty() || Service->GetState().intro.phase == TEXT("elevator")) return;
+    FocusRefreshRemaining -= InDeltaTime;
+    if (FocusRefreshRemaining > 0.f) return;
+    FocusRefreshRemaining = .15f;
+    bool bReplyWaiting = false;
+    FString ReplyError;
+    FString RetryId;
+    if ((DialogueInput && DialogueInput->HasKeyboardFocus()) || !PendingCommand.IsEmpty()
+        || GetSelectedReplyState(bReplyWaiting, ReplyError, RetryId)) return;
+    const FString Previous = SelectedTarget;
+    RefreshFocusedTarget();
+    if (Previous != SelectedTarget) { BuildPrimaryRow(); BuildSecondaryOptions(TEXT("interact")); }
 }
 
 void ULalalandRootWidget::HandleAction(const FString& Payload)
@@ -255,71 +358,124 @@ void ULalalandRootWidget::HandleAction(const FString& Payload)
     if (Payload.StartsWith(TEXT("target:"))) { SetSelectedTarget(Payload.Mid(7)); return; }
     if (Payload.StartsWith(TEXT("option:"))) { ExecuteOption(Payload.Mid(7)); return; }
     if (Payload == TEXT("system:send")) { SendDialogue(); return; }
+    if (Payload == TEXT("system:retry"))
+    {
+        if (LastRetryReplyId.IsEmpty() || !PendingCommand.IsEmpty()) return;
+        FLalalandCommandDto Command;
+        Command.type = TEXT("retry_reply");
+        Command.requestId = LastRetryReplyId;
+        PendingOption = TEXT("retry_reply");
+        PendingCommand = Service->SendCommand(Command);
+        BuildPrimaryRow();
+        return;
+    }
     if (Payload == TEXT("system:model")) { SaveModelConfig(); return; }
     if (Payload == TEXT("system:save")) { Service->Save(); return; }
     if (Payload == TEXT("system:pause"))
     {
         FLalalandCommandDto Command; Command.type = TEXT("pause"); Command.paused = !Service->GetState().paused; Service->SendCommand(Command); return;
     }
+    if (Payload == TEXT("system:intox"))
+    {
+        FLalalandCommandDto Command; Command.type = TEXT("set_intox_fx");
+        const FString Current = Service->GetState().firstNight.intoxFx;
+        Command.intent = Current == TEXT("full") || Current.IsEmpty() ? TEXT("low") : Current == TEXT("low") ? TEXT("off") : TEXT("full");
+        Service->SendCommand(Command);
+        return;
+    }
 }
 
 void ULalalandRootWidget::ChooseIntroValue(const FString& Value)
 {
-    if (Value == TEXT("back")) { IntroPage = FMath::Max(0, IntroPage - 1); BuildIntroPage(); return; }
-    const FString Chosen = Value == TEXT("skip") ? (IntroPage == 0 ? TEXT("passerby") : IntroPage == 1 ? TEXT("observe_only") : TEXT("natural")) : Value;
-    if (IntroPage == 0) SelectedRole = Chosen;
-    else if (IntroPage == 1) SelectedIntent = Chosen;
-    else SelectedStyle = Chosen;
-    if (IntroPage < 2) { ++IntroPage; BuildIntroPage(); }
-    else Service->OpenNewSession(SelectedRole, SelectedIntent, SelectedStyle, Service->GetBootstrap().modelConfigured);
+    if (Value == TEXT("start") && Service->GetBootstrap().modelConfigured)
+        Service->OpenNewSession(TEXT("passerby"), TEXT("observe_only"), TEXT("natural"), true);
+    else if (Value == TEXT("offline"))
+        Service->OpenNewSession(TEXT("passerby"), TEXT("observe_only"), TEXT("natural"), false);
 }
 
 void ULalalandRootWidget::BuildSecondaryOptions(const FString& GroupId)
 {
     SecondaryOptions->ClearChildren();
     const FLalalandInteractionDto& Interaction = Service->GetState().interaction;
-    for (const FLalalandInteractionGroupDto& Group : Interaction.groups)
+    int32 Added = 0;
+    for (const FLalalandInteractionOptionDto& Option : Interaction.suggestions)
     {
-        if (Group.id != GroupId) continue;
-        for (const FLalalandInteractionOptionDto& Option : Group.options)
+        if (Added++ >= 3) break;
+        const bool bPending = PendingOption == Option.id;
+        FString VisibleLabel = Option.label;
+        if (Option.id.StartsWith(TEXT("drink_")) && Option.id != TEXT("drink_next"))
         {
-            const bool bPending = PendingOption == Option.id;
-            ULalalandActionButton* Button = AddButton(SecondaryOptions, Option.label, TEXT("option:") + Option.id, Option.enabled && !bPending, Option.selected || bPending);
-            if (!Option.enabled && !Option.disabledReason.IsEmpty()) Button->SetToolTipText(FText::FromString(Option.disabledReason));
+            FString Name;
+            for (const FLalalandActorDto& Actor : Service->GetState().characters) if (Actor.id == SelectedTarget) { Name = Actor.name; break; }
+            VisibleLabel = Name.IsEmpty() ? TEXT("自己点 · ") + VisibleLabel : TEXT("请 ") + Name + TEXT(" · ") + VisibleLabel;
         }
+        ULalalandActionButton* Button = AddButton(SecondaryOptions, VisibleLabel, TEXT("option:") + Option.id, Option.enabled && !bPending, Option.selected || bPending);
+        if (!Option.enabled && !Option.disabledReason.IsEmpty()) Button->SetToolTipText(FText::FromString(Option.disabledReason));
     }
     UpdateInteractionVisibility();
 }
 
 void ULalalandRootWidget::BuildPrimaryRow()
 {
-    if (!PrimaryRow) return;
+    if (!PrimaryRow || !Service) return;
     PrimaryRow->ClearChildren();
-    AddButton(PrimaryRow, TEXT("观察"), TEXT("group:observe"), true, OpenGroup == TEXT("observe"));
-    AddButton(PrimaryRow, TEXT("移动"), TEXT("group:move"), true, OpenGroup == TEXT("move"));
-    AddButton(PrimaryRow, TEXT("互动"), TEXT("group:interact"), true, OpenGroup == TEXT("interact"));
+    bool bReplyWaiting = false;
+    FString ReplyError;
+    FString RetryId;
+    if (GetSelectedReplyState(bReplyWaiting, ReplyError, RetryId))
+    {
+        LastRetryReplyId = RetryId;
+        if (!ReplyError.IsEmpty())
+        {
+            AddButton(PrimaryRow, TEXT("重试 AI 回复"), TEXT("system:retry"), PendingCommand.IsEmpty(), PendingOption == TEXT("retry_reply"));
+        }
+        else
+        {
+            AddButton(PrimaryRow, TEXT("等待回应…"), TEXT("system:waiting"), false, true);
+        }
+        return;
+    }
+    LastRetryReplyId.Empty();
+    const FLalalandInteractionDto& Interaction = Service->GetState().interaction;
+    if (!Interaction.primaryActionId.IsEmpty() && Interaction.suggestions.Num() == 0)
+    {
+        const bool bHasTarget = !Interaction.primaryTargetRequired || !SelectedTarget.IsEmpty();
+        AddButton(PrimaryRow, Interaction.primaryLabel, TEXT("option:") + Interaction.primaryActionId, bHasTarget && PendingCommand.IsEmpty(), PendingOption == Interaction.primaryActionId);
+    }
 }
 
 void ULalalandRootWidget::UpdateInteractionVisibility()
 {
     if (!TargetRow || !TargetPrompt || !DialogueRow) return;
-    bool bNeedsTarget = false;
-    if (Service)
+    const bool bHasTarget = !SelectedTarget.IsEmpty();
+    FString TargetName = SelectedTarget;
+    FString Attitude;
+    if (Service) for (const FLalalandActorDto& Actor : Service->GetState().characters)
     {
-        for (const FLalalandInteractionGroupDto& Group : Service->GetState().interaction.groups)
-        {
-            if (Group.id != OpenGroup) continue;
-            bNeedsTarget = Group.options.ContainsByPredicate([](const FLalalandInteractionOptionDto& Option)
-            {
-                return Option.targetRequired;
-            });
-            break;
-        }
+        if (Actor.id == SelectedTarget) { TargetName = Actor.name.IsEmpty() ? Actor.id : Actor.name; break; }
     }
-    const ESlateVisibility TargetVisibility = bNeedsTarget ? ESlateVisibility::Visible : ESlateVisibility::Collapsed;
-    TargetPrompt->SetVisibility(TargetVisibility);
-    TargetRow->SetVisibility(TargetVisibility);
-    DialogueRow->SetVisibility(OpenGroup == TEXT("interact") ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+    if (Service) for (const FLalalandAttitudeDto& Item : Service->GetState().firstNight.attitudes)
+    {
+        if (Item.id != SelectedTarget) continue;
+        Attitude = Item.stage + TEXT(" · ") + Item.reason;
+        TargetName = Item.name.IsEmpty() ? TargetName : Item.name;
+        break;
+    }
+    TargetPrompt->SetVisibility(ESlateVisibility::Visible);
+    TargetPrompt->SetText(FText::FromString(bHasTarget ? TEXT("交谈对象 · ") + TargetName : TEXT("靠近并看向一个人，即可自由交谈")));
+    if (AttitudeHud) AttitudeHud->SetText(FText::FromString(bHasTarget && !Attitude.IsEmpty() ? TargetName + TEXT(" · ") + Attitude : TEXT("靠近并看向一个人，即可开始交谈")));
+    TargetRow->SetVisibility(ESlateVisibility::Collapsed);
+    DialogueRow->SetVisibility(ESlateVisibility::Visible);
+    bool bReplyWaiting = false;
+    FString ReplyError;
+    FString RetryId;
+    GetSelectedReplyState(bReplyWaiting, ReplyError, RetryId);
+    DialogueInput->SetIsEnabled(bHasTarget && PendingCommand.IsEmpty() && !bReplyWaiting && ReplyError.IsEmpty());
+    const FString Hint = !bHasTarget ? TEXT("靠近并看向一个人…")
+        : bReplyWaiting ? TEXT("正在等待对方回应…")
+        : !ReplyError.IsEmpty() ? TEXT("请先重试这次回复…")
+        : TEXT("自由输入你想说的话，按 Enter 发送…");
+    DialogueInput->SetHintText(FText::FromString(Hint));
 }
 
 void ULalalandRootWidget::ExecuteOption(const FString& OptionId)
@@ -328,6 +484,53 @@ void ULalalandRootWidget::ExecuteOption(const FString& OptionId)
     if (OptionId == TEXT("talk")) { DialogueInput->SetKeyboardFocus(); return; }
     FLalalandCommandDto Command;
     if (OptionId == TEXT("observe_room") || OptionId == TEXT("observe_target")) { Command.type = TEXT("observe"); Command.target = SelectedTarget; }
+    else if (OptionId == TEXT("ball_return") || OptionId == TEXT("ball_try") || OptionId == TEXT("ball_ignore"))
+    {
+        Command.type = TEXT("opening_ball");
+        Command.intent = OptionId == TEXT("ball_return") ? TEXT("return") : OptionId == TEXT("ball_try") ? TEXT("try") : TEXT("ignore");
+    }
+    else if (OptionId == TEXT("bounce_join") || OptionId == TEXT("bounce_watch") || OptionId == TEXT("bounce_decline"))
+    {
+        Command.type = TEXT("bounce_choice");
+        Command.intent = OptionId == TEXT("bounce_join") ? TEXT("join") : OptionId == TEXT("bounce_watch") ? TEXT("watch") : TEXT("decline");
+    }
+    else if (OptionId == TEXT("open_drinks") || OptionId == TEXT("drink_next"))
+    {
+        Command.type = TEXT("drink_menu"); Command.intent = OptionId == TEXT("drink_next") ? TEXT("next") : TEXT("open");
+    }
+    else if (OptionId.StartsWith(TEXT("drink_")) && OptionId != TEXT("drink_next"))
+    {
+        Command.type = TEXT("order_drink"); Command.objectTarget = OptionId.Mid(6); Command.target = SelectedTarget;
+    }
+    else if (OptionId.StartsWith(TEXT("consume_")))
+    {
+        Command.type = TEXT("consume_drink"); Command.objectTarget = OptionId.Mid(8);
+    }
+    else if (OptionId == TEXT("aim_left") || OptionId == TEXT("aim_center") || OptionId == TEXT("aim_right"))
+    {
+        Command.type = TEXT("set_throw_aim"); Command.x = OptionId == TEXT("aim_left") ? .48 : OptionId == TEXT("aim_center") ? .67 : .84;
+    }
+    else if (OptionId == TEXT("power_light") || OptionId == TEXT("power_medium") || OptionId == TEXT("power_heavy"))
+    {
+        Command.type = TEXT("throw_ball"); Command.z = OptionId == TEXT("power_light") ? .42 : OptionId == TEXT("power_medium") ? .58 : .76;
+    }
+    else if (OptionId.StartsWith(TEXT("reward_")) || OptionId.StartsWith(TEXT("penalty_")))
+    {
+        Command.type = TEXT("post_game_choice"); Command.intent = OptionId;
+    }
+    else if (OptionId == TEXT("feign_drunk")) { Command.type = TEXT("feign_drunk"); }
+    else if (OptionId == TEXT("sit_view")) { Command.type = TEXT("sit_view"); }
+    else if (OptionId.StartsWith(TEXT("song_"))) { Command.type = TEXT("pick_song"); Command.objectTarget = OptionId.Mid(5); }
+    else if (OptionId.StartsWith(TEXT("activity_"))) { Command.type = TEXT("pick_activity"); Command.objectTarget = OptionId.Mid(9); }
+    else if (OptionId == TEXT("npc_romance") || OptionId == TEXT("npc_friend") || OptionId == TEXT("npc_decline"))
+    {
+        Command.type = TEXT("npc_invite_reply");
+        Command.intent = OptionId == TEXT("npc_romance") ? TEXT("accept_romance") : OptionId == TEXT("npc_friend") ? TEXT("accept_friend") : TEXT("decline");
+    }
+    else if (OptionId.StartsWith(TEXT("station_"))) { Command.type = TEXT("choose_next"); Command.intent = OptionId.Mid(8); }
+    else if (OptionId == TEXT("invite_rooftop")) { Command.type = TEXT("invite_rooftop"); Command.target = SelectedTarget; }
+    else if (OptionId == TEXT("go_rooftop")) { Command.type = TEXT("go_rooftop"); }
+    else if (OptionId == TEXT("end_first_night")) { Command.type = TEXT("end_first_night"); }
     else if (OptionId == TEXT("observe_third")) { Command.type = TEXT("observe_object"); Command.objectTarget = TEXT("third_drink"); }
     else if (OptionId == TEXT("observe_seat")) { Command.type = TEXT("observe_object"); Command.objectTarget = TEXT("reserved_seat"); }
     else if (OptionId == TEXT("approach")) { Command.type = TEXT("approach_target"); Command.target = SelectedTarget; }
@@ -346,27 +549,35 @@ void ULalalandRootWidget::SetSelectedTarget(const FString& Target)
     RebuildTargetRow();
 }
 
+void ULalalandRootWidget::RefreshFocusedTarget()
+{
+    SelectedTarget.Empty();
+    APlayerController* PC = GetOwningPlayer();
+    if (!PC || !PC->PlayerCameraManager) return;
+    const FVector Start = PC->PlayerCameraManager->GetCameraLocation();
+    const FVector End = Start + PC->PlayerCameraManager->GetCameraRotation().Vector() * 450.f;
+    FHitResult Hit;
+    FCollisionQueryParams Params(SCENE_QUERY_STAT(LalalandFocus), true);
+    if (APawn* Pawn = PC->GetPawn()) Params.AddIgnoredActor(Pawn);
+    if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, Params))
+    {
+        if (const ALalalandNpcCharacter* Npc = Cast<ALalalandNpcCharacter>(Hit.GetActor())) SelectedTarget = Npc->GetActorId();
+    }
+}
+
 void ULalalandRootWidget::RebuildTargetRow()
 {
     TargetRow->ClearChildren();
-    TArray<const FLalalandActorDto*> Targets;
-    for (const FLalalandActorDto& Actor : Service->GetState().characters)
-    {
-        if (Actor.id != TEXT("USER") && Actor.id != TEXT("OWNER") && Actor.interactable) Targets.Add(&Actor);
-    }
-    if (Targets.Num() && !Targets.ContainsByPredicate([this](const FLalalandActorDto* Actor) { return Actor->id == SelectedTarget; }))
-        SelectedTarget = Targets[0]->id;
-    for (const FLalalandActorDto* Actor : Targets)
-    {
-        const FString Label = Actor->name.IsEmpty() ? Actor->id : Actor->name;
-        AddButton(TargetRow, Label, TEXT("target:") + Actor->id, true, Actor->id == SelectedTarget);
-    }
 }
 
 void ULalalandRootWidget::SendDialogue()
 {
     const FString Text = DialogueInput->GetText().ToString().TrimStartAndEnd();
-    if (Text.IsEmpty() || !PendingCommand.IsEmpty()) return;
+    bool bReplyWaiting = false;
+    FString ReplyError;
+    FString RetryId;
+    if (Text.IsEmpty() || SelectedTarget.IsEmpty() || !PendingCommand.IsEmpty()
+        || GetSelectedReplyState(bReplyWaiting, ReplyError, RetryId)) return;
     FLalalandCommandDto Command;
     Command.type = TEXT("talk");
     Command.target = SelectedTarget;
@@ -378,6 +589,49 @@ void ULalalandRootWidget::SendDialogue()
         PlayerDialogue->SetText(FText::FromString(Command.text));
         DialogueInput->SetText(FText::GetEmpty());
     }
+}
+
+void ULalalandRootWidget::HandleDialogueCommitted(const FText& Text, ETextCommit::Type CommitMethod)
+{
+    if (CommitMethod == ETextCommit::OnEnter) SendDialogue();
+}
+
+bool ULalalandRootWidget::GetSelectedReplyState(bool& bWaiting, FString& Error, FString& RequestId) const
+{
+    bWaiting = false;
+    Error.Empty();
+    RequestId.Empty();
+    if (!Service || SelectedTarget.IsEmpty()) return false;
+    const TArray<FLalalandReplyDto>& Replies = Service->GetState().replies;
+    for (int32 Index = Replies.Num() - 1; Index >= 0; --Index)
+    {
+        const FLalalandReplyDto& Reply = Replies[Index];
+        if (Reply.actor != SelectedTarget) continue;
+        if (Reply.status == TEXT("queued") || Reply.status == TEXT("running") || Reply.status == TEXT("ready"))
+        {
+            bWaiting = true;
+            RequestId = Reply.id;
+            return true;
+        }
+        if (Reply.status == TEXT("error"))
+        {
+            Error = Reply.error.IsEmpty() ? TEXT("AI 回复失败") : Reply.error;
+            RequestId = Reply.id;
+            return true;
+        }
+        return false;
+    }
+    return false;
+}
+
+FString ULalalandRootWidget::GetSelectedTargetName() const
+{
+    if (!Service) return SelectedTarget;
+    for (const FLalalandActorDto& Actor : Service->GetState().characters)
+    {
+        if (Actor.id == SelectedTarget) return Actor.name.IsEmpty() ? Actor.id : Actor.name;
+    }
+    return SelectedTarget;
 }
 
 void ULalalandRootWidget::SaveModelConfig()

@@ -6,7 +6,12 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
-$repoRoot = Split-Path -Parent $projectRoot
+$physicalProjectRoot = $projectRoot
+$projectItem = Get-Item -LiteralPath $projectRoot
+if ($projectItem.LinkType -eq 'Junction' -and $projectItem.Target) {
+    $physicalProjectRoot = [IO.Path]::GetFullPath([string]$projectItem.Target)
+}
+$repoRoot = Split-Path -Parent $physicalProjectRoot
 $runtimeProjectRoot = $projectRoot
 if ($projectRoot -match '[^\x00-\x7F]') {
     $runtimeProjectRoot = 'D:\LalalandUE'
@@ -32,7 +37,7 @@ try {
     }
 } finally { Pop-Location }
 
-& (Join-Path $PSScriptRoot 'Stage-LalalandServer.ps1') -ProjectRoot $projectRoot -RepoRoot $repoRoot
+& (Join-Path $PSScriptRoot 'Stage-LalalandServer.ps1') -ProjectRoot $physicalProjectRoot -RepoRoot $repoRoot
 if ($LASTEXITCODE -ne 0) { throw "Server staging failed: $LASTEXITCODE" }
 
 & $uat BuildCookRun -project="$project" -noP4 -platform=Win64 -clientconfig=Shipping -build -cook -stage -pak -iostore -archive -archivedirectory="$Output" -prereqs -utf8output
@@ -40,9 +45,17 @@ if ($LASTEXITCODE -ne 0) { throw "Unreal Windows build failed: $LASTEXITCODE" }
 $bootstrap = Get-ChildItem -LiteralPath $Output -Recurse -Filter 'LalalandUnreal.exe' | Sort-Object FullName | Select-Object -First 1
 if ($bootstrap) { Copy-Item -LiteralPath $bootstrap.FullName -Destination (Join-Path $bootstrap.DirectoryName 'Lalaland.exe') -Force }
 Get-ChildItem -LiteralPath $Output -Recurse -File -Filter '*.pdb' | ForEach-Object { Remove-Item -LiteralPath $_.FullName -Force }
+foreach ($manifestName in @('Manifest_DebugFiles_Win64.txt', 'Manifest_NonUFSFiles_Win64.txt', 'Manifest_UFSFiles_Win64.txt')) {
+    $manifestPath = Join-Path $Output $manifestName
+    if (Test-Path -LiteralPath $manifestPath) { Remove-Item -LiteralPath $manifestPath -Force }
+}
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'README-Windows.txt') -Destination (Join-Path $Output 'README.txt') -Force
 $hashLines = @()
-foreach ($relative in @('Lalaland.exe', 'LalalandUnreal\Binaries\Win64\LalalandUnreal-Win64-Shipping.exe')) {
+foreach ($relative in @(
+    'Lalaland.exe',
+    'LalalandUnreal\Binaries\Win64\LalalandUnreal-Win64-Shipping.exe',
+    'LalalandUnreal\Content\Paks\LalalandUnreal-Windows.ucas'
+)) {
     $artifact = Join-Path $Output $relative
     if (Test-Path -LiteralPath $artifact) {
         $hash = (Get-FileHash -LiteralPath $artifact -Algorithm SHA256).Hash.ToLowerInvariant()

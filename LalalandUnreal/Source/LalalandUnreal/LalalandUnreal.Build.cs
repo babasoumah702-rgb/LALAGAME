@@ -9,7 +9,7 @@ public class LalalandUnreal : ModuleRules
         {
             "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput",
             "HTTP", "WebSockets", "Json", "JsonUtilities",
-            "UMG", "Slate", "SlateCore", "AIModule", "NavigationSystem", "AssetRegistry"
+            "UMG", "Slate", "SlateCore", "AIModule", "NavigationSystem", "AssetRegistry", "PhysicsCore"
         });
     }
 }

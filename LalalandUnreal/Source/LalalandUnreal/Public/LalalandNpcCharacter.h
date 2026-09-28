@@ -19,6 +19,7 @@ public:
     void InitializeActor(const FString& InActorId, const FLinearColor& Color);
     void ApplyState(const FLalalandActorDto& Dto, const TMap<FString, ALalalandNpcCharacter*>& Cast);
     void ShowDialogue(const FString& Text, float Seconds = 7.f);
+    void TriggerGesture(const FString& Semantic) { PlaySemanticAnimation(Semantic, false); }
     FString GetActorId() const { return ActorId; }
 
 private:

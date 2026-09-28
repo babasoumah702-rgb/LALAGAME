@@ -78,8 +78,12 @@ void ALalalandNpcCharacter::LoadCharacterMesh()
         }
         return;
     }
-    const FString Path = FString::Printf(TEXT("/Game/Characters/%s/SK_%s.SK_%s"), *ActorId, *ActorId, *ActorId);
-    if (USkeletalMesh* Asset = LoadObject<USkeletalMesh>(nullptr, *Path))
+    const bool bHasReplacement = ActorId == TEXT("B") || ActorId == TEXT("C") || ActorId == TEXT("D");
+    const FString ReplacementPath = FString::Printf(TEXT("/Game/Characters/%s_2026/SK_%s_2026.SK_%s_2026"), *ActorId, *ActorId, *ActorId);
+    const FString LegacyPath = FString::Printf(TEXT("/Game/Characters/%s/SK_%s.SK_%s"), *ActorId, *ActorId, *ActorId);
+    USkeletalMesh* Asset = bHasReplacement ? LoadObject<USkeletalMesh>(nullptr, *ReplacementPath) : nullptr;
+    if (!Asset) Asset = LoadObject<USkeletalMesh>(nullptr, *LegacyPath);
+    if (Asset)
     {
         GetMesh()->SetSkeletalMeshAsset(Asset);
         const FBoxSphereBounds SourceBounds = Asset->GetBounds();
@@ -120,7 +124,11 @@ void ALalalandNpcCharacter::CacheAnimations()
 {
     AnimationAssets.Empty();
     FAssetRegistryModule& RegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry"));
-    const FString CharacterPath = FString::Printf(TEXT("/Game/Characters/%s"), *ActorId);
+    const bool bUsesReplacementSkeleton =
+        ActorId == TEXT("B") || ActorId == TEXT("C") || ActorId == TEXT("D");
+    const FString CharacterPath = bUsesReplacementSkeleton
+        ? FString::Printf(TEXT("/Game/Characters/%s_2026/Retargeted"), *ActorId)
+        : FString::Printf(TEXT("/Game/Characters/%s"), *ActorId);
     RegistryModule.Get().ScanPathsSynchronous({CharacterPath}, false);
     FARFilter Filter;
     Filter.PackagePaths.Add(*CharacterPath);
@@ -134,7 +142,16 @@ void ALalalandNpcCharacter::CacheAnimations()
     });
     for (const FAssetData& Data : Assets)
     {
-        if (UAnimSequence* Sequence = Cast<UAnimSequence>(Data.GetAsset())) AnimationAssets.Add(Sequence);
+        if (UAnimSequence* Sequence = Cast<UAnimSequence>(Data.GetAsset()))
+        {
+            // A retargeted sequence must belong to the mesh's own skeleton.
+            // Mixing the legacy 41-bone actions with a 61-bone replacement
+            // mesh makes the character collapse even though both assets load.
+            if (Sequence->GetSkeleton() == GetMesh()->GetSkeletalMeshAsset()->GetSkeleton())
+            {
+                AnimationAssets.Add(Sequence);
+            }
+        }
     }
 }
 
@@ -162,6 +179,7 @@ void ALalalandNpcCharacter::PlaySemanticAnimation(const FString& Semantic, bool 
     else if (Lower.Contains(TEXT("look")) || Lower.Contains(TEXT("observe"))) Tokens = {TEXT("look_around")};
     else if (Lower.Contains(TEXT("fold")) || Lower.Contains(TEXT("listen"))) Tokens = {TEXT("fold_arms"), TEXT("wait")};
     else if (Lower.Contains(TEXT("greet")) || Lower.Contains(TEXT("talk"))) Tokens = {TEXT("greet"), TEXT("agree")};
+    else if (Lower.Contains(TEXT("throw")) || Lower.Contains(TEXT("toss"))) Tokens = {TEXT("throw"), TEXT("agree"), TEXT("greet")};
     else if (Lower.Contains(TEXT("agree"))) Tokens = {TEXT("agree")};
     else Tokens = {TEXT("standing_relax"), TEXT("idle"), TEXT("wait")};
     if (UAnimSequence* Sequence = FindAnimation(Tokens))
@@ -176,9 +194,10 @@ void ALalalandNpcCharacter::PlaySemanticAnimation(const FString& Semantic, bool 
 
 void ALalalandNpcCharacter::ApplyState(const FLalalandActorDto& Dto, const TMap<FString, ALalalandNpcCharacter*>& Cast)
 {
-    const bool bHide = Dto.id == TEXT("D") && !Dto.interactable;
+    const bool bHide = false;
     SetActorHiddenInGame(bHide);
     SetActorEnableCollision(!bHide);
+    NameLabel->SetText(FText::FromString(Dto.name.IsEmpty() ? Dto.id : Dto.name));
     DesiredLocation = ServerToWorld(Dto.x, Dto.y, Dto.z);
     if (!bReceivedInitialState || FVector::DistSquared(GetActorLocation(), DesiredLocation) > FMath::Square(800.f))
     {

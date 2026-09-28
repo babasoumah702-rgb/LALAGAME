@@ -3,9 +3,9 @@ import type {World} from './types.js';
 export type StoryState={version:1;chapter:number;phase:string;stageAt:number;enteredAt:number;executed:string[];transitions:{from:number;to:number;at:number}[];budgets:Record<string,{calls:number;tokens:number}>};
 export function initializeStory(w:World){
   if(w.scene3&&!w.scene3.questionEventId)w.scene3.questionEventId=w.events.findLast(e=>e.intent==='tarot_question'&&e.text===w.scene3!.question)?.id;
-  if(w.story||!w.scene1)return;
-  const chapter=w.scene3?3:w.scene2?2:1;
-  w.story={version:1,chapter,phase:'restored',stageAt:w.elapsed,enteredAt:chapter===3?w.scene3!.enteredAt:chapter===2?w.scene2!.enteredAt:0,executed:[],transitions:[],budgets:{}};
+  if(w.story||(!w.scene1&&!w.firstNight))return;
+  const chapter=w.firstNight?1:w.scene3?3:w.scene2?2:1;
+  w.story={version:1,chapter,phase:w.firstNight?w.firstNight.phase:'restored',stageAt:w.firstNight?.stageAt??w.elapsed,enteredAt:w.firstNight?.enteredAt??(chapter===3?w.scene3!.enteredAt:chapter===2?w.scene2!.enteredAt:0),executed:[],transitions:[],budgets:{}};
   // Legacy counters are retained, not reset on migration. Unknown historic usage is charged to
   // the reached chapter; this is conservative and never creates extra budget by loading a save.
   for(let i=1;i<=6;i++)w.story.budgets[i]={calls:i===chapter?w.calls:0,tokens:i===chapter?w.tokens:0};

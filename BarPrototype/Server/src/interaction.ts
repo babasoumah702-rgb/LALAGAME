@@ -1,4 +1,6 @@
 import type {Engine} from './engine.js';
+import {ACTIVITIES,DRINKS,SONGS,drinkLabel} from './first-night-content.js';
+import {distance} from './navigation.js';
 
 export type InteractionOption={
   id:string;label:string;selected:boolean;replaceable:boolean;targetRequired:boolean;
@@ -7,6 +9,7 @@ export type InteractionOption={
 export type InteractionGroup={id:'observe'|'move'|'interact';label:string;options:InteractionOption[]};
 export type InteractionView={
   contextId:string;nextTitle:string;nextHint:string;nextGroup:'observe'|'move'|'interact';nextActionId:string;
+  primaryActionId:string;primaryLabel:string;primaryTargetRequired:boolean;suggestions:InteractionOption[];
   groups:InteractionGroup[];
 };
 
@@ -16,6 +19,7 @@ const option=(id:string,label:string,values:Partial<InteractionOption>={}):Inter
 
 export function interactionView(g:Engine):InteractionView|null{
   const w=g.world;if(!w.story)return null;
+  if(w.firstNight)return firstNightInteraction(g);
   const user=g.actor('USER'),stage=w.story.stageAt;
   const selected=(intent:string,object='')=>w.events.some(e=>e.actor==='USER'&&e.time>=stage&&e.intent===intent&&(!object||e.objectTarget===object));
   const commonObserve=[option('observe_room','观察周围',{selected:selected('observe')}),option('observe_target','观察所选人物',{targetRequired:true})];
@@ -88,7 +92,81 @@ export function interactionView(g:Engine):InteractionView|null{
     else{nextTitle='等待最后一位来客';nextHint='不需要继续重复操作；到场后会自动进入动态社交。';nextGroup='observe';}
   }else return null;
 
-  return {contextId,nextTitle,nextHint,nextGroup,nextActionId,groups:[
+  return {contextId,nextTitle,nextHint,nextGroup,nextActionId,primaryActionId:nextActionId,primaryLabel:nextTitle,primaryTargetRequired:false,suggestions:[],groups:[
     {id:'observe',label:'观察',options:observe},{id:'move',label:'移动',options:move},{id:'interact',label:'互动',options:interact}
   ]};
+}
+
+function firstNightInteraction(g:Engine):InteractionView{
+  const s=g.world.firstNight!,phase=s.phase,user=g.actor('USER');
+  let nextTitle='今晚先按自己的节奏来',nextHint='看向人物或物件时，只显示一个当前动作。按 Enter 可自由输入。';
+  let primaryActionId='',primaryLabel='',primaryTargetRequired=false;
+  let suggestions:InteractionOption[]=[];
+  const pages=Math.ceil(DRINKS.length/2);
+  const drinkSuggestions=()=>{
+    const page=Math.max(0,s.drinkMenuPage)%pages,menu=DRINKS.slice(page*2,page*2+2);
+    nextTitle=`酒单 · ${page+1}/${pages}`;
+    nextHint=menu.map(d=>`${d.name}：${d.recipe}／${d.flavor}`).join('；')+`。剩余 ${s.cash.USER} Cash。点单与真正喝下分开记录。`;
+    return [...menu.map(d=>option('drink_'+d.id,drinkLabel(d,(s.vouchers.USER??0)>0?'特调券':`${d.price} Cash`),{enabled:(s.vouchers.USER??0)>0||s.cash.USER>=d.price,disabledReason:(s.vouchers.USER??0)>0||s.cash.USER>=d.price?'':`Cash 不足 · ${d.recipe}`})),option('drink_next','下一页')];
+  };
+  if(s.inviteFrom&&!s.invited&&phase==='meteor_window'){
+    nextTitle=`${g.actor(s.inviteFrom).name} 邀请你一起上露台`;nextHint='浪漫同行、朋友同行或拒绝，都是有效答复。';
+    suggestions=[option('npc_romance','答应浪漫同行'),option('npc_friend','以朋友身份一起去'),option('npc_decline','这次不去')];
+  }else if(s.postGameStep==='songs'){
+    nextTitle='选一首今晚的歌';nextHint='吧台会真的换上这首歌。';
+    suggestions=SONGS.map(x=>option('song_'+x.id,x.label));
+  }else if(s.postGameStep==='activities'){
+    nextTitle='选一项轻松活动';nextHint='选择会立刻发生在酒吧里。';
+    suggestions=ACTIVITIES.map(x=>option('activity_'+x.id,x.label));
+  }else if(s.postGameStep==='question'){
+    nextTitle='回答一个轻松问题';nextHint=s.question||'用文字回答即可。';
+    primaryActionId='talk';primaryLabel='用文字回答';primaryTargetRequired=true;
+    suggestions=[option('talk','自由回答',{targetRequired:true,replaceable:true}),option('open_drinks','去吧台'),option('observe_room','看看周围')];
+  }else if(phase==='arrival'){
+    nextTitle='一颗球滚到了你附近';nextHint='这是可以错过的小互动。你也可以先去找人说话，球会在视野边缘自行收走。';
+    primaryActionId='ball_return';primaryLabel='捡起球';
+    suggestions=[option('ball_return','递回万塞'),option('ball_try','问能否试投'),option('talk','去和眼前的人说话',{targetRequired:true,replaceable:true})];
+  }else if(phase==='free_time'){
+    nextTitle='自由认识这里的人';nextHint=`你有 ${s.cash.USER} Cash。可以聊天、看夜景或去吧台；工作人员稍后会组织活动。`;
+    if(s.drinkMenuPage>=0)suggestions=drinkSuggestions();
+    else{
+      primaryActionId='talk';primaryLabel='和眼前的人交谈';primaryTargetRequired=true;
+      const held=[...s.drinks].reverse().find(d=>d.owner==='USER'&&d.status==='served');
+      if(s.openingBall==='rolling')suggestions=[option('ball_return','递回万塞'),option('talk','自由交谈',{targetRequired:true,replaceable:true}),option('open_drinks','查看酒单',{replaceable:true})];
+      else if(held)suggestions=[option('consume_'+held.id,'喝下手边的饮品'),option('talk','自由交谈',{targetRequired:true,replaceable:true}),option('open_drinks','查看酒单',{replaceable:true})];
+      else if(distance(user,g.actor('A'))<2.4&&!s.seatedNearKiko)suggestions=[option('sit_view','在观景位坐下'),option('talk','自由交谈',{targetRequired:true,replaceable:true}),option('open_drinks','查看酒单',{replaceable:true})];
+      else if(!s.feigningDrunk.USER&&s.drinkStage.USER==='sober')suggestions=[option('talk','自由交谈',{targetRequired:true,replaceable:true}),option('open_drinks','查看酒单',{replaceable:true}),option('feign_drunk','装作有些醉')];
+      else suggestions=[option('talk','自由交谈',{targetRequired:true,replaceable:true}),option('open_drinks','查看酒单',{replaceable:true}),option('observe_room','看看周围')];
+    }
+  }else if(['game_call','game_choice'].includes(phase)){
+    nextTitle='工作人员正在组织弹球入杯';nextHint='规则和彩头已经说明，选择不会暗中判定输赢。';
+    suggestions=[option('bounce_join','加入'),option('bounce_watch','先看一局'),option('bounce_decline','不参加')];
+  }else if(phase==='game_round'){
+    const turn=s.participants[s.turn%s.participants.length];
+    nextTitle=turn==='USER'?'轮到你投球':'看清每个人真实的投球';nextHint=turn==='USER'?'调整方向和力度后出手。球必须先落桌再进杯。':`${g.actor(turn).name} 正在准备。`;
+    if(s.pendingThrow){nextTitle=`${g.actor(s.pendingThrow.actor).name} 的球正在运动`;nextHint='结果只由场内物理碰撞决定。';suggestions=[];}
+    else if(turn==='USER'&&s.pendingAim<0){primaryLabel='先选择落点';suggestions=[option('aim_left','偏左'),option('aim_center','正中'),option('aim_right','偏右')];}
+    else if(turn==='USER'){primaryLabel='再选择力度';suggestions=[option('power_light','轻投'),option('power_medium','适中'),option('power_heavy','重投')];}
+    else suggestions=[];
+  }else if(phase==='post_game'){
+    nextTitle=s.winner==='USER'?'你先命中了目标杯':'比赛已经有了结果';nextHint='输赢只打开新的相处机会，不直接决定谁喜欢谁。';
+    if(s.drinkMenuPage>=0)suggestions=drinkSuggestions();
+    else if(s.winner==='USER'&&!s.postGameChoice)suggestions=[option('reward_voucher','拿一张特调券'),option('reward_song','选择下一首歌'),option('reward_activity','选择下一项活动')];
+    else if(s.lastPlace==='USER'&&!s.postGameChoice&&s.postGameMenu)suggestions=[option('penalty_mocktail','调一杯无酒精特饮'),option('penalty_question','回答一个轻松问题'),option('penalty_song','帮大家选歌')];
+    else if(s.lastPlace==='USER'&&!s.postGameChoice)suggestions=[option('penalty_tasks','接受一项轻任务'),option('penalty_pay','支付 2 Cash',{enabled:s.cash.USER>=2,disabledReason:s.cash.USER>=2?'':'Cash 不足'})];
+    else{primaryActionId='talk';primaryLabel='和眼前的人聊聊赛后';primaryTargetRequired=true;suggestions=[option('talk','自由交谈',{targetRequired:true,replaceable:true}),option('open_drinks','去吧台'),option('observe_room','看看大家的反应')];}
+  }else if(phase==='meteor_window'){
+    if(s.rooftopChosen){nextTitle='沿灯带找到楼梯';nextHint='亲自走上楼梯。抵达上层露台后，流星雨阶段才会开始。';suggestions=[option('end_first_night','留在楼下结束')];}
+    else{nextTitle='流星雨快到了';nextHint=s.invited?'邀请已经发出，也可以独自上楼。':'邀请一位愿意同行的人，或者自己上露台。';
+      primaryActionId=s.invited?'go_rooftop':'invite_rooftop';primaryLabel=s.invited?'沿楼梯上露台':'邀请眼前的人';primaryTargetRequired=!s.invited;
+      suggestions=s.invited?[option('go_rooftop','上露台'),option('end_first_night','留在这里结束')]:[option('invite_rooftop','邀请同行',{targetRequired:true}),option('go_rooftop','独自上楼'),option('end_first_night','提前结束')];}
+  }else if(phase==='rooftop'){
+    nextTitle=s.roofCompanions.length?'一起看完这场流星雨':'一个人也能看完整个夜晚';nextHint='继续说话或安静待着，准备好后再结束。';
+    primaryActionId='end_first_night';primaryLabel='结束这一晚';
+    suggestions=[option('talk','轻声交谈',{targetRequired:true,replaceable:true}),option('end_first_night','结束这一晚')];
+  }else {
+    nextTitle='这一晚已经结算';nextHint=`${s.ending||'首夜结束'} · 剩余 ${s.cash.USER} Cash · ${s.winner?`${g.actor(s.winner).name} 先命中`:'本局无人先命中'}。攀岩馆与温泉尚未开放。`;
+    suggestions=[option('station_later','留待下次'),option('station_climbing','室内攀岩馆（未开放）',{enabled:false,disabledReason:'尚未开放'}),option('station_hotspring','温泉（未开放）',{enabled:false,disabledReason:'尚未开放'})];
+  }
+  return {contextId:`first-night.${phase}`,nextTitle,nextHint,nextGroup:'interact',nextActionId:primaryActionId,primaryActionId,primaryLabel,primaryTargetRequired,suggestions,groups:[{id:'observe',label:'观察',options:[]},{id:'move',label:'移动',options:[]},{id:'interact',label:'互动',options:suggestions}]};
 }

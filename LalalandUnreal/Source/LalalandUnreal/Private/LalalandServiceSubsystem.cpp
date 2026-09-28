@@ -57,6 +57,16 @@ TStatId ULalalandServiceSubsystem::GetStatId() const
 void ULalalandServiceSubsystem::Tick(float DeltaTime)
 {
     ConsumeServiceOutput();
+    if (bReady && !State.sessionId.IsEmpty() && !bEventChannelReady && !bHttpFallback)
+    {
+        if (HttpFallbackAt <= 0.0) HttpFallbackAt = FPlatformTime::Seconds() + 1.0;
+        else if (FPlatformTime::Seconds() >= HttpFallbackAt)
+        {
+            bHttpFallback = true;
+            NextPollAt = 0;
+            SetStatus(TEXT("本地事件连接已切换到兼容模式。"));
+        }
+    }
     if (bHttpFallback && bReady && !State.sessionId.IsEmpty() && !bPollInFlight && FPlatformTime::Seconds() >= NextPollAt)
     {
         bPollInFlight = true;
@@ -69,7 +79,7 @@ void ULalalandServiceSubsystem::Tick(float DeltaTime)
             if (bSuccess && FLalalandJson::ParseStateEnvelope(Body, Incoming, Error)) AcceptState(Incoming);
         });
     }
-    if (State.intro.phase == TEXT("elevator") && (bEventChannelReady || bHttpFallback))
+    if (State.intro.phase == TEXT("elevator") && !State.sessionId.IsEmpty())
     {
         if (!State.intro.ready && !bIntroReadySent)
         {
@@ -77,11 +87,11 @@ void ULalalandServiceSubsystem::Tick(float DeltaTime)
             Command.type = TEXT("intro_ready");
             bIntroReadySent = !SendCommand(Command).IsEmpty();
         }
-        else if (State.intro.progress >= 6.9 && !bIntroCompleteSent)
+        else if (!bIntroCompleteInFlight && (State.intro.progress >= 6.9 || !State.firstNight.contentVersion.IsEmpty()))
         {
             FLalalandCommandDto Command;
             Command.type = TEXT("intro_complete");
-            bIntroCompleteSent = !SendCommand(Command).IsEmpty();
+            bIntroCompleteInFlight = !SendCommand(Command).IsEmpty();
         }
     }
     if (!bReady && ServiceProcess.IsValid() && FPlatformTime::Seconds() > StartupDeadline)
@@ -112,10 +122,12 @@ void ULalalandServiceSubsystem::StartLocalService()
         return;
     }
 
-    SessionToken = FGuid::NewGuid().ToString(EGuidFormats::Digits) + FGuid::NewGuid().ToString(EGuidFormats::Digits);
-    FString LocalData = FPlatformMisc::GetEnvironmentVariable(TEXT("LOCALAPPDATA"));
-    if (LocalData.IsEmpty()) LocalData = FPlatformProcess::UserSettingsDir();
-    const FString DataRoot = FPaths::Combine(LocalData, TEXT("LalalandUnreal"));
+    // A single GUID still supplies 128 bits of entropy and keeps the WebSocket
+    // subprotocol short enough for every WinHTTP/libwebsockets backend.
+    SessionToken = FGuid::NewGuid().ToString(EGuidFormats::Digits);
+    // Keep runtime state beside the D-drive project/build as requested. This also makes it
+    // obvious what can be removed without touching credentials from another application.
+    const FString DataRoot = FPaths::ConvertRelativePathToFull(FPaths::Combine(FPaths::ProjectSavedDir(), TEXT("LalalandData")));
     const FString ConfigRoot = FPaths::Combine(DataRoot, TEXT("private"));
     IPlatformFile& Files = FPlatformFileManager::Get().GetPlatformFile();
     Files.CreateDirectoryTree(*ConfigRoot);
@@ -126,17 +138,26 @@ void ULalalandServiceSubsystem::StartLocalService()
     const FString PreviousToken = FPlatformMisc::GetEnvironmentVariable(TEXT("LASTCALL_SESSION_TOKEN"));
     const FString PreviousData = FPlatformMisc::GetEnvironmentVariable(TEXT("LASTCALL_DATA_DIR"));
     const FString PreviousConfig = FPlatformMisc::GetEnvironmentVariable(TEXT("LASTCALL_CONFIG_DIR"));
+    const FString PreviousAutoplay = FPlatformMisc::GetEnvironmentVariable(TEXT("LASTCALL_AUTOPLAY"));
+    const FString PreviousTestClock = FPlatformMisc::GetEnvironmentVariable(TEXT("LASTCALL_TEST_CLOCK"));
     {
         FScopeLock Lock(&ServiceEnvironmentMutex);
         FPlatformMisc::SetEnvironmentVar(TEXT("LASTCALL_SESSION_TOKEN"), *SessionToken);
         FPlatformMisc::SetEnvironmentVar(TEXT("LASTCALL_DATA_DIR"), *DataRoot);
         FPlatformMisc::SetEnvironmentVar(TEXT("LASTCALL_CONFIG_DIR"), *ConfigRoot);
+        if (FParse::Param(FCommandLine::Get(), TEXT("LalalandFullPlaythrough")))
+        {
+            FPlatformMisc::SetEnvironmentVar(TEXT("LASTCALL_AUTOPLAY"), TEXT("1"));
+            FPlatformMisc::SetEnvironmentVar(TEXT("LASTCALL_TEST_CLOCK"), TEXT("4"));
+        }
         uint32 ProcessId = 0;
         const FString Params = FString::Printf(TEXT("\"%s\" --managed"), *ScriptPath);
         ServiceProcess = FPlatformProcess::CreateProc(*NodePath, *Params, false, true, true, &ProcessId, 0, *ServerRoot, ServiceWritePipe, ServiceStdInReadPipe);
         FPlatformMisc::SetEnvironmentVar(TEXT("LASTCALL_SESSION_TOKEN"), *PreviousToken);
         FPlatformMisc::SetEnvironmentVar(TEXT("LASTCALL_DATA_DIR"), *PreviousData);
         FPlatformMisc::SetEnvironmentVar(TEXT("LASTCALL_CONFIG_DIR"), *PreviousConfig);
+        FPlatformMisc::SetEnvironmentVar(TEXT("LASTCALL_AUTOPLAY"), *PreviousAutoplay);
+        FPlatformMisc::SetEnvironmentVar(TEXT("LASTCALL_TEST_CLOCK"), *PreviousTestClock);
     }
     if (!ServiceProcess.IsValid())
     {
@@ -183,6 +204,9 @@ void ULalalandServiceSubsystem::StopLocalService()
     bHttpFallback = false;
     bPollInFlight = false;
     bEventChannelReady = false;
+    HttpFallbackAt = 0;
+    bIntroReadySent = false;
+    bIntroCompleteInFlight = false;
 }
 
 void ULalalandServiceSubsystem::ConsumeServiceOutput()
@@ -231,8 +255,17 @@ void ULalalandServiceSubsystem::FetchBootstrap()
             return;
         }
         bReady = true;
-        SetStatus(TEXT("准备好了。选择今晚如何入场。"));
+        SetStatus(TEXT("准备好了。今晚从酒吧门口直接开始。"));
+#if PLATFORM_WINDOWS
+        // UE 5.8's bundled libwebsockets transport can fail before sending a
+        // loopback handshake on Windows machines with local proxy software.
+        // Use the authenticated 5 Hz state channel directly; command acks and
+        // idempotency continue to use the same service authority.
+        bHttpFallback = true;
+        NextPollAt = 0;
+#else
         ConnectEvents();
+#endif
         OnChanged.Broadcast();
 #if !UE_BUILD_SHIPPING
         if (FParse::Param(FCommandLine::Get(), TEXT("LalalandAutoStart")))
@@ -264,8 +297,15 @@ void ULalalandServiceSubsystem::OpenNewSession(const FString& Role, const FStrin
         PendingCommands.Empty();
         VisibleEvents.Empty();
         bIntroReadySent = false;
-        bIntroCompleteSent = false;
+        bIntroCompleteInFlight = false;
+        HttpFallbackAt = FPlatformTime::Seconds() + 1.0;
         AcceptState(Incoming);
+        if (State.intro.phase == TEXT("elevator"))
+        {
+            FLalalandCommandDto Ready;
+            Ready.type = TEXT("intro_ready");
+            bIntroReadySent = !SendCommand(Ready).IsEmpty();
+        }
     });
 }
 
@@ -298,16 +338,21 @@ FString ULalalandServiceSubsystem::SendCommand(FLalalandCommandDto Command)
     Command.version = 1;
     Command.cursor = State.cursor;
     Command.sessionId = State.sessionId;
-    if (!bEventChannelReady && !bHttpFallback)
+    const bool bSocketReady = bEventChannelReady && EventSocket.IsValid() && EventSocket->IsConnected();
+    const bool bIntroCommand = Command.type.StartsWith(TEXT("intro_"));
+    if (!bSocketReady && !bHttpFallback)
     {
         if (Command.type == TEXT("position") || Command.type == TEXT("positions")) return FString();
-        Fail(TEXT("本地事件连接尚未就绪。"));
-        return FString();
+        if (!(bIntroCommand && !State.sessionId.IsEmpty()))
+        {
+            Fail(TEXT("本地事件连接尚未就绪。"));
+            return FString();
+        }
     }
     if (PendingCommands.Contains(Command.id)) return Command.id;
     const FString Json = FLalalandJson::WriteCommand(Command);
     PendingCommands.Add(Command.id, Json);
-    if (bEventChannelReady && EventSocket.IsValid())
+    if (bSocketReady)
     {
         EventSocket->Send(Json);
     }
@@ -328,6 +373,11 @@ FString ULalalandServiceSubsystem::SendCommand(FLalalandCommandDto Command)
             {
                 const FString Reason = Error.IsEmpty() ? TEXT("本地命令提交失败。") : Error;
                 OnCommandRejected.Broadcast(CommandId, Reason);
+                if (Reason.Contains(TEXT("电梯")))
+                {
+                    bIntroCompleteInFlight = false;
+                    return;
+                }
                 Fail(Reason);
             }
         });
@@ -348,19 +398,24 @@ void ULalalandServiceSubsystem::ConnectEvents()
     if (EventSocket.IsValid()) EventSocket->Close();
     bEventChannelReady = false;
     FWebSocketsModule& Module = FModuleManager::LoadModuleChecked<FWebSocketsModule>(TEXT("WebSockets"));
-    TMap<FString, FString> Headers;
-    // WinHTTP treats Authorization as a reserved upgrade header on some
-    // Windows configurations. A dedicated local-only header keeps the token
-    // out of the URL and reliably reaches Fastify during the WS handshake.
-    Headers.Add(TEXT("X-Lalaland-Token"), SessionToken);
-    EventSocket = Module.CreateWebSocket(BaseUrl.Replace(TEXT("http://"), TEXT("ws://")) + TEXT("/api/events"), FString(), Headers);
+    // The first offered protocol is a fixed, registered callback protocol.
+    // The second carries the per-process token. The server selects the first,
+    // while authenticating from the complete offered protocol list. This is
+    // compatible with UE's libwebsockets backend without putting credentials
+    // in the URL or command line.
+    TArray<FString> Protocols;
+    Protocols.Add(TEXT("lalaland.v1"));
+    Protocols.Add(TEXT("lalaland.auth.") + SessionToken);
+    EventSocket = Module.CreateWebSocket(BaseUrl.Replace(TEXT("http://"), TEXT("ws://")) + TEXT("/api/events"), Protocols);
     EventSocket->OnConnected().AddLambda([this]()
     {
-        SetStatus(TEXT("正在建立本地事件通道…"));
+        bEventChannelReady = true;
+        SetStatus(TEXT("本地事件通道已连接。"));
     });
     EventSocket->OnConnectionError().AddLambda([this](const FString& Error)
     {
-        UE_LOG(LogLalaland, Warning, TEXT("Local event socket failed: %s"), *Error.Left(240));
+        const FString Detail = Error.IsEmpty() ? TEXT("unknown websocket handshake failure") : Error.Left(240);
+        UE_LOG(LogLalaland, Warning, TEXT("Local event socket failed: %s"), *Detail);
         bEventChannelReady = false;
         bHttpFallback = true;
         NextPollAt = 0;
@@ -395,6 +450,11 @@ void ULalalandServiceSubsystem::ConnectEvents()
             PendingCommands.Remove(Id);
             const FString Reason = JsonString(Object, TEXT("message"));
             OnCommandRejected.Broadcast(Id, Reason);
+            if (Reason.Contains(TEXT("电梯")))
+            {
+                bIntroCompleteInFlight = false;
+                return;
+            }
             Fail(Reason);
             return;
         }
@@ -426,6 +486,11 @@ void ULalalandServiceSubsystem::AcceptState(const FLalalandStateDto& Incoming)
     State.events.Reset();
     VisibleEvents.GenerateValueArray(State.events);
     State.events.Sort([](const FLalalandEventDto& A, const FLalalandEventDto& B) { return A.seq < B.seq; });
+    if (State.intro.phase != TEXT("elevator"))
+    {
+        bIntroReadySent = true;
+        bIntroCompleteInFlight = false;
+    }
     OnChanged.Broadcast();
 }
 

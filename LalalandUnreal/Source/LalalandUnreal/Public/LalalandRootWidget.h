@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include "Components/EditableTextBox.h"
 #include "LalalandRootWidget.generated.h"
 
 class UBorder;
@@ -10,6 +11,7 @@ class UEditableTextBox;
 class UHorizontalBox;
 class UTextBlock;
 class UVerticalBox;
+class ALalalandNpcCharacter;
 class ULalalandServiceSubsystem;
 
 UCLASS()
@@ -32,6 +34,7 @@ class LALALANDUNREAL_API ULalalandRootWidget final : public UUserWidget
 public:
     virtual TSharedRef<SWidget> RebuildWidget() override;
     virtual void NativeConstruct() override;
+    virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
     UFUNCTION() void HandleAction(const FString& Payload);
 
 private:
@@ -40,6 +43,7 @@ private:
     UFUNCTION() void HandleAck(const FString& CommandId, const FString& Reason);
     UFUNCTION() void HandleReject(const FString& CommandId, const FString& Reason);
     UFUNCTION() void SendDialogue();
+    UFUNCTION() void HandleDialogueCommitted(const FText& Text, ETextCommit::Type CommitMethod);
     UFUNCTION() void SaveModelConfig();
 
     UTextBlock* AddText(UVerticalBox* Parent, const FString& Text, int32 Size, const FLinearColor& Color);
@@ -55,6 +59,11 @@ private:
     void RebuildTargetRow();
     void ExecuteOption(const FString& OptionId);
     void SetSelectedTarget(const FString& Target);
+    void RefreshFocusedTarget();
+    void RefreshSettlement();
+    bool GetSelectedReplyState(bool& bWaiting, FString& Error, FString& RequestId) const;
+    FString GetSelectedTargetName() const;
+    FString DrinkStageLabel(const FString& Stage) const;
 
     UPROPERTY() TObjectPtr<ULalalandServiceSubsystem> Service;
     UPROPERTY() TObjectPtr<UBorder> IntroBackdrop;
@@ -68,8 +77,12 @@ private:
     UPROPERTY() TObjectPtr<UVerticalBox> InteractionPanel;
     UPROPERTY() TObjectPtr<UTextBlock> ObjectiveTitle;
     UPROPERTY() TObjectPtr<UTextBlock> ObjectiveHint;
+    UPROPERTY() TObjectPtr<UTextBlock> StatusHud;
+    UPROPERTY() TObjectPtr<UTextBlock> AttitudeHud;
     UPROPERTY() TObjectPtr<UTextBlock> PlayerDialogue;
-    UPROPERTY() TObjectPtr<UVerticalBox> SecondaryOptions;
+    UPROPERTY() TObjectPtr<UBorder> SettlementBackdrop;
+    UPROPERTY() TObjectPtr<UVerticalBox> SettlementPanel;
+    UPROPERTY() TObjectPtr<UHorizontalBox> SecondaryOptions;
     UPROPERTY() TObjectPtr<UEditableTextBox> DialogueInput;
     UPROPERTY() TObjectPtr<UEditableTextBox> ApiBaseInput;
     UPROPERTY() TObjectPtr<UEditableTextBox> ModelInput;
@@ -78,12 +91,11 @@ private:
     UPROPERTY() TObjectPtr<UHorizontalBox> PrimaryRow;
     UPROPERTY() TObjectPtr<UHorizontalBox> DialogueRow;
     UPROPERTY() TObjectPtr<UTextBlock> TargetPrompt;
-    FString SelectedRole;
-    FString SelectedIntent;
-    FString SelectedStyle;
     FString SelectedTarget;
     FString OpenGroup;
     FString PendingOption;
     FString PendingCommand;
+    FString LastRetryReplyId;
+    float FocusRefreshRemaining = 0.f;
     int32 IntroPage = 0;
 };

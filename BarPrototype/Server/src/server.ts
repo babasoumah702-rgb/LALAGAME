@@ -25,16 +25,18 @@ const token=process.env.LASTCALL_SESSION_TOKEN||randomBytes(32).toString('hex');
 const adapter=new ModelAdapter();
 const tts=new TtsAdapter();
 const app=Fastify({logger:false,bodyLimit:16384});
-await app.register(websocket,{options:{maxPayload:16384}});
+await app.register(websocket,{options:{maxPayload:1048576}});
 let engine:Engine|undefined;
 const sockets=new Set<WebSocket>();
 let closing=false;
 app.addHook('onRequest',async(request,reply)=>{
   if(request.url==='/health')return;
   const dedicated=request.headers['x-lalaland-token'];
-  const supplied=request.headers.authorization?.replace(/^Bearer /,'')||(Array.isArray(dedicated)?dedicated[0]:dedicated);
+  const protocols=String(request.headers['sec-websocket-protocol']||'').split(',').map(value=>value.trim());
+  const protocolToken=protocols.find(value=>value.startsWith('lalaland.auth.'))?.slice('lalaland.auth.'.length);
+  const supplied=request.headers.authorization?.replace(/^Bearer /,'')||(Array.isArray(dedicated)?dedicated[0]:dedicated)||protocolToken;
   if(supplied!==token){
-    if(request.url.startsWith('/api/events'))process.stdout.write(JSON.stringify({type:'diagnostic',message:`websocket authentication rejected (authorization=${!!request.headers.authorization}, dedicated=${!!dedicated})`})+'\n');
+    if(request.url.startsWith('/api/events'))process.stdout.write(JSON.stringify({type:'diagnostic',message:`websocket authentication rejected (authorization=${!!request.headers.authorization}, dedicated=${!!dedicated}, protocol=${!!protocolToken})`})+'\n');
     return reply.code(401).send({error:'Unauthorized'});
   }
 });
@@ -68,7 +70,7 @@ app.post('/api/session',async(request,reply)=>{
         engine.world.modelMode='online';engine.world.modelReason='已读取模型配置 · '+adapter.config.model;
       }
     }else{
-      engine=new Engine(scenario,{playerId:body.playerId,role:body.role,entryIntent:body.entryIntent,style:body.style,online:body.online!==false,seed:Number(body.seed)||821,opening:body.opening,entryMode:body.entryMode,entryContext:body.entryContext,choices:body.choices,story:body.story},undefined,navigation);
+      engine=new Engine(scenario,{playerId:body.playerId,role:body.role,entryIntent:body.entryIntent,style:body.style,online:body.online!==false,seed:Number(body.seed)||821,opening:body.opening||'first_night_v2',entryMode:body.entryMode,entryContext:body.entryContext,choices:body.choices,story:body.story||body.opening||'first_night_v2'},undefined,navigation);
     }
     engine.voice=tts;
     database.save(engine.world);
@@ -131,7 +133,8 @@ const timer=setInterval(async()=>{
   if(closing||!engine)return;
   const testPlayer=['full-night-verification','scene-two-three-verification'].includes(engine.world.playerId);
   const testDirectory=/(FullNightVerification|SceneTwoThreeVerification)$/.test(String(process.env.LASTCALL_DATA_DIR));
-  const testClock=testPlayer&&testDirectory?Math.max(1,Math.min(4,Number(process.env.LASTCALL_TEST_CLOCK)||1)):1;
+  const automatedClient=process.env.LASTCALL_AUTOPLAY==='1';
+  const testClock=(testPlayer&&testDirectory)||automatedClient?Math.max(1,Math.min(4,Number(process.env.LASTCALL_TEST_CLOCK)||1)):1;
   engine.advance(dt*testClock);
   applyReadyReplies(engine,database);
   if(!engine.world.paused&&engine.world.status==='playing'&&!introActive(engine.world)&&!pendingIntro.has(engine)){

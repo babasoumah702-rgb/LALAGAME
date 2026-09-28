@@ -15,13 +15,19 @@ import {initializeIntro,introActive,advanceIntro,type IntroOptions} from './intr
 import {initializeSceneOne,advanceSceneOne,observeSceneOneEvent,releaseFacing} from './scene-one.js';
 import {initializeSceneTwo,advanceSceneTwo,advanceFollowing,observeSceneTwoEvent,sceneTwoHandoff} from './scene-two.js';
 import {initializeSceneThree,advanceSceneThree,observeSceneThreeEvent,sceneThreeHandoff} from './scene-three.js';
+import {advanceFirstNight,hydrateFirstNight,initializeFirstNight} from './first-night.js';
 
 // A line addressed to the player or spoken by the player can still be overheard and remembered,
 // but it is not an open invitation for every witness to answer. Scene code explicitly queues any
 // group reaction it wants (tarot gaze order, deflection, social ripples).
 export function canActorReplyToEvent(e:Event,actorId:string){
-  if(!['speech','message'].includes(e.type)||e.actor!=='USER'&&e.target!=='USER')return true;
-  return e.actor==='USER'&&actorId===e.target;
+  if(!['speech','message'].includes(e.type))return true;
+  // Spoken lines are directed.  Other people may perceive and remember them, but a perceived
+  // line is never an invitation to join the exchange.  Scene code can still create a separate
+  // peer cue when it intentionally wants a third participant to enter.
+  if(e.actor==='USER')return actorId===e.target;
+  if(e.target==='USER')return false;
+  return actorId===e.target;
 }
 export class Engine {
   world:World;
@@ -30,8 +36,18 @@ export class Engine {
   voice?:TtsAdapter;
   constructor(public scenario:Scenario,options:{playerId:string;role?:string;entryIntent?:string;style?:string;seed?:number;online?:boolean;choices?:Record<string,string>}&IntroOptions,snapshot?:World,public navigation=new Navigator(emptyNavigation)){
     if(snapshot){if(snapshot.version!==1||snapshot.scenarioId!==scenario.id)throw new Error('存档与剧本不兼容');this.world=structuredClone(snapshot);this.world.paused=true;}
-    else {this.world=createWorld(scenario,navigation,options);initializeIntro(this,options);if(options.story==='scene1_v1')initializeSceneOne(this);runBeats(this);}
+    else {this.world=createWorld(scenario,navigation,options);initializeIntro(this,options);if(options.story==='first_night_v2'||options.opening==='first_night_v2')initializeFirstNight(this);else if(options.story==='scene1_v1')initializeSceneOne(this);if(!this.world.firstNight)runBeats(this);}
     initializeStory(this.world);if(this.world.story&&!(this.navigation instanceof NightNavigator))this.navigation=new NightNavigator(this.navigation);
+    if(this.world.firstNight){
+      hydrateFirstNight(this.world.firstNight);
+      if(this.world.intro?.phase==='elevator'){
+        this.world.intro.phase='bar';
+        this.world.intro.progress=7;
+        this.world.intro.checkpoint=5;
+        this.world.intro.ready=true;
+        this.world.intro.messageLocked=true;
+      }
+    }
     this.world.replies??=[];for(const r of this.world.replies){
       const event=this.world.events.find(e=>e.id===r.eventId);
       if(event&&!canActorReplyToEvent(event,r.actor)){r.status='complete';r.error='';r.errorCode='SUPPRESSED';r.decision=undefined;continue;}
@@ -77,10 +93,11 @@ export class Engine {
     return this.navigation.nearest({y:t.y,area:t.area,x:t.x+Math.sin(rad)*1.05,z:t.z+Math.cos(rad)*1.05});
   }
   command(c:Command){return handleCommand(this,c);}
-  advance(seconds:number){const w=this.world;if(w.status!=='playing'||w.paused)return;if(introActive(w)){advanceIntro(this,seconds);return;}if(this.busy)return;w.elapsed=this.world.scene1?w.elapsed+clamp(seconds,0,2):Math.min(this.scenario.duration,w.elapsed+clamp(seconds,0,2));runBeats(this);
+  advance(seconds:number){const w=this.world;if(w.status!=='playing'||w.paused)return;if(introActive(w)){advanceIntro(this,seconds);return;}if(this.busy)return;w.elapsed=this.world.scene1||w.firstNight?w.elapsed+clamp(seconds,0,2):Math.min(this.scenario.duration,w.elapsed+clamp(seconds,0,2));if(!w.firstNight)runBeats(this);
     // Scene 1 hands to Scene 2 the moment the room is complete, and Scene 2 hands to Scene 3 when the
     // deck lands. Each chapter owns its own clock; the legacy night keeps the declarative beats.
     advanceFollowing(this);advanceCrowd(this);
+    if(w.firstNight){advanceFirstNight(this,seconds);phase(this,w.firstNight.phase);return;}
     if(w.late){advanceLateNight(this);return;}
     if(w.scene3){if(w.scene3.phase==='scene4_ready'){initializeLateNight(this,4);advanceLateNight(this);return;}advanceSceneThree(this);phase(this,w.scene3.phase);return;}
     if(w.scene2){if(w.scene2.phase==='tarot_ready'){enterChapter(this,3,'seating');initializeSceneThree(this);advanceSceneThree(this);return;}advanceSceneTwo(this);phase(this,w.scene2.phase);return;}
