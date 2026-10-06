@@ -1,0 +1,18 @@
+{
+  "FileVersion": 3,
+  "EngineAssociation": "5.8",
+  "Category": "IntegrationCandidates",
+  "Description": "Independent v027 characters on interior v013; offline recording slice with mixing and ordering. Full narrative backend NOT integrated.",
+  "Modules": [
+    {"Name":"GaussianSplatProbe","Type":"Runtime","LoadingPhase":"Default"},
+    {"Name":"LalalandUnreal","Type":"Runtime","LoadingPhase":"Default"}
+  ],
+  "Plugins": [
+    {"Name":"PythonScriptPlugin","Enabled":true,"TargetAllowList":["Editor"]},
+    {"Name":"EditorScriptingUtilities","Enabled":true,"TargetAllowList":["Editor"]},
+    {"Name":"ControlRig","Enabled":true},
+    {"Name":"IKRig","Enabled":true},
+    {"Name":"EnhancedInput","Enabled":true},
+    {"Name":"AndroidFileServer","Enabled":false}
+  ]
+}

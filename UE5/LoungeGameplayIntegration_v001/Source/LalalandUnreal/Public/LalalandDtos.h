@@ -1,0 +1,419 @@
+#pragma once
+
+#include "CoreMinimal.h"
+#include "LalalandDtos.generated.h"
+
+USTRUCT(BlueprintType)
+struct FLalalandEntryDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString id;
+    UPROPERTY(BlueprintReadOnly) FString name;
+    UPROPERTY(BlueprintReadOnly) FString description;
+    UPROPERTY(BlueprintReadOnly) FString spawn;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandChoiceOptionDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString value;
+    UPROPERTY(BlueprintReadOnly) FString label;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandChoiceDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString id;
+    UPROPERTY(BlueprintReadOnly) FString label;
+    UPROPERTY(BlueprintReadOnly) FString prompt;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandChoiceOptionDto> options;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandBootstrapDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) int32 version = 0;
+    UPROPERTY(BlueprintReadOnly) FString title;
+    UPROPERTY(BlueprintReadOnly) FString model;
+    UPROPERTY(BlueprintReadOnly) FString modelBase;
+    UPROPERTY(BlueprintReadOnly) bool modelConfigured = false;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandEntryDto> roles;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandEntryDto> intents;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandEntryDto> styles;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandChoiceDto> choices;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandPointDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString area;
+    UPROPERTY(BlueprintReadOnly) double x = 0;
+    UPROPERTY(BlueprintReadOnly) double y = 0;
+    UPROPERTY(BlueprintReadOnly) double z = 0;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandActorDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString id;
+    UPROPERTY(BlueprintReadOnly) FString name;
+    UPROPERTY(BlueprintReadOnly) FString color;
+    UPROPERTY(BlueprintReadOnly) FString animation;
+    UPROPERTY(BlueprintReadOnly) FString destination;
+    UPROPERTY(BlueprintReadOnly) FString location;
+    UPROPERTY(BlueprintReadOnly) FString conversationTarget;
+    UPROPERTY(BlueprintReadOnly) FString area;
+    UPROPERTY(BlueprintReadOnly) FString posture;
+    UPROPERTY(BlueprintReadOnly) FString gesture;
+    UPROPERTY(BlueprintReadOnly) double x = 0;
+    UPROPERTY(BlueprintReadOnly) double y = 0;
+    UPROPERTY(BlueprintReadOnly) double z = 0;
+    UPROPERTY(BlueprintReadOnly) double yaw = 0;
+    UPROPERTY(BlueprintReadOnly) double facingUntil = 0;
+    UPROPERTY(BlueprintReadOnly) double gestureAt = 0;
+    UPROPERTY(BlueprintReadOnly) int32 routeVersion = 0;
+    UPROPERTY(BlueprintReadOnly) int32 interactions = 0;
+    UPROPERTY(BlueprintReadOnly) bool interactable = false;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandPointDto> route;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandEventDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString id;
+    UPROPERTY(BlueprintReadOnly) FString time;
+    UPROPERTY(BlueprintReadOnly) FString actor;
+    UPROPERTY(BlueprintReadOnly) FString name;
+    UPROPERTY(BlueprintReadOnly) FString text;
+    UPROPERTY(BlueprintReadOnly) FString source;
+    UPROPERTY(BlueprintReadOnly) FString level;
+    UPROPERTY(BlueprintReadOnly) FString type;
+    UPROPERTY(BlueprintReadOnly) FString target;
+    UPROPERTY(BlueprintReadOnly) FString intent;
+    UPROPERTY(BlueprintReadOnly) FString objectTarget;
+    UPROPERTY(BlueprintReadOnly) FString generationSource;
+    UPROPERTY(BlueprintReadOnly) FString privacy;
+    UPROPERTY(BlueprintReadOnly) FString audio;
+    UPROPERTY(BlueprintReadOnly) int32 seq = 0;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandInteractionOptionDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString id;
+    UPROPERTY(BlueprintReadOnly) FString label;
+    UPROPERTY(BlueprintReadOnly) FString disabledReason;
+    UPROPERTY(BlueprintReadOnly) bool selected = false;
+    UPROPERTY(BlueprintReadOnly) bool replaceable = false;
+    UPROPERTY(BlueprintReadOnly) bool targetRequired = false;
+    UPROPERTY(BlueprintReadOnly) bool enabled = false;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandInteractionGroupDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString id;
+    UPROPERTY(BlueprintReadOnly) FString label;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandInteractionOptionDto> options;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandInteractionDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString contextId;
+    UPROPERTY(BlueprintReadOnly) FString nextTitle;
+    UPROPERTY(BlueprintReadOnly) FString nextHint;
+    UPROPERTY(BlueprintReadOnly) FString nextGroup;
+    UPROPERTY(BlueprintReadOnly) FString nextActionId;
+    UPROPERTY(BlueprintReadOnly) FString primaryActionId;
+    UPROPERTY(BlueprintReadOnly) FString primaryLabel;
+    UPROPERTY(BlueprintReadOnly) bool primaryTargetRequired = false;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandInteractionOptionDto> suggestions;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandInteractionGroupDto> groups;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandPendingThrowDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString id;
+    UPROPERTY(BlueprintReadOnly) FString actor;
+    UPROPERTY(BlueprintReadOnly) int32 round = 0;
+    UPROPERTY(BlueprintReadOnly) double aim = 0;
+    UPROPERTY(BlueprintReadOnly) double power = 0;
+    UPROPERTY(BlueprintReadOnly) double startedAt = 0;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandAttitudeDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString id;
+    UPROPERTY(BlueprintReadOnly) FString name;
+    UPROPERTY(BlueprintReadOnly) FString stage;
+    UPROPERTY(BlueprintReadOnly) FString reason;
+    UPROPERTY(BlueprintReadOnly) FString drinkStage;
+    UPROPERTY(BlueprintReadOnly) int32 affinity = 0;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandEvaluationDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString id;
+    UPROPERTY(BlueprintReadOnly) FString name;
+    UPROPERTY(BlueprintReadOnly) FString text;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandDrinkPropDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) bool propConfirmed=false;
+    UPROPERTY(BlueprintReadOnly) FString instanceId;
+    UPROPERTY(BlueprintReadOnly) FString sipActionId;
+    UPROPERTY(BlueprintReadOnly) double sipStartedAt = -1;
+    UPROPERTY(BlueprintReadOnly) FString sipPhase = TEXT("sip");
+    UPROPERTY(BlueprintReadOnly) FString cupPlacement = TEXT("counter");
+    UPROPERTY(BlueprintReadOnly) FString deliveryOfferId;
+    UPROPERTY(BlueprintReadOnly) FString deliveryActionId;
+    UPROPERTY(BlueprintReadOnly) FString deliveryTarget;
+    UPROPERTY(BlueprintReadOnly) double deliveryStartedAt = -1;
+    UPROPERTY(BlueprintReadOnly) FString receivedFrom;
+    UPROPERTY(BlueprintReadOnly) FString id;
+    UPROPERTY(BlueprintReadOnly) FString owner;
+    UPROPERTY(BlueprintReadOnly) FString status;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandStationDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString id;
+    UPROPERTY(BlueprintReadOnly) FString label;
+    UPROPERTY(BlueprintReadOnly) bool open = false;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandCraftChoiceDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString id;
+    UPROPERTY(BlueprintReadOnly) FString label;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandCraftDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) bool open=false;
+    UPROPERTY(BlueprintReadOnly) FString recipe;
+    UPROPERTY(BlueprintReadOnly) FString sweetness;
+    UPROPERTY(BlueprintReadOnly) int32 ingredients=0;
+    UPROPERTY(BlueprintReadOnly) bool mixed=false;
+    UPROPERTY(BlueprintReadOnly) int32 steps=3;
+    UPROPERTY(BlueprintReadOnly) int32 cost=0;
+    UPROPERTY(BlueprintReadOnly) bool alcoholic=false;
+    UPROPERTY(BlueprintReadOnly) FString title;
+    UPROPERTY(BlueprintReadOnly) TArray<FString> ingredientNames;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandCraftChoiceDto> choices;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandFirstNightDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FLalalandCraftDto craft;
+    UPROPERTY(BlueprintReadOnly) FString catalogVersion;
+    UPROPERTY(BlueprintReadOnly) FString postGameStep;
+    UPROPERTY(BlueprintReadOnly) int32 version = 0;
+    UPROPERTY(BlueprintReadOnly) FString relationshipVersion;
+    UPROPERTY(BlueprintReadOnly) FString contentVersion;
+    UPROPERTY(BlueprintReadOnly) FString phase;
+    UPROPERTY(BlueprintReadOnly) FString openingBall;
+    UPROPERTY(BlueprintReadOnly) FString gameChoice;
+    UPROPERTY(BlueprintReadOnly) FString winner;
+    UPROPERTY(BlueprintReadOnly) FString lastPlace;
+    UPROPERTY(BlueprintReadOnly) FString invited;
+    UPROPERTY(BlueprintReadOnly) FString invitationResult;
+    UPROPERTY(BlueprintReadOnly) FString ending;
+    UPROPERTY(BlueprintReadOnly) FString playerDrinkStage;
+    UPROPERTY(BlueprintReadOnly) FString settlementSummary;
+    UPROPERTY(BlueprintReadOnly) FString inviteFrom;
+    UPROPERTY(BlueprintReadOnly) FString intoxFx;
+    UPROPERTY(BlueprintReadOnly) FString songChoice;
+    UPROPERTY(BlueprintReadOnly) int32 availableCash = 0;
+    UPROPERTY(BlueprintReadOnly) int32 voucherCount = 0;
+    UPROPERTY(BlueprintReadOnly) int32 round = 0;
+    UPROPERTY(BlueprintReadOnly) int32 turn = 0;
+    UPROPERTY(BlueprintReadOnly) bool cupAssist = false;
+    UPROPERTY(BlueprintReadOnly) bool feigningDrunk = false;
+    UPROPERTY(BlueprintReadOnly) TArray<FString> participants;
+    UPROPERTY(BlueprintReadOnly) TArray<FString> keyActions;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandAttitudeDto> attitudes;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandEvaluationDto> evaluations;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandDrinkPropDto> drinks;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandStationDto> nextStations;
+    UPROPERTY(BlueprintReadOnly) FLalalandPendingThrowDto pendingThrow;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandSceneOneDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString phase;
+    UPROPERTY(BlueprintReadOnly) bool drinkPlaced = false;
+    UPROPERTY(BlueprintReadOnly) bool seated = false;
+    UPROPERTY(BlueprintReadOnly) double drinkPlacedAt = -1;
+    UPROPERTY(BlueprintReadOnly) double arrivalAt = -1;
+    UPROPERTY(BlueprintReadOnly) double phoneAt = -1;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandIntroDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) int32 version = 0;
+    UPROPERTY(BlueprintReadOnly) int32 checkpoint = 0;
+    UPROPERTY(BlueprintReadOnly) double progress = 0;
+    UPROPERTY(BlueprintReadOnly) FString phase;
+    UPROPERTY(BlueprintReadOnly) FString entryMode;
+    UPROPERTY(BlueprintReadOnly) FString message;
+    UPROPERTY(BlueprintReadOnly) FString hint;
+    UPROPERTY(BlueprintReadOnly) FString messageSource;
+    UPROPERTY(BlueprintReadOnly) FString generationStatus;
+    UPROPERTY(BlueprintReadOnly) FString attitude;
+    UPROPERTY(BlueprintReadOnly) FString intent;
+    UPROPERTY(BlueprintReadOnly) FString playerText;
+    UPROPERTY(BlueprintReadOnly) bool ready = false;
+    UPROPERTY(BlueprintReadOnly) bool checkedMessage = false;
+    UPROPERTY(BlueprintReadOnly) bool phoneVisible = false;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandReplyDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) FString id;
+    UPROPERTY(BlueprintReadOnly) FString actor;
+    UPROPERTY(BlueprintReadOnly) FString eventId;
+    UPROPERTY(BlueprintReadOnly) FString status;
+    UPROPERTY(BlueprintReadOnly) FString error;
+    UPROPERTY(BlueprintReadOnly) FString errorCode;
+    UPROPERTY(BlueprintReadOnly) FString model;
+    UPROPERTY(BlueprintReadOnly) bool playerInitiated = false;
+    UPROPERTY(BlueprintReadOnly) int32 elapsedMs = 0;
+    UPROPERTY(BlueprintReadOnly) int32 chapter = 0;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandStateDto
+{
+    GENERATED_BODY()
+    UPROPERTY(BlueprintReadOnly) int32 version = 0;
+    UPROPERTY(BlueprintReadOnly) int32 cursor = 0;
+    UPROPERTY(BlueprintReadOnly) int32 night = 0;
+    UPROPERTY(BlueprintReadOnly) int32 calls = 0;
+    UPROPERTY(BlueprintReadOnly) int32 tokens = 0;
+    UPROPERTY(BlueprintReadOnly) FString sessionId;
+    UPROPERTY(BlueprintReadOnly) FString clock;
+    UPROPERTY(BlueprintReadOnly) FString status;
+    UPROPERTY(BlueprintReadOnly) FString mode;
+    UPROPERTY(BlueprintReadOnly) FString modeReason;
+    UPROPERTY(BlueprintReadOnly) FString role;
+    UPROPERTY(BlueprintReadOnly) FString lastTarget;
+    UPROPERTY(BlueprintReadOnly) double elapsed = 0;
+    UPROPERTY(BlueprintReadOnly) bool paused = false;
+    UPROPERTY(BlueprintReadOnly) bool busy = false;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandActorDto> characters;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandEventDto> events;
+    UPROPERTY(BlueprintReadOnly) FLalalandIntroDto intro;
+    UPROPERTY(BlueprintReadOnly) FLalalandSceneOneDto scene1;
+    UPROPERTY(BlueprintReadOnly) FLalalandFirstNightDto firstNight;
+    UPROPERTY(BlueprintReadOnly) FLalalandInteractionDto interaction;
+    UPROPERTY(BlueprintReadOnly) TArray<FLalalandReplyDto> replies;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandPositionDto
+{
+    GENERATED_BODY()
+    UPROPERTY() FString actor;
+    UPROPERTY() FString area;
+    UPROPERTY() double x = 0;
+    UPROPERTY() double y = 0;
+    UPROPERTY() double z = 0;
+    UPROPERTY() double yaw = 0;
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandCommandDto
+{
+    GENERATED_BODY()
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 version = 1;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 cursor = 0;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString sessionId;
+    // Command ids are intentionally randomized for idempotency, so they cannot
+    // participate in Unreal's deterministic member initialization check.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (IgnoreForMemberInitializationTest)) FString id;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString type;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString target;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString intent;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString text;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString actor;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString location;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString requestId;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString objectTarget;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString tone;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString movement;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString area;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) double x = 0;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) double y = 0;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) double z = 0;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) double yaw = 0;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) bool paused = false;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) bool online = true;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) bool open = false;
+    UPROPERTY() TArray<FLalalandPositionDto> items;
+    UPROPERTY() TMap<FString, int32> mixIngredients;
+
+    FLalalandCommandDto()
+        : id(FGuid::NewGuid().ToString(EGuidFormats::Digits))
+    {
+    }
+};
+
+USTRUCT(BlueprintType)
+struct FLalalandSessionRequest
+{
+    GENERATED_BODY()
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString playerId;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString role = TEXT("passerby");
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString entryIntent = TEXT("observe_only");
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString style = TEXT("natural");
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString mode = TEXT("new");
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString sessionId;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) bool online = true;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 seed = 821;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString opening = TEXT("first_night_v2");
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString story = TEXT("first_night_v2");
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString entryMode;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString entryContext;
+};
+
+struct FLalalandJson
+{
+    static bool ParseBootstrap(const FString& Json, FLalalandBootstrapDto& Out, FString& Error);
+    static bool ParseStateEnvelope(const FString& Json, FLalalandStateDto& Out, FString& Error);
+    static FString WriteSession(const FLalalandSessionRequest& Request);
+    static FString WriteCommand(const FLalalandCommandDto& Command);
+};
